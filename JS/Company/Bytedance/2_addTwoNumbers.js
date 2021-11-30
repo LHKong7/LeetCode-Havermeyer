@@ -39,10 +39,10 @@
         const n2 = l2 ? l2.val : 0;
         const sum = n1 + n2 + carry;
 
-        if (!head) {
+        if (!head) { //头节点为空，新链表没有结点
             head = tail = new ListNode(sum % 10);
-        } else {
-            tail.next = new ListNode(sum % 10);
+        } else { // 有头节点，后续结点插入
+            tail.next = new ListNode(sum % 10); // 尾结点后插入
             tail = tail.next;
         }
         carry = Math.floor(sum / 10);
