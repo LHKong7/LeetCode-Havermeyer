@@ -24,19 +24,17 @@
  * @return {number[]}
  */
  var twoSum = function(nums, target) {
-    let res = [];
-    let storeMap = new Map();
+    let myMap = new Map();
 
     for (let i = 0; i < nums.length; i++) {
-        if (storeMap.has(target - nums[i])) {
-            res.push(storeMap.get(target - nums[i]));
-            res.push(i);
-            return res;
+        if (myMap.has(target - nums[i])) {
+            return [myMap.get(target-nums[i]), i];
         }
-        storeMap.set(nums[i], i);
+        myMap.set(nums[i], i);
     }
-    return res;
-};
+    return [-1,-1];
+}
+
 
 
 
