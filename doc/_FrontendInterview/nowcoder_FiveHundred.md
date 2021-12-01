@@ -1048,13 +1048,17 @@ c、使用HTML5中的新增属性hidden="hidden"，不会占有原来的位置
 
 
 
+##### 67. 为什么重置浏览器默认样式，如何重置默浏览器认样式？
 
+每种浏览器都有一套默认的样式表，即user agent stylesheet，网页在没有指定的样式时，按浏览器内置的样式表来渲染。这是合理的，像word中也有一些预留样式，可以让我们的排版更美观整齐。不同浏览器甚至同一浏览器不同版本的默认样式是不同的。但这样会有很多兼容问题。
 
-### TODO
+a、最简单的办法：（不推荐使用）*{margin: 0;padding: 0;}。
 
+b、使用CSSReset可以将所有浏览器默认样式设置成一样。
 
+c、normalize：也许有些cssreset过于简单粗暴，有点伤及无辜，normalize是另一个选择。bootstrap已经引用该css来重置浏览器默认样式，比普通的cssreset要精细一些，保留浏览器有用的默认样式，支持包括手机浏览器在内的超多浏览器，同时对HTML5元素、排版、列表、嵌入的内容、表单和表格都进行了一般化。
 
-
+天猫 使用的css reset重置浏览器默认样式
 
 
 
@@ -1105,6 +1109,109 @@ b、元素定位参考的是离自身最近的定位祖先元素，要满足两�
 与absolute一致。元素在分页媒体或者区域块内，元素的包含块始终是初始包含块，否则取决于每个absolute模式。（CSS3）
 **(7)、sticky**
 对象在常态时遵循常规流。它就像是relative和fixed的合体，当在屏幕中时按常规流排版，当卷动到屏幕外时则表现如fixed。该属性的表现是现实中你见到的吸附效果。（CSS3）
+
+
+
+##### 70. 如何解决多个元素重叠问题？
+
+**使用z-index属性可以设置元素的层叠顺序**
+
+z-index属性
+语法：z-index: auto | <integer>
+默认值：auto
+适用于：定位元素。即定义了position为非static的元素
+取值：
+auto： 元素在当前层叠上下文中的层叠级别是0。元素不会创建新的局部层叠上下文，除非它是根元素。 
+整数： 用整数值来定义堆叠级别。可以为负值。 说明：
+检索或设置对象的层叠顺序。 
+z-index用于确定元素在当前层叠上下文中的层叠级别，并确定该元素是否创建新的局部层叠上下文。 
+当多个元素层叠在一起时，数字大者将显示在上面。
+
+
+
+##### 71. 页面布局的方式有哪些？
+
+方式：双飞翼、多栏、弹性、流式、瀑布流、响应式布局 
+
+**双飞翼布局**
+
+​	经典三列布局，也叫做圣杯布局【Holy Grail of Layouts】是Kevin Cornell在2006年提出的一个布局模型概念，在国内最早是由淘宝UED的工程师传播开来，在中国也有叫法是双飞翼布局，它的布局要求有几点：
+
+a、三列布局，中间宽度自适应，两边定宽； 
+b、中间栏要在浏览器中优先展示渲染； 
+c、允许任意列的高度最高；
+d、要求只用一个额外的DIV标签； 
+e、要求用最简单的CSS、最少的HACK语句；
+
+在不增加额外标签的情况下，圣杯布局已经非常完美，圣杯布局使用了相对定位，以后布局是有局限性的，而且宽度控制要改的地方也多。在淘宝UED（User Experience Design）探讨下，增加多一个div就可以不用相对布局了，只用到了浮动和负边距，这就是我们所说的双飞翼布局。
+
+**多栏布局**
+
+a、栏栅格系统：就是利用浮动实现的多栏布局，在bootstrap中用的非常多。
+b、多列布局：栅格系统并没有真正实现分栏效果（如word中的分栏），CSS3为了满足这个要求增加了多列布局模块
+
+**弹性布局（Flexbox）**
+
+CSS3引入了一种新的布局模式——Flexbox布局，即伸缩布局盒模型（Flexible Box），用来提供一个更加有效的方式制定、调整和分布一个容器里项目布局，即使它们的大小是未知或者动态的，这里简称为Flex。
+Flexbox布局常用于设计比较复杂的页面，可以轻松的实现屏幕和浏览器窗口大小发生变化时保持元素的相对位置和大小不变，同时减少了依赖于浮动布局实现元素位置的定义以及重置元素的大小。
+
+Flexbox布局在定义伸缩项目大小时伸缩容器会预留一些可用空间，让你可以调节伸缩项目的相对大小和位置。例如，你可以确保伸缩容器中的多余空间平均分配多个伸缩项目，当然，如果你的伸缩容器没有足够大的空间放置伸缩项目时，浏览器会根据一定的比例减少伸缩项目的大小，使其不溢出伸缩容器。
+
+综合而言，Flexbox布局功能主要具有以下几点：
+a、屏幕和浏览器窗口大小发生改变也可以灵活调整布局；
+b、可以指定伸缩项目沿着主轴或侧轴按比例分配额外空间（伸缩容器额外空间），从而调整伸缩项目的大小；
+c、可以指定伸缩项目沿着主轴或侧轴将伸缩容器额外空间，分配到伸缩项目之前、之后或之间；
+d、可以指定如何将垂直于元素布局轴的额外空间分布到该元素的周围；
+e、可以控制元素在页面上的布局方向；
+f、可以按照不同于文档对象模型（DOM）所指定排序方式对屏幕上的元素重新排序。也就是说可以在浏览器渲染中不按照文档流先后顺序重排伸缩项目顺序
+
+**瀑布流布局**
+
+瀑布流布局是流式布局的一种。是当下比较流行的一种网站页面布局，视觉表现为参差不齐的多栏布局，随着页面滚动条向下滚动，这种布局还会不断加载数据块并附加至当前尾部。最早采用此布局的网站是Pinterest，逐渐在国内流行开来。
+**优点**
+a、有效的降低了界面复杂度，节省了空间：我们不再需要臃肿复杂的页码导航链接或按钮了。
+b、对触屏设备来说，交互方式更符合直觉：在移动应用的交互环境当中，通过向上滑动进行滚屏的操作已经成为最基本的用户习惯，而且所需要的操作精准程度远远低于点击链接或按钮。
+c、更高的参与度：以上两点所带来的交互便捷性可以使用户将注意力更多的集中在内容而不是操作上，从而让他们更乐于沉浸在探索与浏览当中。
+**缺点**
+a、有限的用例：
+无限滚动的方式只适用于某些特定类型产品当中一部分特定类型的内容。
+例如，在电商网站当中，用户时常需要在商品列表与详情页面之间切换，这种情况下，传统的、带有页码导航的方式可以帮助用户更稳妥和准确的回到某个特定的列表页面当中。
+b、额外的复杂度：
+那些用来打造无限滚动的JS库虽然都自称很容易使用，但你总会需要在自己的产品中进行不同程度的定制化处理，以满足你们自己的需求;另外这些JS库在浏览器和设备兼容性等方面的表现也参差不齐，你必须做好充分的测试与调整工作。
+c、再见了，页脚：
+如果使用了比较典型的无限滚动加载模式，这就意味着你可以和页脚说拜拜了。
+最好考虑一下页脚对于你的网站，特别是用户的重要性;如果其中确实有比较重要的内容或链接，那么最好换一种更传统和稳妥的方式。
+千万不要耍弄你的用户，当他们一次次的浏览到页面底部，看到页脚，却因为自动加载的内容突然出现而无论如何都无法点击页脚中的链接时，他们会变的越发愤怒。
+d、集中在一页当中动态加载数据，与一页一页的输出相比，究竟那种方式更利于SEO，这是你必须考虑的问题。对于某些以类型网站来说，在这方面进行冒险是很不划算的。
+e、关于页面数量的印象：
+其实站在用户的角度来看，这一点并非负面;不过，如果对于你的网站来说，通过更多的内容页面展示更多的相关信息(包括广告)是很重要的策略，那么单页无限滚动的方式对你并不适用。
+
+**流式布局（Fluid）**
+
+固定布局和流式布局在网页设计中最常用的两种布局方式。固定布局能呈现网页的原始设计效果，流式布局则不受窗口宽度影响，流式布局使用百分比宽度来限定布局元素，这样可以根据客户端分辨率的大小来进行合理的显示。
+
+**响应式布局**
+
+响应式布局是Ethan Marcotte在2010年5月份提出的一个概念，简而言之，就是一个网站能够兼容多个终端——而不是为每个终端做一个特定的版本。这个概念是为解决移动互联网浏览而诞生的。
+响应式布局可以为不同终端的用户提供更加舒适的界面和更好的用户体验，而且随着目前大屏幕移动设备的普及，用“大势所趋”来形容也不为过。随着越来越多的设计师采用这个技术，我们不仅看到很多的创新，还看到了一些成形的模式。
+**优点**
+a、面对不同分辨率设备灵活性强
+b、能够快捷解决多设备显示适应问题
+**缺点**
+a、兼容各种设备工作量大，效率低下
+b、代码累赘，会出现隐藏无用的元素，加载时间加长
+c、其实这是一种折中性质的设计解决方案，多方面因素影响而达不到最佳效果
+d、一定程度上改变了网站原有的布局结构，会出现用户混淆的情况
+
+
+
+##### 72. **overflow** :hidden是否形成新的块级格式化上下文？
+
+会形成，触发BFC的条件有：
+\- float的值不为none。
+\- overflow的值不为visible。
+\- display的值为table-cell, table-caption, inline-block 中的任何一个。
+\- position的值不为relative 和static。
 
 
 
@@ -1171,6 +1278,20 @@ SSL证书需要绑定IP，不能再同一个ip上绑定多个域名，ipv4资源
 
 
 
+##### 74. tcp三次握手，一句话概括
+
+客户端和服务端都需要直到各自可收发，因此需要三次握手。
+
+简化三次握手：
+
+```
+<img width="487" alt="2018-07-10 3 42 11" src="https://user-images.githubusercontent.com/17233651/42496289-1c6d668a-8458-11e8-98b3-65db50f64d48.png">
+```
+
+从图片可以得到三次握手可以简化为：C发起请求连接S确认，也发起连接C确认我们再看看每次握手的作用：第一次握手：S只可以确认 自己可以接受C发送的报文段第二次握手：C可以确认 S收到了自己发送的报文段，并且可以确认 自己可以接受S发送的报文段第三次握手：S可以确认 C收到了自己发送的报文段
+
+
+
 ##### 75. TCP和UDP的区别
 
 （1）TCP是面向连接的，udp是无连接的即发送数据前不需要先建立链接。
@@ -1187,11 +1308,84 @@ SSL证书需要绑定IP，不能再同一个ip上绑定多个域名，ipv4资源
 
 
 
+##### 76. WebSocket的实现和应用
+
+(1)什么是WebSocket?
+
+WebSocket是HTML5中的协议，支持持久连续，http协议不支持持久性连接。Http1.0和HTTP1.1都不支持持久性的链接，HTTP1.1中的keep-alive，将多个http请求合并为1个
+
+(2)WebSocket是什么样的协议，具体有什么优点？
+
+HTTP的生命周期通过Request来界定，也就是Request一个Response，那么在Http1.0协议中，这次Http请求就结束了。在Http1.1中进行了改进，是的有一个connection：Keep-alive，也就是说，在一个Http连接中，可以发送多个Request，接收多个Response。但是必须记住，在Http中一个Request只能对应有一个Response，而且这个Response是被动的，不能主动发起。
+
+WebSocket是基于Http协议的，或者说借用了Http协议来完成一部分握手，在握手阶段与Http是相同的。我们来看一个websocket握手协议的实现，基本是2个属性，upgrade，connection。
+
+基本请求如下：
+
+```
+GET /chat HTTP/1.1
+Host: server.example.com
+Upgrade: websocket
+Connection: Upgrade
+Sec-WebSocket-Key: x3JJHMbDL1EzLkh9GBhXDw==
+Sec-WebSocket-Protocol: chat, superchat
+Sec-WebSocket-Version: 13
+Origin: http://example.com
+```
+
+多了下面2个属性：
+
+```
+Upgrade:webSocket
+Connection:Upgrade
+```
+
+告诉服务器发送的是websocket
+
+```
+Sec-WebSocket-Key: x3JJHMbDL1EzLkh9GBhXDw==
+Sec-WebSocket-Protocol: chat, superchat
+Sec-WebSocket-Version: 13
+```
+
 ##### 77. HTTP请求的方式，HEAD方式
 
 head：类似于get请求，只不过返回的响应中没有具体的内容，用户获取报头
 
 options：允许客户端查看服务器的性能，比如说服务器支持的请求方式等等。
+
+
+
+##### 78. 一个图片url访问后直接下载怎样实现？
+
+请求的返回头里面，用于浏览器解析的重要参数就是OSS的API文档里面的返回http头，决定用户下载行为的参数。
+
+下载的情况下：
+
+1. x-oss-object-type:Normal
+
+2. x-oss-request-id:598D5ED34F29D01FE2925F41
+
+3. x-oss-storage-class:Standard
+
+##### 79. 说一下web Quality（无障碍）
+
+能够被残障人士使用的网站才能称得上一个易用的（易访问的）网站。
+
+残障人士指的是那些带有残疾或者身体不健康的用户。
+
+使用alt属性：
+
+`<img src="person.jpg"  alt="this is a person"/>`
+
+有时候浏览器会无法显示图像。具体的原因有：
+
+用户关闭了图像显示
+
+浏览器是不支持图形显示的迷你浏览器
+
+浏览器是语音浏览器（供盲人和弱视人群使用）
+如果您使用了alt 属性，那么浏览器至少可以显示或读出有关图像的描述。
 
 ##### 80. 几个很实用的BOM属性对象方法?
 
@@ -1222,7 +1416,63 @@ history.forward() -- 前进一页
 navigator.userAgent -- 返回用户代理头的字符串表示(就是包括浏览器版本信息等的字符串)
 navigator.cookieEnabled -- 返回浏览器是否支持(启用)cookie
 
+##### 81. 说一下HTML5 drag api
 
+```
+dragstart：事件主体是被拖放元素，在开始拖放被拖放元素时触发，。
+darg：事件主体是被拖放元素，在正在拖放被拖放元素时触发。
+dragenter：事件主体是目标元素，在被拖放元素进入某元素时触发。
+dragover：事件主体是目标元素，在被拖放在某元素内移动时触发。
+dragleave：事件主体是目标元素，在被拖放元素移出目标元素是触发。
+drop：事件主体是目标元素，在目标元素完全接受被拖放元素时触发。
+dragend：事件主体是被拖放元素，在整个拖放操作结束时触发
+```
+
+
+
+##### 82. 说一下http2.0
+
+首先补充一下，http和https的区别，相比于http,https是基于ssl加密的http协议
+
+简要概括：http2.0是基于1999年发布的http1.0之后的首次更新。
+
+提升访问速度（可以对于，请求资源所需时间更少，访问速度更快，相比http1.0）
+
+允许多路复用：多路复用允许同时通过单一的HTTP/2连接发送多重请求-响应信息。改善了：在http1.1中，浏览器客户端在同一时间，针对同一域名下的请求有一定数量限制（连接数量），超过限制会被阻塞。
+
+二进制分帧：HTTP2.0会将所有的传输信息分割为更小的信息或者帧，并对他们进行二进制编码
+
+首部压缩
+
+服务器端推送
+
+##### 83. 补充400和401、403状态码
+
+(1)400状态码：请求无效
+
+产生原因：
+
+前端提交数据的字段名称和字段类型与后台的实体没有保持一致
+
+前端提交到后台的数据应该是json字符串类型，但是前端没有将对象JSON.stringify转化成字符串。
+
+解决方法：
+
+对照字段的名称，保持一致性
+
+将obj对象通过JSON.stringify实现序列化
+
+(2)401状态码：当前请求需要用户验证
+
+(3)403状态码：服务器已经得到请求，但是拒绝执行
+
+
+
+##### 84. fetch发送2次请求的原因
+
+fetch发送post请求的时候，总是发送2次，第一次状态码是204，第二次才成功？
+
+原因很简单，因为你用fetch的post请求的时候，导致fetch 第一次发送了一个Options请求，询问服务器是否支持修改的请求头，如果服务器支持，则在第二次中发送真正的请求
 
 ##### 85. Cookie、sessionStorage、localStorage的区别
 
@@ -1254,11 +1504,95 @@ localStorage：localStorage 在所有同源窗口中都是共享的；cookie也�
 
 
 
+##### 87. 对HTML语义化标签的理解
+
+HTML5语义化标签是指正确的标签包含了正确的内容，结构良好，便于阅读，比如nav表示导航条，类似的还有article、header、footer等等标签。
+
+##### 88. iframe是什么？有什么缺点？
+
+定义：iframe元素会创建包含另一个文档的内联框架
+
+提示：可以将提示文字放在<iframe></iframe>之间，来提示某些不支持iframe的浏览器
+
+缺点：
+
+会阻塞主页面的onload事件
+
+搜索引擎无法解读这种页面，不利于SEO
+
+iframe和主页面共享连接池，而浏览器对相同区域有限制所以会影响性能。
+
+
+
+##### 89. Doctype作用?严格模式与混杂模式如何区分？它们有何意义?
+
+Doctype声明于文档最前面，告诉浏览器以何种方式来渲染页面，这里有两种模式，严格模式和混杂模式。
+
+严格模式的排版和JS 运作模式是 以该浏览器支持的最高标准运行。
+
+混杂模式，向后兼容，模拟老式浏览器，防止浏览器无法兼容页面。
+
+
+
+##### 90. Cookie如何防范XSS攻击
+
+XSS（跨站脚本攻击）是指攻击者在返回的HTML中嵌入javascript脚本，为了减轻这些攻击，需要在HTTP头部配上，set-cookie：
+
+httponly-这个属性可以防止XSS,它会禁止javascript脚本来访问cookie。
+
+secure - 这个属性告诉浏览器仅在请求为https的时候发送cookie。
+
+结果应该是这样的：`Set-Cookie=<cookie-value>.....`
+
+
+
+##### 91. Cookie和session的区别
+
+HTTP是一个无状态协议，因此Cookie的最大的作用就是存储sessionId用来唯一标识用户
+
+
+
+##### 92. 一句话概括RESTFUL
+
+就是用URL定位资源，用HTTP描述操作
+
+##### 93. 讲讲viewport和移动端布局
+
+
+
+##### 94. click在ios上有300ms延迟，原因及如何解决？
+
+(1)粗暴型，禁用缩放
+
+<meta name="viewport" content="width=device-width, user-scalable=no">
+
+(2)利用FastClick，其原理是：
+
+检测到touchend事件后，立刻出发模拟click事件，并且把浏览器300毫秒之后真正出发的事件给阻断掉
+
+
+
 ##### 95. addEventListener参数
 
 addEventListener(event, function, useCapture)
 
 其中，event指定事件名；function指定要事件触发时执行的函数；useCapture指定事件是否在捕获或冒泡阶段执行
+
+
+
+##### 96. cookie sessionStorage localStorage区别
+
+cookie数据始终在同源的http请求中携带(即使不需要)，即cookie在浏览器和服务器间来回传递
+
+cookie数据还有路径（path）的概念，可以限制。cookie只属于某个路径下
+
+存储大小限制也不同，cookie数据不能超过4K，同时因为每次http请求都会携带cookie，所以cookie只适合保存很小的数据，如回话标识。
+
+webStorage虽然也有存储大小的限制，但是比cookie大得多，可以达到5M或更大
+
+数据的有效期不同sessionStorage：仅在当前的浏览器窗口关闭有效；localStorage：始终有效，窗口或浏览器关闭也一直保存，因此用作持久数据；cookie：只在设置的cookie过期时间之前一直有效，即使窗口和浏览器关闭
+
+作用域不同sessionStorage：不在不同的浏览器窗口中共享，即使是同一个页面；localStorage：在所有同源窗口都是共享的；cookie：也是在所有同源窗口中共享的
 
 
 
@@ -1273,6 +1607,10 @@ addEventListener(event, function, useCapture)
 考虑到减轻服务器性能方面，应当使用COOKIE。
 
 \4.  单个cookie保存的数据不能超过4K，很多浏览器都限制一个站点最多保存20个cookie。
+
+
+
+##### 98 iframe通信，同源和不同源两种情况，多少种方法。同源我说了，根据父页面以及cookie，不同源我说了设置子域的方法。
 
 
 
@@ -1405,8 +1743,6 @@ addEventListener(event, function, useCapture)
 
 缓存分为两种：强缓存和协商缓存，根据响应的header内容来决定。
 
-
-
 |          | 获取资源形式 | 状态码              | 发送请求到服务器                 |
 | -------- | ------------ | ------------------- | -------------------------------- |
 | 强缓存   | 从缓存取     | 200（from cache）   | 否，直接从缓存取                 |
@@ -1416,6 +1752,95 @@ addEventListener(event, function, useCapture)
 
 协商缓存相关字段有Last-Modified/If-Modified-Since，Etag/If-None-Match
 
+
+
+##### 102. HTTP状态码说说你知道的
+
+
+
+##### 103. 讲讲304
+
+304：如果客户端发送了一个带条件的GET 请求且该请求已被允许，而文档的内容（自上次访问以来或者根据请求的条件）并没有改变，则服务器应当返回这个304状态码。
+
+
+
+##### 104. 强缓存、协商缓存什么时候用哪个
+
+因为服务器上的资源不是一直固定不变的，大多数情况下它会更新，这个时候如果我们还访问本地缓存，那么对用户来说，那就相当于资源没有更新，用户看到的还是旧的资源；所以我们希望服务器上的资源更新了浏览器就请求新的资源，没有更新就使用本地的缓存，以最大程度的减少因网络请求而产生的资源浪费。
+
+
+
+##### 105. 前端优化
+
+降低请求量：合并资源，减少HTTP 请求数，minify / gzip 压缩，webP，lazyLoad。
+
+加快请求速度：预解析DNS，减少域名数，并行加载，CDN 分发。
+
+缓存：HTTP 协议缓存请求，离线缓存 manifest，离线数据缓存localStorage。
+
+渲染：JS/CSS优化，加载顺序，服务端渲染，pipeline。
+
+
+
+##### 106. GET和POST的区别
+
+get参数通过url传递，post放在request body中。
+
+get请求在url中传递的参数是有长度限制的，而post没有。
+
+get比post更不安全，因为参数直接暴露在url中，所以不能用来传递敏感信息。
+
+get请求只能进行url编码，而post支持多种编码方式
+
+get请求会浏览器主动cache，而post支持多种编码方式。
+
+get请求参数会被完整保留在浏览历史记录里，而post中的参数不会被保留。
+
+GET和POST本质上就是TCP链接，并无差别。但是由于HTTP的规定和浏览器/服务器的限制，导致他们在应用过程中体现出一些不同。
+
+GET产生一个TCP数据包；POST产生两个TCP数据包。
+
+
+
+#### 107. 301和302的区别
+
+301 Moved Permanently 被请求的资源已永久移动到新位置，并且将来任何对此资源的引用都应该使用本响应返回的若干个URI之一。如果可能，拥有链接编辑功能的客户端应当自动把请求的地址修改为从服务器反馈回来的地址。除非额外指定，否则这个响应也是可缓存的。
+
+302 Found 请求的资源现在临时从不同的URI响应请求。由于这样的重定向是临时的，客户端应当继续向原有地址发送以后的请求。只有在Cache-Control或Expires中进行了指定的情况下，这个响应才是可缓存的。
+
+字面上的区别就是301是永久重定向，而302是临时重定向。
+
+301比较常用的场景是使用域名跳转。302用来做临时跳转 比如未登陆的用户访问用户中心重定向到登录页面。
+
+
+
+##### 108. HTTP支持的方法
+
+`GET, POST, HEAD, OPTIONS, PUT, DELETE, TRACE, CONNECT`
+
+
+
+#### 109. 如何画一个三角形
+
+```
+div {
+  width:0px;
+  height:0px;
+  border-top:10px solid red;
+  border-right:10px solid transparent;
+  border-bottom:10px solid transparent;
+  border-left:10px solid transparent;
+}
+```
+
+##### 110. 状态码304和 200
+
+状态码200：请求已成功，请求所希望的响应头或数据体将随此响应返回。即返回的数据为全量的数据，如果文件不通过GZIP压缩的话，文件是多大，则要有多大传输量。
+
+状态码304：如果客户端发送了一个带条件的 GET 请求且该请求已被允许，而文档的内容（自上次访问以来或者根据请求的条件）并没有改变，则服务器应当返回这个状态码。即客户端和服务器端只需要传输很少的数据量来做文件的校验，如果文件没有修改过，则不需要返回全量的数据。
+
+
+
 ##### 111. 说一下浏览器缓存
 
 缓存分为两种：强缓存和协商缓存，根据响应的header内容来决定。
@@ -1423,6 +1848,12 @@ addEventListener(event, function, useCapture)
 强缓存相关字段有expires，cache-control。如果cache-control与expires同时存在的话，cache-control的优先级高于expires。
 
 协商缓存相关字段有Last-Modified/If-Modified-Since，Etag/If-None-Match
+
+
+
+##### 112. HTML5新增的元素
+
+首先html5为了更好的实践web语义化，增加了header，footer，nav,aside,section等语义化标签，在表单方面，为了增强表单，为input增加了color，emial,data ,range等类型，在存储方面，提供了sessionStorage，localStorage,和离线存储，通过这些存储方式方便数据在客户端的存储和获取，在多媒体方面规定了音频和视频元素audio和vedio，另外还有地理定位，canvas画布，拖放，多线程编程的web worker和websocket协议
 
 ##### 113 在地址栏里输入一个URL,到这个页面呈现出来，中间会发生什么？
 
@@ -1440,11 +1871,73 @@ TCP连接
 
 输入url后，首先需要找到这个url域名的服务器ip,为了寻找这个ip，浏览器首先会寻找缓存，查看缓存中是否有记录，缓存的查找记录为：浏览器缓存-》系统缓存-》路由器缓存，缓存中没有则查找系统的hosts文件中是否有记录，如果没有则查询DNS服务器，得到服务器的ip地址后，浏览器根据这个ip以及相应的端口号，构造一个http请求，这个请求报文会包括这次请求的信息，主要是请求方法，请求说明和请求附带的数据，并将这个http请求封装在一个tcp包中，这个tcp包会依次经过传输层，网络层，数据链路层，物理层到达服务器，服务器解析这个请求来作出响应，返回相应的html给浏览器，因为html是一个树形结构，浏览器根据这个html来构建DOM树，在dom树的构建过程中如果遇到JS脚本和外部JS连接，则会停止构建DOM树来执行和下载相应的代码，这会造成阻塞，这就是为什么推荐JS代码应该放在html代码的后面，之后根据外部央视，内部央视，内联样式构建一个CSS对象模型树CSSOM树，构建完成后和DOM树合并为渲染树，这里主要做的是排除非视觉节点，比如script，meta标签和排除display为none的节点，之后进行布局，布局主要是确定各个元素的位置和尺寸，之后是渲染页面，因为html文件中会含有图片，视频，音频等资源，在解析DOM的过程中，遇到这些都会进行并行下载，浏览器对每个域的并行下载数量有一定的限制，一般是4-6个，当然在这些所有的请求中我们还需要关注的就是缓存，缓存一般通过Cache-Control、Last-Modify、Expires等首部字段控制。 Cache-Control和Expires的区别在于Cache-Control使用相对时间，Expires使用的是基于服务器 端的绝对时间，因为存在时差问题，一般采用Cache-Control，在请求这些有设置了缓存的数据时，会先 查看是否过期，如果没有过期则直接使用本地缓存，过期则请求并在服务器校验文件是否修改，如果上一次 响应设置了ETag值会在这次请求的时候作为If-None-Match的值交给服务器校验，如果一致，继续校验 Last-Modified，没有设置ETag则直接验证Last-Modified，再决定是否返回304
 
+
+
+##### 114. cookie和session的区别，localstorage和sessionstorage的区别
+
+Cookie和session都可用来存储用户信息，cookie存放于客户端，session存放于服务器端，因为cookie存放于客户端有可能被窃取，所以cookie一般用来存放不敏感的信息，比如用户设置的网站主题，敏感的信息用session存储，比如用户的登陆信息，session可以存放于文件，数据库，内存中都可以，cookie可以服务器端响应的时候设置，也可以客户端通过JS设置cookie会在请求时在http首部发送给客户端，cookie一般在客户端有大小限制，一般为4K，
+
+下面从几个方向区分一下cookie，localstorage，sessionstorage的区别
+
+1、生命周期：
+
+Cookie：可设置失效时间，否则默认为关闭浏览器后失效
+
+Localstorage:除非被手动清除，否则永久保存
+
+Sessionstorage：仅在当前网页会话下有效，关闭页面或浏览器后就会被清除
+
+2、存放数据：
+
+Cookie：4k左右
+
+Localstorage和sessionstorage：可以保存5M的信息
+
+3、http请求：
+
+Cookie：每次都会携带在http头中，如果使用cookie保存过多数据会带来性能问题
+
+其他两个：仅在客户端即浏览器中保存，不参与和服务器的通信
+
+4、易用性：
+
+Cookie：需要程序员自己封装，原生的cookie接口不友好
+
+其他两个：即可采用原生接口，亦可再次封装
+
+5、应用场景：
+
+从安全性来说，因为每次http请求都回携带cookie信息，这样子浪费了带宽，所以cookie应该尽可能的少用，此外cookie还需要指定作用域，不可以跨域调用，限制很多，但是用户识别用户登陆来说，cookie还是比storage好用，其他情况下可以用storage，localstorage可以用来在页面传递参数，sessionstorage可以用来保存一些临时的数据，防止用户刷新页面后丢失了一些参数，
+
+
+
+##### 115. 常见的HTTP的头部
+
+可以将http首部分为通用首部，请求首部，响应首部，实体首部
+
+通用首部表示一些通用信息，比如date表示报文创建时间，
+
+请求首部就是请求报文中独有的，如cookie，和缓存相关的如if-Modified-Since
+
+响应首部就是响应报文中独有的，如set-cookie，和重定向相关的location，
+
+实体首部用来描述实体部分，如allow用来描述可执行的请求方法，content-type描述主题类型，content-Encoding描述主体的编码方式
+
+
+
+##### 116. HTTP2.0 的特性
+
+http2.0的特性如下：
+
+1、内容安全，应为http2.0是基于https的，天然具有安全特性，通过http2.0的特性可以避免单纯使用https的性能下降
+
+2、二进制格式，http1.X的解析是基于文本的，http2.0将所有的传输信息分割为更小的消息和帧，并对他们采用二进制格式编码，基于二进制可以让协议有更多的扩展性，比如引入了帧来传输数据和指令
+
+3、多路复用，这个功能相当于是长连接的增强，每个request请求可以随机的混杂在一起，接收方可以根据request的id将request再归属到各自不同的服务端请求里面，另外多路复用中也支持了流的优先级，允许客户端告诉服务器那些内容是更优先级的资源，可以优先传输，
+
 ##### 117. cache-control的值有哪些
 
 cache-control是一个通用消息头字段被用于HTTP请求和响应中，通过指定指令来实现缓存机制，这个缓存指令是单向的，常见的取值有private、no-cache、max-age、must-revalidate等，默认为private。
-
-
 
 ##### 118. 浏览器在生成页面的时候，会生成那两颗树？
 
@@ -1463,6 +1956,88 @@ CSRF：跨站请求伪造，可以理解为攻击者盗用了用户的身份，�
 XSS：跨站脚本攻击，是说攻击者通过注入恶意的脚本，在用户浏览网页的时候进行攻击，比如获取cookie，或者其他用户身份信息，可以分为存储型和反射型，存储型是攻击者输入一些数据并且存储到了数据库中，其他浏览者看到的时候进行攻击，反射型的话不存储在数据库中，往往表现为将攻击代码放在url地址的请求参数中，防御的话为cookie设置httpOnly属性，对用户的输入进行检查，进行特殊字符过滤
 
 
+
+##### 120. 怎么看网站的性能如何
+
+检测页面加载时间一般有两种方式，一种是被动去测：就是在被检测的页面置入脚本或探针，当用户访问网页时，探针自动采集数据并传回数据库进行分析，另一种主动监测的方式，即主动的搭建分布式受控环境，模拟用户发起页面访问请求，主动采集性能数据并分析，在检测的精准度上，专业的第三方工具效果更佳，比如说性能极客
+
+
+
+##### 121. 介绍HTTP协议(特征)
+
+HTTP是一个基于TCP/IP通信协议来传递数据（HTML 文件, 图片文件, 查询结果等）HTTP是一个属于应用层的面向对象的协议，由于其简捷、快速的方式，适用于分布式超媒体信息系统。它于1990年提出，经过几年的使用与发展，得到不断地完善和扩展。目前在WWW中使用的是HTTP/1.0的第六版，HTTP/1.1的规范化工作正在进行之中，而且HTTP-NG(Next Generation of HTTP)的建议已经提出。HTTP协议工作于客户端-服务端架构为上。浏览器作为HTTP客户端通过URL向HTTP服务端即WEB服务器发送所有请求。Web服务器根据接收到的请求后，向客户端发送响应信息。
+
+
+
+##### 122. 输入URL到页面加载显示完成发生了什么?
+
+DNS解析
+
+TCP连接
+
+发送HTTP请求
+
+服务器处理请求并返回HTTP报文
+
+浏览器解析渲染页面
+
+连接结束
+
+
+
+##### 123. 说一下对Cookie和Session的认知，Cookie有哪些限制？
+
+\1.  cookie数据存放在客户的浏览器上，session数据放在服务器上。
+
+\2.  cookie不是很安全，别人可以分析存放在本地的COOKIE并进行COOKIE欺骗
+考虑到安全应当使用session。
+
+\3.  session会在一定时间内保存在服务器上。当访问增多，会比较占用你服务器的性能
+考虑到减轻服务器性能方面，应当使用COOKIE。
+
+\4.  单个cookie保存的数据不能超过4K，很多浏览器都限制一个站点最多保存20个cookie。
+
+
+
+##### 124. 描述一下XSS和CRSF攻击？防御方法？
+
+XSS, 即为（Cross Site Scripting）, 中文名为跨站脚本, 是发生在目标用户的浏览器层面上的，当渲染DOM树的过程成发生了不在预期内执行的JS代码时，就发生了XSS攻击。大多数XSS攻击的主要方式是嵌入一段远程或者第三方域上的JS代码。实际上是在目标网站的作用域下执行了这段js代码。
+
+CSRF（Cross Site Request Forgery，跨站请求伪造），字面理解意思就是在别的站点伪造了一个请求。专业术语来说就是在受害者访问一个网站时，其 Cookie 还没有过期的情况下，攻击者伪造一个链接地址发送受害者并欺骗让其点击，从而形成 CSRF 攻击。
+
+XSS防御的总体思路是：对输入(和URL参数)进行过滤，对输出进行编码。也就是对提交的所有内容进行过滤，对url中的参数进行过滤，过滤掉会导致脚本执行的相关内容；然后对动态输出到页面的内容进行html编码，使脚本无法在浏览器中执行。虽然对输入过滤可以被绕过，但是也还是会拦截很大一部分的XSS攻击。
+
+防御CSRF 攻击主要有三种策略：验证 HTTP Referer 字段；在请求地址中添加 token 并验证；在 HTTP 头中自定义属性并验证。
+
+
+
+##### 125. 知道304吗，什么时候用304？
+
+304：如果客户端发送了一个带条件的GET 请求且该请求已被允许，而文档的内容（自上次访问以来或者根据请求的条件）并没有改变，则服务器应当返回这个304状态码。
+
+
+
+##### 126. 具体有哪些请求头是跟缓存相关的
+
+缓存分为两种：强缓存和协商缓存，根据响应的header内容来决定。
+
+强缓存相关字段有expires，cache-control。如果cache-control与expires同时存在的话，cache-control的优先级高于expires。
+
+协商缓存相关字段有Last-Modified/If-Modified-Since，Etag/If-None-Match
+
+
+
+##### 127. cookie和session的区别
+
+\1.  cookie数据存放在客户的浏览器上，session数据放在服务器上。
+
+\2.  cookie不是很安全，别人可以分析存放在本地的COOKIE并进行COOKIE欺骗
+考虑到安全应当使用session。
+
+\3.  session会在一定时间内保存在服务器上。当访问增多，会比较占用你服务器的性能
+考虑到减轻服务器性能方面，应当使用COOKIE。
+
+\4.  单个cookie保存的数据不能超过4K，很多浏览器都限制一个站点最多保存20个cookie。
 
 ##### 128. cookie有哪些字段可以设置
 
@@ -1489,7 +2064,253 @@ http字段  cookie的httponly属性。若此属性为true，则只有在http请�
 
 secure 字段 设置是否只能通过https来传递此条cookie
 
+##### 129. cookie有哪些编码方式？
 
+`encodeURI（）`
+
+##### 130. 前端优化策略
+
+
+
+##### 131. 既然你看过图解http，那你回答下200和304的区别
+
+200  OK  请求成功。一般用于GET与POST请求
+
+304  Not Modified  未修改。所请求的资源未修改，服务器返回此状态码时，不会返回任何资源。客户端通常会缓存访问过的资源，通过提供一个头信息指出客户端希望只返回在指定日期之后修改的资源
+
+
+
+##### 132. 除了cookie，还有什么存储方式。说说cookie和localStorage的区别
+
+还有localStorage，sessionStorage，indexdDB等
+
+cookie和localStorage的区别：
+
+cookie数据始终在同源的http请求中携带(即使不需要)，即cookie在浏览器和服务器间来回传递
+
+cookie数据还有路径（path）的概念，可以限制。cookie只属于某个路径下
+
+存储大小限制也不同，cookie数据不能超过4K，同时因为每次http请求都会携带cookie，所以cookie只适合保存很小的数据，如回话标识。
+
+localStorage虽然也有存储大小的限制，但是比cookie大得多，可以达到5M或更大
+
+localStorage始终有效，窗口或浏览器关闭也一直保存，因此用作持久数据；cookie只在设置的cookie过期时间之前一直有效，即使窗口和浏览器关闭。
+
+
+
+##### 133. 浏览器输入网址到页面渲染全过程
+
+DNS解析
+
+TCP连接
+
+发送HTTP请求
+
+服务器处理请求并返回HTTP报文
+
+浏览器解析渲染页面
+
+连接结束
+
+
+
+##### 134. HTML5和CSS3用的多吗？你了解它们的新属性吗？有在项目中用过吗？
+
+html5：
+
+1）标签增删
+
+8个语义元素 header section footer aside nav main article figure
+
+内容元素mark高亮 progress进度
+
+新的表单控件calander date time email url search
+
+新的input类型 color date datetime datetime-local email
+
+移除过时标签big font frame frameset
+
+2）canvas绘图，支持内联SVG。支持MathML
+
+3）多媒体audio video source embed track
+
+4）本地离线存储，把需要离线存储在本地的文件列在一个manifest配置文件
+
+5）web存储。localStorage、SessionStorage
+
+
+
+css3：
+
+CSS3边框如border-radius，box-shadow等；CSS3背景如background-size，background-origin等；CSS3 2D，3D转换如transform等；CSS3动画如animation等。 参考https://www.cnblogs.com/xkweb/p/5862612.html
+
+
+
+##### 135. HTTP状态码
+
+
+
+##### 136. http常见的请求方法
+
+get、post，这两个用的是最多的，还有很多比如patch、delete、put、options等等
+
+
+
+##### 137. get和post的区别
+
+GET - 从指定的资源请求数据。
+
+POST - 向指定的资源提交要被处理的数据。
+
+GET：不同的浏览器和服务器不同，一般限制在2~8K之间，更加常见的是1k以内。
+
+GET和POST的底层也是TCP/IP，GET/POST都是TCP链接。
+
+GET产生一个TCP数据包；POST产生两个TCP数据包。
+
+对于GET方式的请求，浏览器会把http header和data一并发送出去，服务器响应200（返回数据）；
+
+而对于POST，浏览器先发送header，服务器响应100 continue，浏览器再发送data，服务器响应200 ok（返回数据）。
+
+##### 138. 说说302，301，304的状态码
+
+301  Moved Permanently  永久移动。请求的资源已被永久的移动到新URI，返回信息会包括新的URI，浏览器会自动定向到新URI。今后任何新的请求都应使用新的URI代替
+
+302  Found  临时移动。与301类似。但资源只是临时被移动。客户端应继续使用原有URI
+
+304  Not Modified  未修改。所请求的资源未修改，服务器返回此状态码时，不会返回任何资源。客户端通常会缓存访问过的资源，通过提供一个头信息指出客户端希望只返回在指定日期之后修改的资
+
+
+
+##### 139. web性能优化
+
+降低请求量：合并资源，减少HTTP 请求数，minify / gzip 压缩，webP，lazyLoad。
+
+加快请求速度：预解析DNS，减少域名数，并行加载，CDN 分发。
+
+缓存：HTTP 协议缓存请求，离线缓存 manifest，离线数据缓存localStorage。
+
+渲染：JS/CSS优化，加载顺序，服务端渲染，pipeline。
+
+
+
+##### 140. 浏览器缓存机制
+
+缓存分为两种：强缓存和协商缓存，根据响应的header内容来决定。
+
+强缓存相关字段有expires，cache-control。如果cache-control与expires同时存在的话，cache-control的优先级高于expires。
+
+协商缓存相关字段有Last-Modified/If-Modified-Since，Etag/If-None-Match
+
+
+
+##### 141. post和get区别
+
+GET - 从指定的资源请求数据。
+
+POST - 向指定的资源提交要被处理的数据。
+
+GET：不同的浏览器和服务器不同，一般限制在2~8K之间，更加常见的是1k以内。
+
+GET和POST的底层也是TCP/IP，GET/POST都是TCP链接。
+
+GET产生一个TCP数据包；POST产生两个TCP数据包。
+
+对于GET方式的请求，浏览器会把http header和data一并发送出去，服务器响应200（返回数据）；
+
+而对于POST，浏览器先发送header，服务器响应100 continue，浏览器再发送data，服务器响应200 ok（返回数据）。
+
+
+
+##### 142. 说一下css盒模型
+
+简介：就是用来装页面上的元素的矩形区域。CSS中的盒子模型包括IE盒子模型和标准的W3C盒子模型。
+
+内容(content)、填充(padding)、边框(border)、边界(margin)， CSS盒子模式都具备这些属性。
+
+box-sizing(有3个值哦)：border-box,padding-box,content-box.
+
+**IE盒模型:width(宽度）= padding(内边距) + border(边框）+content(内容宽度）**
+
+**W3C盒模型:width(宽度）=content(内容宽度）**
+
+
+
+在CSS3中引入了box-sizing属性，
+
+​	`box-sizing: content-box;` 表示标准的盒子模型
+
+​	`box-sizing: border-box; `表示的是IE盒子模型
+
+最后，前面我们还提到了，`box-sizing:padding-box` 这个属性值的宽度包含了左右padding+width
+
+在ie盒模型中，比如我们设置width:200px，border:10px，padding: 10px,那么content就剩下180px了。
+
+**JS如何设置获取盒模型对应的宽高**:
+
+​	**方式一：document.style.width/height**
+
+​	**方式二：document.currentStyle.width/height**
+
+​	**方式三：window.getComputedStyle(dom).width/height**
+
+​	**方式四：dom.getBoundingClientRect()**
+
+​	**方式五、CSS外边距重叠引出BFC(格式化上下文)**
+
+
+
+**BFC概念：块级格式上下文**
+
+**如何创建BFC**
+
+（1）float不为none
+
+（2）position不为static或relative
+
+（3）display为inline-block或是table相关
+
+（4）overflow不为visible
+
+**BFC的使用场景**
+
+（1）解决垂直方向的边距重叠
+
+（2）清除浮动
+
+（3）不与浮动元素重叠
+
+
+
+
+
+##### 143.  画一条0.5px的线
+
+采用meta viewport的方式
+
+<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+采用border-image的方式
+
+采用transform: scale()的方式
+
+
+
+##### 144. link标签和import标签的区别
+
+link属于html标签，而@import是css提供的
+
+页面被加载时，link会同时被加载，而@import引用的css会等到页面加载结束后加载。
+
+link是html标签，因此没有兼容性，而@import只有IE5以上才能识别。
+
+link方式样式的权重高于@import的。
+
+
+
+##### 145. transition和animation的区别
+
+Animation和transition大部分属性是相同的，他们都是随时间改变元素的属性值，他们的主要区别是transition需要触发一个事件才能改变属性，而animation不需要触发任何事件的情况下才会随时间改变属性值，并且transition为2帧，从from .... to，而animation可以一帧一帧的。
 
 ##### 146 Flex布局
 
@@ -1536,6 +2357,291 @@ align-self：允许单个项目与其他项目不一样的对齐方式，可以�
 
 
 
+##### 147. BFC（块级格式化上下文，用于清楚浮动，防止margin重叠等）
+
+直译成：块级格式化上下文，是一个独立的渲染区域，并且有一定的布局规则。
+
+BFC区域不会与float box重叠
+
+BFC是页面上的一个独立容器，子元素不会影响到外面
+
+计算BFC的高度时，浮动元素也会参与计算
+
+那些元素会生成BFC：
+
+根元素
+
+float不为none的元素
+
+position为fixed和absolute的元素
+
+display为inline-block、table-cell、table-caption，flex，inline-flex的元素
+
+overflow不为visible的元素
+
+
+
+##### 148. 垂直居中的方法
+
+1. margin:auto法
+
+   ```
+   div{
+     width: 400px;
+     height: 400px;
+     position: relative;
+     border: 1px solid #465468;
+   }
+   img{
+     position: absolute;
+     margin: auto;
+     top: 0;
+     left: 0;
+     right: 0;
+     bottom: 0;
+   }
+   html:
+   <div>
+     <img src="mm.jpg">
+   </div>
+   ```
+
+   定位为上下左右为0，margin：0可以实现脱离文档流的居中.
+
+2. margin负值法
+
+   ```
+   .container{
+     width: 500px;
+     height: 400px;
+     border: 2px solid #379;
+     position: relative;
+   }
+   .inner{
+     width: 480px;
+     height: 380px;
+     background-color: #746;
+     position: absolute;
+     top: 50%;
+     left: 50%;
+     margin-top: -190px; /*height的一半*/
+     margin-left: -240px; /*width的一半*/
+   }
+   ```
+
+   
+
+   
+
+   
+
+3. table-cell（未脱离文档流的）
+
+   ```
+   div{
+   width: 300px;
+   height: 300px;
+   border: 3px solid #555;
+   display: table-cell;
+   vertical-align: middle;
+   text-align: center;
+   }
+   img{
+   vertical-align: middle;
+   }
+   ```
+
+4. 利用flex
+
+   将父元素设置为display:flex，并且设置align-items:center;justify-content:center;
+
+   ```
+   .container{
+     width: 300px;
+     height: 200px;
+     border: 3px solid #546461;
+     display: -webkit-flex;
+     display: flex;
+     -webkit-align-items: center;
+     align-items: center;
+     -webkit-justify-content: center;
+     justify-content: center;
+   }
+   .inner{
+     border: 3px solid #458761;
+     padding: 20px;
+   }
+   ```
+
+
+
+##### 149. 关于js动画和css3动画的差异性
+
+渲染线程分为main thread和compositor thread，如果css动画只改变transform和opacity，这时整个CSS动画得以在compositor trhead完成（而js动画则会在main thread执行，然后出发compositor thread进行下一步操作），特别注意的是如果改变transform和opacity是不会layout或者paint的。
+
+区别：
+
+功能涵盖面，js比css大
+
+实现/重构难度不一，CSS3比js更加简单，性能跳优方向固定
+
+对帧速表现不好的低版本浏览器，css3可以做到自然降级
+
+css动画有天然事件支持
+
+css3有兼容性问题
+
+
+
+##### 150. 说一下块元素和行元素
+
+块元素：独占一行，并且有自动填满父元素，可以设置margin和pading以及高度和宽度
+
+行元素：不会独占一行，width和height会失效，并且在垂直方向的padding和margin会失效。
+
+
+
+##### 151. 多行元素的文本省略号
+
+```
+display: -webkit-box
+-webkit-box-orient:vertical
+-webkit-line-clamp:3
+overflow:hidden
+```
+
+##### 152. visibility=hidden, opacity=0，display:none
+
+opacity=0，该元素隐藏起来了，但不会改变页面布局，并且，如果该元素已经绑定一些事件，如click事件，那么点击该区域，也能触发点击事件的
+
+visibility=hidden，该元素隐藏起来了，但不会改变页面布局，但是不会触发该元素已经绑定的事件
+
+display=none，把元素隐藏起来，并且会改变页面布局，可以理解成在页面中把该元素删除掉一样。
+
+
+
+##### 153. 双边距重叠问题（外边距折叠）
+
+多个相邻（兄弟或者父子关系）普通流的块元素垂直方向marigin会重叠
+
+折叠的结果为：
+
+两个相邻的外边距都是正数时，折叠结果是它们两者之间较大的值。
+两个相邻的外边距都是负数时，折叠结果是两者绝对值的较大值。
+两个外边距一正一负时，折叠结果是两者的相加的和。
+
+
+
+##### 154. position属性 比较
+
+固定定位fixed：
+
+元素的位置相对于浏览器窗口是固定位置，即使窗口是滚动的它也不会移动。Fixed定位使元素的位置与文档流无关，因此不占据空间。 Fixed定位的元素和其他元素重叠。
+
+相对定位relative：
+
+如果对一个元素进行相对定位，它将出现在它所在的位置上。然后，可以通过设置垂直或水平位置，让这个元素“相对于”它的起点进行移动。 在使用相对定位时，无论是否进行移动，元素仍然占据原来的空间。因此，移动元素会导致它覆盖其它框。
+
+绝对定位absolute：
+
+绝对定位的元素的位置相对于最近的已定位父元素，如果元素没有已定位的父元素，那么它的位置相对于<html>。 absolute 定位使元素的位置与文档流无关，因此不占据空间。 absolute 定位的元素和其他元素重叠。
+
+粘性定位sticky：
+
+元素先按照普通文档流定位，然后相对于该元素在流中的flow root（BFC）和 containing block（最近的块级祖先元素）定位。而后，元素定位表现为在跨越特定阈值前为相对定位，之后为固定定位。
+
+默认定位Static：
+
+默认值。没有定位，元素出现在正常的流中（忽略top, bottom, left, right 或者 z-index 声明）。
+
+inherit:
+
+规定应该从父元素继承position 属性的值。
+
+
+
+##### 155. 浮动清除
+
+方法一：使用带clear属性的空元素
+
+在浮动元素后使用一个空元素如<div class="clear"></div>，并在CSS中赋予.clear{clear:both;}属性即可清理浮动。亦可使用<br class="clear" />或<hr class="clear" />来进行清理。
+
+方法二：使用CSS的overflow属性
+
+给浮动元素的容器添加overflow:hidden;或overflow:auto;可以清除浮动，另外在 IE6 中还需要触发 hasLayout ，例如为父元素设置容器宽高或设置 zoom:1。
+
+在添加overflow属性后，浮动元素又回到了容器层，把容器高度撑起，达到了清理浮动的效果。
+
+方法三：给浮动的元素的容器添加浮动
+
+给浮动元素的容器也添加上浮动属性即可清除内部浮动，但是这样会使其整体浮动，影响布局，不推荐使用。
+
+方法四：使用邻接元素处理
+
+什么都不做，给浮动元素后面的元素添加clear属性。
+
+方法五：使用CSS的:after伪元素
+
+结合:after 伪元素（注意这不是伪类，而是伪元素，代表一个元素之后最近的元素）和 IEhack ，可以完美兼容当前主流的各大浏览器，这里的 IEhack 指的是触发 hasLayout。
+
+给浮动元素的容器添加一个clearfix的class，然后给这个class添加一个:after伪元素实现元素末尾添加一个看不见的块元素（Block element）清理浮动。
+
+
+
+##### 156. css3新特性
+
+CSS3边框如border-radius，box-shadow等；CSS3背景如background-size，background-origin等；CSS3 2D，3D转换如transform等；CSS3动画如animation等
+
+
+
+##### 157. CSS选择器有哪些，优先级呢
+
+id 选择器，class 选择器，标签选择器，伪元素选择器，伪类选择器等
+
+同一元素引用了多个样式时，排在后面的样式属性的优先级高；
+
+样式选择器的类型不同时，优先级顺序为：id 选择器 > class 选择器 > 标签选择器；
+
+标签之间存在层级包含关系时，后代元素会继承祖先元素的样式。如果后代元素定义了与祖先元素相同的样式，则祖先元素的相同的样式属性会被覆盖。继承的样式的优先级比较低，至少比标签选择器的优先级低；
+
+带有!important 标记的样式属性的优先级最高；
+
+样式表的来源不同时，优先级顺序为：内联样式> 内部样式 > 外部样式 > 浏览器用户自定义样式 > 浏览器默认样式
+
+##### 158. 清除浮动的方法，能讲讲吗
+
+方法一：使用带clear属性的空元素
+
+在浮动元素后使用一个空元素如<div class="clear"></div>，并在CSS中赋予.clear{clear:both;}属性即可清理浮动。亦可使用<br class="clear" />或<hr class="clear" />来进行清理。
+
+方法二：使用CSS的overflow属性
+
+给浮动元素的容器添加overflow:hidden;或overflow:auto;可以清除浮动，另外在 IE6 中还需要触发 hasLayout ，例如为父元素设置容器宽高或设置 zoom:1。
+
+在添加overflow属性后，浮动元素又回到了容器层，把容器高度撑起，达到了清理浮动的效果。
+
+方法三：给浮动的元素的容器添加浮动
+
+给浮动元素的容器也添加上浮动属性即可清除内部浮动，但是这样会使其整体浮动，影响布局，不推荐使用。
+
+方法四：使用邻接元素处理
+
+什么都不做，给浮动元素后面的元素添加clear属性。
+
+方法五：使用CSS的:after伪元素
+
+结合:after 伪元素（注意这不是伪类，而是伪元素，代表一个元素之后最近的元素）和 IEhack ，可以完美兼容当前主流的各大浏览器，这里的 IEhack 指的是触发 hasLayout。
+
+给浮动元素的容器添加一个clearfix的class，然后给这个class添加一个:after伪元素实现元素末尾添加一个看不见的块元素（Block element）清理浮动。
+
+
+
+##### 159. 怎么样让一个元素消失，讲讲
+
+display:none; visibility:hidden; opacity: 0; 等等
+
+
+
 ##### 160. 介绍一下盒模型
 
 CSS盒模型本质上是一个盒子，封装周围的HTML元素，它包括：边距，边框，填充，和实际内容。
@@ -1547,6 +2653,16 @@ CSS盒模型本质上是一个盒子，封装周围的HTML元素，它包括：�
 设置盒模型：box-sizing:border-box
 
 
+
+##### 161. position相关属性
+
+
+
+##### 162. css动画如何实现
+
+创建动画序列，需要使用animation属性或其子属性，该属性允许配置动画时间、时长以及其他动画细节，但该属性不能配置动画的实际表现，动画的实际表现是由 @keyframes规则实现，具体情况参见使用keyframes定义动画序列小节部分。
+
+transition也可实现动画。transition强调过渡，是元素的一个或多个属性发生变化时产生的过渡效果，同一个元素通过两个不同的途径获取样式，而第二个途径当某种改变发生（例如hover）时才能获取样式，这样就会产生过渡动画。
 
 ##### 163. 如何实现图片在某个容器中居中的？
 
@@ -1562,9 +2678,173 @@ css3属性transform。子元素设置position: absolute; left: 50%; top: 50%;tra
 
 
 
+##### 164. 如何实现元素的垂直居中
+
+法一：父元素display:flex,align-items:center;
+
+法二：元素绝对定位，top:50%，margin-top：-（高度/2）
+
+法三：高度不确定用transform：translateY（-50%）
+
+法四：父元素table布局，子元素设置vertical-align:center;
+
+
+
+##### 165. CSS3中对溢出的处理
+
+cnkOhu
+
+text-overflow属性，值为clip是修剪文本；ellipsis为显示省略符号来表被修剪的文本；string为使用给定的字符串来代表被修剪的文本。
+
+
+
+##### 166. float的元素，display是什么
+
+`display为block`
+
+
+
+##### 167. 隐藏页面中某个元素的方法
+
+display:none; visibility:hidden; opacity: 0; position移到外部，z-index涂层遮盖等等
+
+
+
+##### 168. 三栏布局的实现方式，尽可能多写，浮动布局时，三个div的生成顺序有没有影响
+
+三列布局又分为两种，两列定宽一列自适应，以及两侧定宽中间自适应
+
+两列定宽一列自适应：
+
+1、使用float+margin：
+
+给div设置float：left，left的div添加属性margin-right：left和center的间隔px,right的div添加属性margin-left：left和center的宽度之和加上间隔
+
+2、使用float+overflow：
+
+给div设置float：left，再给right的div设置overflow:hidden。这样子两个盒子浮动，另一个盒子触发bfc达到自适应
+
+3、使用position：
+
+父级div设置position：relative，三个子级div设置position：absolute，这个要计算好盒子的宽度和间隔去设置位置，兼容性比较好，
+
+4、使用table实现：
+
+父级div设置display：table，设置border-spacing：10px//设置间距，取值随意,子级div设置display:table-cell，这种方法兼容性好，适用于高度宽度未知的情况，但是margin失效，设计间隔比较麻烦，
+
+5、flex实现：
+
+parent的div设置display：flex；left和center的div设置margin-right；然后right 的div设置flex：1；这样子right自适应，但是flex的兼容性不好
+
+6、grid实现：
+
+parent的div设置display：grid，设置grid-template-columns属性，固定第一列第二列宽度，第三列auto，
+
+对于两侧定宽中间自适应的布局，对于这种布局需要把center放在前面，可以采用双飞翼布局：圣杯布局，来实现，也可以使用上述方法中的grid，table，flex，position实现
+
+
+
+##### 169. 什么是BFC
+
+BFC也就是常说的块格式化上下文，这是一个独立的渲染区域，规定了内部如何布局，并且这个区域的子元素不会影响到外面的元素，其中比较重要的布局规则有内部box垂直放置，计算BFC的高度的时候，浮动元素也参与计算，触发BFC的规则有根元素，浮动元素，position为absolute或fixed的元素，display为inline-block，table-cell，table-caption，flex，inline-flex，overflow不为visible的元素
+
+
+
+##### 170. calc属性
+
+Calc用户动态计算长度值，任何长度值都可以使用calc()函数计算，需要注意的是，运算符前后都需要保留一个空格，例如：width: calc(100% - 10px)；
+
+
+
+##### 171. 有一个width300，height300，怎么实现在屏幕上垂直水平居中
+
+对于行内块级元素，
+
+1、父级元素设置text-alig：center，然后设置line-height和vertical-align使其垂直居中，最后设置font-size：0消除近似居中的bug
+
+2、父级元素设置display：table-cell，vertical-align：middle达到水平垂直居中
+
+3、采用绝对定位，原理是子绝父相，父元素设置position：relative，子元素设置position：absolute，然后通过transform或margin组合使用达到垂直居中效果，设置top：50%，left：50%，transform：translate（-50%，-50%）
+
+4、绝对居中，原理是当top,bottom为0时，margin-top&bottom设置auto的话会无限延伸沾满空间并平分，当left，right为0时,margin-left&right设置auto会无限延伸占满空间并平分，
+
+5、采用flex，父元素设置display：flex，子元素设置margin：auto
+
+6、视窗居中，vh为视口单位，50vh即是视口高度的50/100，设置margin：50vh auto 0，transform：translate(-50%)
+
+
+
+##### 172. display：table和本身的table有什么区别
+
+Display:table和本身table是相对应的，区别在于，display：table的css声明能够让一个html元素和它的子节点像table元素一样，使用基于表格的css布局，是我们能够轻松定义一个单元格的边界，背景等样式，而不会产生因为使用了table那样的制表标签导致的语义化问题。
+
+之所以现在逐渐淘汰了table系表格元素，是因为用div+css编写出来的文件比用table边写出来的文件小，而且table必须在页面完全加载后才显示，div则是逐行显示，table的嵌套性太多，没有div简洁
+
+
+
+##### 173. position属性的值有哪些及其区别
+
+Position属性把元素放置在一个静态的，相对的，绝对的，固定的位置中，
+
+Static：位置设置为static的元素，他始终处于页面流给予的位置，static元素会忽略任何top,buttom,left,right声明
+
+Relative：位置设置为relative的元素，可将其移至相对于其正常位置的地方，因此left：20会将元素移至元素正常位置左边20个像素的位置
+
+Absolute：此元素可定位于相对包含他的元素的指定坐标，此元素可通过left，top等属性规定
+
+Fixed：位置被设为fiexd的元素，可定为与相对浏览器窗口的指定坐标，可以通过left，top，right属性来定位
+
+
+
+##### 174. z-index的定位方法
+
+z-index属性设置元素的堆叠顺序，拥有更好堆叠顺序的元素会处于较低顺序元素之前，z-index可以为负，且z-index只能在定位元素上奏效，该属性设置一个定位元素沿z轴的位置，如果为正数，离用户越近，为负数，离用户越远，它的属性值有auto，默认，堆叠顺序与父元素相等，number，inherit，从父元素继承z-index属性的值
+
+
+
+##### 175. CSS盒模型
+
+##### 176. 如果想要改变一个DOM元素的字体颜色，不在它本身上进行操作？
+
+可以更改父元素的color
+
+##### 177. 对CSS的新属性有了解过的吗？
+
+CSS3的新特性中，在布局方面新增了flex布局，在选择器方面新增了例如first-of-type,nth-child等选择器，在盒模型方面添加了box-sizing来改变盒模型，在动画方面增加了animation，2d变换，3d变换等，在颜色方面添加透明，rbga等，在字体方面允许嵌入字体和设置字体阴影，最后还有媒体查讯等
+
+
+
+##### 178. 用的最多的css属性是啥？
+
+用的目前来说最多的是flex属性，灵活但是兼容性方面不强，
+
+
+
 ##### 179. line-height和height的区别
 
 line-height一般是指布局里面一段文字上下行之间的高度，是针对字体来设置的，height一般是指容器的整体高度，
+
+##### 180. 设置一个元素的背景颜色，背景颜色会填充哪些区域？
+
+background-color设置的背景颜色会填充元素的content、padding、border区域，
+
+
+
+##### 181. 知道属性选择器和伪类选择器的优先级吗
+
+属性选择器和伪类选择器优先级相同
+
+##### 182. inline-block、inline和block的区别；为什么img是inline还可以设置宽高
+
+Block是块级元素，其前后都会有换行符，能设置宽度，高度，margin/padding水平垂直方向都有效。
+
+Inline：设置width和height无效，margin在竖直方向上无效，padding在水平方向垂直方向都有效，前后无换行符
+
+Inline-block：能设置宽度高度，margin/padding水平垂直方向 都有效，前后无换行符
+
+##### 183. 用css实现一个硬币旋转的效果
+
+
 
 
 
@@ -1600,6 +2880,30 @@ DOM的变化影响到了预算内宿的几何属性比如宽高，浏览器重�
 
 
 
+##### 187. 清除浮动的方法
+
+给要清除浮动的元素添加样式clear，\
+
+父元素结束标签钱插入清除浮动的块级元素，给该元素添加样式clear
+
+添加伪元素，在父级元素的最后，添加一个伪元素，通过清除伪元素的浮动，注意该伪元素的display为block，
+
+父元素添加样式overflow清除浮动，overflow设置除visible以外的任何位置
+
+
+
+##### 188. box-sizing的语法和基本用处
+
+box-sizing规定两个并排的带边框的框，语法为box-sizing：content-box/border-box/inherit
+
+content-box：宽度和高度分别应用到元素的内容框，在宽度和高度之外绘制元素的内边距和边框
+
+border-box：为元素设定的宽度和高度决定了元素的边框盒，
+
+inherit：继承父元素的box-sizing
+
+
+
 ##### 189. 使元素消失的方法有哪些？
 
 1. opacity：0，该元素隐藏起来了，但不会改变页面布局，并且，如果该元素已经绑定一些事件，如click事件，那么点击该区域，也能触发点击事件的
@@ -1607,6 +2911,132 @@ DOM的变化影响到了预算内宿的几何属性比如宽高，浏览器重�
 2. visibility：hidden，该元素隐藏起来了，但不会改变页面布局，但是不会触发该元素已经绑定的事件
 
 3. display：none，把元素隐藏起来，并且会改变页面布局，可以理解成在页面中把该元素删除掉。
+
+
+
+##### 190. 两个嵌套的div，position都是absolute，子div设置top属性，那么这个top是相对于父元素的哪个位置定位的。
+
+`border的内边缘`
+
+
+
+##### 191. 说说盒子模型
+
+CSS盒模型本质上是一个盒子，封装周围的HTML元素，它包括：边距，边框，填充，和实际内容。
+
+标准盒模型：一个块的总宽度=width+margin(左右)+padding(左右)+border(左右)
+
+怪异盒模型：一个块的总宽度=width+margin（左右）（既width已经包含了padding和border值）
+
+如何设置：box-sizing:border-box
+
+
+
+##### 192. display
+
+主要取值有none,block,inline-block,inline,flex等。
+
+
+
+##### 193. 怎么隐藏一个元素
+
+##### 194. display:none和visibilty:hidden的区别
+
+\1. visibility：hidden，该元素隐藏起来了，但不会改变页面布局，但是不会触发该元素已经绑定的事件
+
+\2. display：none，把元素隐藏起来，并且会改变页面布局，可以理解成在页面中把该元素删除掉。
+
+
+
+##### 195. 相对布局和绝对布局，position:relative和obsolute。
+
+相对定位relative：
+
+如果对一个元素进行相对定位，它将出现在它所在的位置上。然后，可以通过设置垂直或水平位置，让这个元素“相对于”它的起点进行移动。 在使用相对定位时，无论是否进行移动，元素仍然占据原来的空间。因此，移动元素会导致它覆盖其它框。
+
+绝对定位absolute：
+
+绝对定位的元素的位置相对于最近的已定位父元素，如果元素没有已定位的父元素，那么它的位置相对于<html>。 absolute 定位使元素的位置与文档流无关，因此不占据空间。 absolute 定位的元素和其他元素重叠。
+
+
+
+##### 196. flex布局
+
+
+
+##### 197. block、inline、inline-block的区别。
+
+block元素会独占一行，多个block元素会各自新起一行。默认情况下，block元素宽度自动填满其父元素宽度。
+
+block元素可以设置width,height属性。块级元素即使设置了宽度,仍然是独占一行。
+
+block元素可以设置margin和padding属性。
+
+inline元素不会独占一行，多个相邻的行内元素会排列在同一行里，直到一行排列不下，才会新换一行，其宽度随元素的内容而变化。
+
+inline元素设置width,height属性无效。
+
+inline元素的margin和padding属性，水平方向的padding-left, padding-right, margin-left, margin-right都产生边距效果；但竖直方向的padding-top, padding-bottom, margin-top, margin-bottom不会产生边距效果。
+
+inline-block：简单来说就是将对象呈现为inline对象，但是对象的内容作为block对象呈现。之后的内联对象会被排列在同一行内。比如我们可以给一个link（a元素）inline-block属性值，使其既具有block的宽度高度特性又具有inline的同行特性
+
+
+
+##### 198. css的常用选择器
+
+id选择器，类选择器，伪类选择器等
+
+
+
+##### 199. css布局
+
+六种布局方式总结：圣杯布局、双飞翼布局、Flex布局、绝对定位布局、表格布局、网格布局。
+
+圣杯布局是指布局从上到下分为header、container、footer，然后container部分定为三栏布局。这种布局方式同样分为header、container、footer。圣杯布局的缺陷在于 center 是在 container 的padding中的，因此宽度小的时候会出现混乱。
+
+双飞翼布局给center 部分包裹了一个 main 通过设置margin主动地把页面撑开。
+
+Flex布局是由CSS3提供的一种方便的布局方式。
+
+绝对定位布局是给container 设置position: relative和overflow: hidden，因为绝对定位的元素的参照物为第一个postion不为static的祖先元素。 left 向左浮动，right 向右浮动。center 使用绝对定位，通过设置left和right并把两边撑开。 center 设置top: 0和bottom: 0使其高度撑开。
+
+表格布局的好处是能使三栏的高度统一。
+
+网格布局可能是最强大的布局方式了，使用起来极其方便，但目前而言，兼容性并不好。网格布局，可以将页面分割成多个区域，或者用来定义内部元素的大小，位置，图层关系。
+
+
+
+##### 200. css定位
+
+固定定位fixed：
+
+元素的位置相对于浏览器窗口是固定位置，即使窗口是滚动的它也不会移动。Fixed定位使元素的位置与文档流无关，因此不占据空间。 Fixed定位的元素和其他元素重叠。
+
+相对定位relative：
+
+如果对一个元素进行相对定位，它将出现在它所在的位置上。然后，可以通过设置垂直或水平位置，让这个元素“相对于”它的起点进行移动。 在使用相对定位时，无论是否进行移动，元素仍然占据原来的空间。因此，移动元素会导致它覆盖其它框。
+
+绝对定位absolute：
+
+绝对定位的元素的位置相对于最近的已定位父元素，如果元素没有已定位的父元素，那么它的位置相对于<html>。 absolute 定位使元素的位置与文档流无关，因此不占据空间。 absolute 定位的元素和其他元素重叠。
+
+粘性定位sticky：
+
+元素先按照普通文档流定位，然后相对于该元素在流中的flow root（BFC）和 containing block（最近的块级祖先元素）定位。而后，元素定位表现为在跨越特定阈值前为相对定位，之后为固定定位。
+
+默认定位Static：
+
+默认值。没有定位，元素出现在正常的流中（忽略top, bottom, left, right 或者 z-index 声明）。
+
+inherit:
+
+规定应该从父元素继承position 属性的值。
+
+
+
+##### 201. relative定位规则
+
+如果对一个元素进行相对定位，它将出现在它所在的位置上。然后，可以通过设置垂直或水平位置，让这个元素“相对于”它的起点进行移动。 在使用相对定位时，无论是否进行移动，元素仍然占据原来的空间。因此，移动元素会导致它覆盖其它框。
 
 
 
@@ -1624,9 +3054,83 @@ css3属性transform。子元素设置position: absolute; left: 50%; top: 50%;tra
 
 
 
+##### 203. css预处理器有什么
+
+less，sass等
+
+
+
+##### 204. get请求传参长度的误区
+
+误区：我们经常说get请求参数的大小存在限制，而post请求的参数大小是无限制的。
+
+实际上HTTP 协议从未规定 GET/POST 的请求长度限制是多少。对get请求参数的限制是来源与浏览器或web服务器，浏览器或web服务器限制了url的长度。为了明确这个概念，我们必须再次强调下面几点:
+
+HTTP 协议 未规定 GET 和POST的长度限制
+
+GET的最大长度显示是因为 浏览器和 web服务器限制了 URI的长度
+
+不同的浏览器和WEB服务器，限制的最大长度不一样
+
+要支持IE，则最大长度为2083byte，若只支持Chrome，则最大长度 8182byte
+
+
+
+##### 205 补充get和post请求在缓存方面的区别
+
+post/get的请求区别，具体不再赘述。
+
+补充补充一个get和post在缓存方面的区别：
+
+get请求类似于查找的过程，用户获取数据，可以不用每次都与数据库连接，所以可以使用缓存。
+
+post不同，post做的一般是修改和删除的工作，所以必须与数据库交互，所以不能使用缓存。因此get请求适合于请求缓存。
+
 ##### 206. 说一下闭包
 
 一句话可以概括：闭包就是能够读取其他函数内部变量的函数，或者子函数在外调用，子函数所在的父函数的作用域不会被释放。
+
+
+
+##### 207. 说一下类的创建和继承
+
+1. 类的创建（es5）：new一个function，在这个function的prototype里面增加属性和方法。
+
+2. 类的继承——原型链继承
+
+   介绍：在这里我们可以看到new了一个空对象,这个空对象指向Animal并且Cat.prototype指向了这个空对象，这种就是基于原型链的继承。
+
+   特点：基于原型链，既是父类的实例，也是子类的实例
+
+   缺点：无法实现多继承
+
+3. 构造继承：使用父类的构造函数来增强子类实例，等于是复制父类的实例属性给子类（没用到原型）
+
+   ​	特点：可以实现多继承
+
+   ​	缺点：只能继承父类实例的属性和方法，不能继承原型上的属性和方法。
+
+4. 实例继承和拷贝继承
+
+   实例继承：为父类实例添加新特性，作为子类实例返回
+
+   拷贝继承：拷贝父类元素上的属性和方法
+
+   上述两个实用性不强，不一一举例。
+
+5. 组合继承：相当于构造继承和原型链继承的组合体。通过调用父类构造，继承父类的属性并保留传参的优点，然后通过将父类实例作为子类原型，实现函数复用
+
+   特点：可以继承实例属性/方法，也可以继承原型属性/方法
+
+   缺点：调用了两次父类构造函数，生成了两份实例
+
+6. 寄生组合继承：通过寄生方式，砍掉父类的实例属性，这样，在调用两次父类的构造的时候，就不会初始化两次实例方法/属性
+
+
+
+##### 208. 如何解决异步回调地狱
+
+`promise、generator、async/await`
 
 
 
@@ -1648,6 +3152,22 @@ IE只支持事件冒泡。
 
 
 
+##### 210. 如何让事件先冒泡后捕获
+
+在DOM标准事件模型中，是先捕获后冒泡。但是如果要实现先冒泡后捕获的效果，对于同一个事件，监听捕获和冒泡，分别对应相应的处理函数，监听到捕获事件，先暂缓执行，直到冒泡事件被捕获后再执行捕获之间。
+
+
+
+##### 211. 说一下事件委托
+
+简介：事件委托指的是，不在事件的发生地（直接dom）上设置监听函数，而是在其父元素上设置监听函数，通过事件冒泡，父元素可以监听到子元素上事件的触发，通过判断事件发生元素DOM的类型，来做出不同的响应。
+
+举例：最经典的就是ul和li标签的事件监听，比如我们在添加事件时候，采用事件委托机制，不会在li标签上直接添加，而是在ul父元素上添加。
+
+好处：比较合适动态元素的绑定，新添加的子元素也会有监听函数，也可以有事件触发机制。
+
+
+
 ##### 212. 说一下图片的懒加载和预加载
 
 预加载：提前加载图片，当用户需要查看时可直接从本地缓存中渲染。
@@ -1656,6 +3176,95 @@ IE只支持事件冒泡。
 
 两种技术的本质：两者的行为是相反的，一个是提前加载，一个是迟缓甚至不加载。
 懒加载对服务器前端有一定的缓解压力作用，预加载则会增加服务器前端压力。
+
+
+
+##### 213. mouseover和mouseenter的区别
+
+mouseover：当鼠标移入元素或其子元素都会触发事件，所以有一个重复触发，冒泡的过程。对应的移除事件是mouseout
+
+mouseenter：当鼠标移除元素本身（不包含元素的子元素）会触发事件，也就是不会冒泡，对应的移除事件是mouseleave
+
+
+
+##### 214. js的new操作符做了哪些事情
+
+new 操作符新建了一个空对象，这个对象原型指向构造函数的prototype，执行构造函数后返回这个对象。
+
+
+
+###### 215. 改变函数内部this指针的指向函数（bind，apply，call的区别）
+
+通过apply和call改变函数的this指向，他们两个函数的第一个参数都是一样的表示要改变指向的那个对象，第二个参数，apply是数组，而call则是arg1,arg2...这种形式。通过bind改变this作用域会返回一个新的函数，这个函数不会马上执行。
+
+
+
+###### 216. js的各种位置，比如clientHeight,scrollHeight,offsetHeight ,以及scrollTop, offsetTop,clientTop的区别？
+
+clientHeight：表示的是可视区域的高度，不包含border和滚动条
+
+offsetHeight：表示可视区域的高度，包含了border和滚动条
+
+scrollHeight：表示了所有区域的高度，包含了因为滚动被隐藏的部分。
+
+clientTop：表示边框border的厚度，在未指定的情况下一般为0
+
+scrollTop：滚动后被隐藏的高度，获取对象相对于由offsetParent属性指定的父坐标(css定位的元素或body元素)距离顶端的高度。
+
+
+
+##### 217. js拖拽功能的实现
+
+首先是三个事件，分别是mousedown，mousemove，mouseup
+
+当鼠标点击按下的时候，需要一个tag标识此时已经按下，可以执行mousemove里面的具体方法。
+
+clientX，clientY标识的是鼠标的坐标，分别标识横坐标和纵坐标，并且我们用offsetX和offsetY来表示元素的元素的初始坐标，移动的举例应该是：
+
+鼠标移动时候的坐标-鼠标按下去时候的坐标。
+
+也就是说定位信息为：
+
+​	鼠标移动时候的坐标-鼠标按下去时候的坐标+元素初始情况下的offetLeft.
+
+还有一点也是原理性的东西，也就是拖拽的同时是绝对定位，我们改变的是绝对定位条件下的left
+以及top等等值。
+
+补充：也可以通过html5的拖放（Drag 和 drop）来实现
+
+
+
+##### 218. 异步加载js的方法
+
+defer：只支持IE如果您的脚本不会改变文档的内容，可将 defer 属性加入到<script>标签中，以便加快处理文档的速度。因为浏览器知道它将能够安全地读取文档的剩余部分而不用执行脚本，它将推迟对脚本的解释，直到文档已经显示给用户为止。
+
+async，HTML5属性仅适用于外部脚本，并且如果在IE中，同时存在defer和async，那么defer的优先级比较高，脚本将在页面完成时执行。
+
+创建script标签，插入到DOM中
+
+
+
+##### 219. Ajax解决浏览器缓存问题
+
+在ajax发送请求前加上 anyAjaxObj.setRequestHeader("If-Modified-Since","0")。
+
+在ajax发送请求前加上 anyAjaxObj.setRequestHeader("Cache-Control","no-cache")。
+
+在URL后面加上一个随机数： "fresh=" + Math.random()。
+
+在URL后面加上时间搓："nowtime=" + new Date().getTime()。
+
+如果是使用jQuery，直接这样就可以了 $.ajaxSetup({cache:false})。这样页面的所有ajax都会执行这条语句就是不需要保存缓存记录。
+
+
+
+##### 220. js的节流和防抖
+
+
+
+
+
+
 
 
 
@@ -1717,11 +3326,64 @@ element.someObject=myObj;
 
 
 
+##### 222. eval是做什么的
+
+它的功能是将对应的字符串解析成js并执行，应该避免使用js，因为非常消耗性能（2次，一次解析成js，一次执行）
+
+
+
 ##### 223. 如何理解前端模块化
 
 前端模块化就是复杂的文件编程一个一个独立的模块，比如js文件等等，分成独立的模块有利于重用（复用性）和维护（版本迭代），这样会引来模块之间相互依赖的问题，所以有了commonJS规范，AMD，CMD规范等等，以及用于js打包（编译等处理）的工具webpack
 
 
+
+##### 224. 说一下Commonjs、AMD和CMD
+
+一个模块是能实现特定功能的文件，有了模块就可以方便的使用别人的代码，想要什么功能就能加载什么模块。
+
+Commonjs：开始于服务器端的模块化，同步定义的模块化，每个模块都是一个单独的作用域，模块输出，modules.exports，模块加载require()引入模块。
+
+AMD：中文名异步模块定义的意思。
+
+requireJS实现了AMD规范，主要用于解决下述两个问题。
+
+1.多个文件有依赖关系，被依赖的文件需要早于依赖它的文件加载到浏览器
+
+2.加载的时候浏览器会停止页面渲染，加载文件越多，页面失去响应的时间越长。
+
+语法：requireJS定义了一个函数define，它是全局变量，用来定义模块。
+
+```js
+define(['dependency'], function(){
+  var name = 'Byron';
+  function printName(){
+    console.log(name);
+  }
+  return {
+    printName: printName
+  };
+});
+```
+
+加载模块
+
+```
+require(['myModule'], function (my){
+	my.printName();
+}
+```
+
+requirejs定义了一个函数define,它是全局变量，用来定义模块：
+
+`define(id?dependencies?,factory)`
+
+在页面上使用模块加载函数：
+
+`require([dependencies],factory)；`
+
+总结AMD规范：require（）函数在加载依赖函数的时候是异步加载的，这样浏览器不会失去响应，它指定的回调函数，只有前面的模块加载成功，才会去执行。
+因为网页在加载js的时候会停止渲染，因此我们可以通过异步的方式去加载js,而如果需要依赖某些，也是异步去依赖，依赖后再执行某些方法。
 
 ##### 225. 对象深度克隆的简单实现
 
@@ -1736,7 +3398,324 @@ return newObj;
 }
 ```
 
+##### 226. 实现一个once函数，传入函数参数只执行一次
 
+```
+function ones(func){
+  var tag=true;
+  return function(){
+    if(tag==true){
+    func.apply(null,arguments);
+    tag=false;
+  }
+  return undefined
+  }
+}
+```
+
+
+
+##### 228. js监听对象属性的改变
+
+1. 在ES5中可以通过Object.defineProperty来实现已有属性的监听
+2. 在ES6中可以通过Proxy来实现
+
+##### 229. 如何实现一个私有变量，用getName方法可以访问，不能直接访问
+
+1. 通过defineProperty来实现
+
+   ````js
+   obj={
+   	name:yuxiaoliang,
+   	getName:function(){
+   		return this.name
+   	}
+   }
+   object.defineProperty(obj,"name",{
+   ````
+
+   
+
+2. 通过函数的创建形式
+
+   ```js
+   function product(){
+     var name='yuxiaoliang';
+     this.getName=function(){
+     	return name;
+   	}
+   }
+   var obj=new product();
+   ```
+
+   
+
+##### 230. ==和===、以及Object.is的区别
+
+(1) ==
+
+主要存在：强制转换成number,null==undefined
+
+" "==0  //true
+
+"0"==0  //true
+
+" " !="0" //true
+
+123=="123" //true
+
+null==undefined //true
+
+(2)Object.js
+
+主要的区别就是+0！=-0 而NaN==NaN
+(相对比===和==的改进)
+
+
+
+##### 231. setTimeout、setInterval和requestAnimationFrame之间的区别
+
+与setTimeout和setInterval不同，requestAnimationFrame不需要设置时间间隔，
+大多数电脑显示器的刷新频率是60Hz，大概相当于每秒钟重绘60次。大多数浏览器都会对重绘操作加以限制，不超过显示器的重绘频率，因为即使超过那个频率用户体验也不会有提升。因此，最平滑动画的最佳循环间隔是1000ms/60，约等于16.6ms。
+
+RAF采用的是系统时间间隔，不会因为前面的任务，不会影响RAF，但是如果前面的任务多的话，
+会响应setTimeout和setInterval真正运行时的时间间隔。
+
+特点：
+（1）requestAnimationFrame会把每一帧中的所有DOM操作集中起来，在一次重绘或回流中就完成，并且重绘或回流的时间间隔紧紧跟随浏览器的刷新频率。
+
+（2）在隐藏或不可见的元素中，requestAnimationFrame将不会进行重绘或回流，这当然就意味着更少的CPU、GPU和内存使用量
+
+（3）requestAnimationFrame是由浏览器专门为动画提供的API，在运行时浏览器会自动优化方法的调用，并且如果页面不是激活状态下的话，动画会自动暂停，有效节省了CPU开销。
+
+
+
+##### 232 实现一个两列等高布局，讲讲思路
+
+为了实现两列等高，可以给每列加上 padding-bottom:9999px;
+
+margin-bottom:-9999px;同时父元素设置overflow:hidden;
+
+
+
+##### 233. 自己实现一个bind函数
+
+原理：通过apply或者call方法来实现。
+
+考虑到原型链: 为什么要考虑？因为在new 一个bind过生成的新函数的时候，必须的条件是要继承原函数的原型
+
+````
+Function.prototype.bind=function(obj,arg){
+var arg=Array.prototype.slice.call(arguments,1);
+var context=this;
+var bound=function(newArg){
+arg=arg.concat(Array.prototype.slice.call(newArg));
+return context.apply(obj,arg);
+}
+var F=function(){}
+````
+
+
+
+##### 237. 如何实现sleep的效果（es5或者es6）
+
+1. while循环的方式
+
+   ```js
+   function sleep(ms){
+     var start=Date.now(),expire=start+ms;
+     while(Date.now()<expire);
+     console.log('1111');
+     return;
+   }
+   ```
+
+   
+
+2. 通过promise来实现
+
+   ```
+   function sleep(ms){
+   var temple=new Promise(
+   (resolve)=>{
+   console.log(111);setTimeout(resolve,ms)
+   });
+   return temple
+   }
+   sleep(500).then(function(){
+   //console.log(222)
+   })
+   ```
+
+3. 通过async封装
+
+   ```
+   function sleep(ms){
+   return new Promise((resolve)=>setTimeout(resolve,ms));
+   }
+   async function test(){
+   var temple=await sleep(1000);
+   console.log(1111)
+   return temple
+   }
+   test();
+   ```
+
+   
+
+4. 通过generate来实现
+
+   ```
+   function* sleep(ms){
+   yield new Promise(function(resolve,reject){
+   console.log(111);
+   setTimeout(resolve,ms);
+   })
+   }
+   sleep(500).next().value.then(function(){console.log(2222)})
+   ```
+
+   
+
+##### 238. 简单的实现一个promise
+
+[首先明](https://promisesaplus.com/)[确什么是promiseA+规范，参考规范的地址：primise](https://promisesaplus.com/)
+
+A+规范
+
+如何实现一个promise，参考我的文章：
+
+[实现一个完美符合Promise/A+规范的Promise](https://github.com/forthealllight/blog/issues/4)
+
+一般不会问的很详细，只要能写出上述文章中的v1.0版本的简单promise即可。
+
+
+
+##### 239. Function._proto_(getPrototypeOf)是什么？
+
+获取一个对象的原型，在chrome中可以通过_proto_的形式，或者在ES6中可以通过Object.getPrototypeOf的形式。
+
+那么Function.proto是什么么？也就是说Function由什么对象继承而来，我们来做如下判别。
+
+Function.__proto__==Object.prototype //false
+
+Function.__proto__==Function.prototype//true
+
+我们发现Function的原型也是Function。
+
+我们用图可以来明确这个关系：
+
+<img width="646" alt="2018-07-10 2 38 27" src="https://user-images.githubusercontent.com/17233651/42493275-f55d0860-844e-11e8-983f-e04189a4f3d8.png">
+
+
+
+##### 240 . 实现js中所有对象的深度克隆（包装对象，Date对象，正则对象）
+
+通过递归可以简单实现对象的深度克隆，但是这种方法不管是ES6还是ES5实现，都有同样的缺陷，就是只能实现特定的object的深度复制（比如数组和函数），不能实现包装对象Number，String ， Boolean，以及Date对象，RegExp对象的复制。
+
+##### 241 简单实现Node的Events模块
+
+简介：观察者模式或者说订阅模式，它定义了对象间的一种一对多的关系，让多个观察者对象同时监听某一个主题对象，当一个对象发生改变时，所有依赖于它的对象都将得到通知。
+
+node中的Events模块就是通过观察者模式来实现的：
+
+```js
+var events=require('events');
+var eventEmitter=new events.EventEmitter();
+eventEmitter.on('say',function(name){
+	console.log('Hello',name);
+})
+eventEmitter.emit('say','Jony yu');
+```
+
+这样，eventEmitter发出say事件，通过On接收，并且输出结果，这就是一个订阅模式的实现，下面我们来简单的实现一个Events模块的EventEmitter。
+
+
+
+实现简单的Event模块的emit和on方法
+
+```
+function Events(){
+this.on=function(eventName,callBack){
+if(!this.handles){
+this.handles={};
+}
+if(!this.handles[eventName]){
+this.handles[eventName]=[];
+}
+this.handles[eventName].push(callBack);
+}
+this.emit=function(eventName,obj){
+if(this.handles[eventName]){
+for(var i=0;o<this.handles[eventName].length;i++){
+this.handles[eventName][i](obj);
+}
+}
+}
+return this;
+}
+```
+
+这样我们就定义了Events，现在我们可以开始来调用：
+
+```
+var events=new Events();
+events.on('say',function(name){
+console.log('Hello',nama)
+});
+events.emit('say','Jony yu');
+```
+
+每个对象是独立的
+
+​	因为是通过new的方式，每次生成的对象都是不相同的，因此：
+
+```
+var event1=new Events();
+var event2=new Events();
+event1.on('say',function(){
+console.log('Jony event1');
+});
+event2.on('say',function(){
+console.log('Jony event2');
+})
+event1.emit('say');
+event2.emit('say');
+```
+
+
+
+##### 242. 箭头函数中this指向举例
+
+```
+var a=11;
+function test2(){
+this.a=22;
+let b=()=>{console.log(this.a)}
+b();
+}
+var x=new test2();
+```
+
+##### 243. js判断类型
+
+判断方法：typeof()，instanceof，Object.prototype.toString.call()等
+
+
+
+##### 244. 数组常用方法
+
+push()，pop()，shift()，unshift()，splice()，sort()，reverse()，map()等
+
+
+
+##### 245. 数组去重
+
+法一：indexOf循环去重
+
+法二：ES6 Set去重；Array.from(new Set(array))
+
+法三：Object 键值对去重；把数组的值存成 Object 的 key 值，比如 Object[value1] = true，在判断另一个值的时候，如果 Object[value2]存在的话，就说明该值是重复的。
 
 ##### 246. 闭包 有什么用
 
@@ -1762,6 +3741,126 @@ return newObj;
 
 
 
+##### 248. 去除字符串首尾空格
+
+使用正则(^\s*)|(\s*$)即可
+
+
+
+##### 249. 性能优化
+
+减少HTTP请求
+
+使用内容发布网络（CDN）
+
+添加本地缓存
+
+压缩资源文件
+
+将CSS样式表放在顶部，把javascript放在底部（浏览器的运行机制决定）
+
+避免使用CSS表达式
+
+减少DNS查询
+
+使用外部javascript和CSS
+
+避免重定向
+
+图片lazyLoad
+
+
+
+##### 250. 来讲讲JS的闭包吧
+
+闭包是指有权访问另外一个函数作用域中的变量的函数。
+
+闭包就是函数的局部变量集合，只是这些局部变量在函数返回后会继续存在。闭包就是就是函数的“堆栈”在函数返回后并不释放，我们也可以理解为这些函数堆栈并不在栈上分配而是在堆上分配。当在一个函数内定义另外一个函数就会产生闭包。
+
+（2）为什么要用：
+
+匿名自执行函数：我们知道所有的变量，如果不加上var关键字，则默认的会添加到全局对象的属性上去，这样的临时变量加入全局对象有很多坏处，比如：别的函数可能误用这些变量；造成全局对象过于庞大，影响访问速度(因为变量的取值是需要从原型链上遍历的)。除了每次使用变量都是用var关键字外，我们在实际情况下经常遇到这样一种情况，即有的函数只需要执行一次，其内部变量无需维护，可以用闭包。
+
+结果缓存：我们开发中会碰到很多情况，设想我们有一个处理过程很耗时的函数对象，每次调用都会花费很长时间，那么我们就需要将计算出来的值存储起来，当调用这个函数的时候，首先在缓存中查找，如果找不到，则进行计算，然后更新缓存并返回值，如果找到了，直接返回查找到的值即可。闭包正是可以做到这一点，因为它不会释放外部的引用，从而函数内部的值可以得以保留。
+
+
+
+##### 251. 能来讲讲JS的语言特性吗
+
+运行在客户端浏览器上；
+
+不用预编译，直接解析执行代码；
+
+是弱类型语言，较为灵活；
+
+与操作系统无关，[跨平台](https://www.baidu.com/s?wd=跨平台&tn=24004469_oem_dg&rsv_dl=gh_pl_sl_csd)的语言；
+
+脚本语言、解释性语言
+
+
+
+##### 252. 如何判断一个数组(讲到typeof差点掉坑里)
+
+```
+Object.prototype.toString.call()
+instanceof
+```
+
+
+
+##### 253. 你说到typeof，能不能加一个限制条件达到判断条件
+
+typeof只能判断是object,可以判断一下是否拥有数组的方法
+
+
+
+##### 254. JS实现跨域
+
+JSONP：通过动态创建script，再请求一个带参网址实现跨域通信。document.domain + iframe跨域：两个页面都通过js强制设置document.domain为基础主域，就实现了同域。
+
+location.hash + iframe跨域：a欲与b跨域相互通信，通过中间页c来实现。 三个页面，不同域之间利用iframe的location.hash传值，相同域之间直接js访问来通信。
+
+window.name + iframe跨域：通过iframe的src属性由外域转向本地域，跨域数据即由iframe的window.name从外域传递到本地域。
+
+postMessage跨域：可以跨域操作的window属性之一。
+
+CORS：服务端设置Access-Control-Allow-Origin即可，前端无须设置，若要带cookie请求，前后端都需要设置。
+
+代理跨域：启一个代理服务器，实现数据的转发
+
+
+
+##### 255. Js基本数据类型
+
+基本数据类型：undefined、null、number、boolean、string、symbol
+
+
+
+##### 256.  js的命名方式
+
+
+
+##### 257. js深度拷贝一个元素的具体实现
+
+````
+var deepCopy = function(obj) {
+if (typeof obj !== 'object') return;
+var newObj = obj instanceof Array ? [] : {};
+for (var key in obj) {
+if (obj.hasOwnProperty(key)) {
+newObj[key] = typeof obj[key] === 'object' ? deepCopy(obj[key]) : obj[key];
+}
+}
+return newObj;
+}
+````
+
+##### 258. 之前说了ES6set可以数组去重，是否还有数组去重的方法
+
+法一：indexOf循环去重
+
+法二：Object 键值对去重；把数组的值存成 Object 的 key 值，比如 Object[value1] = true，在判断另一个值的时候，如果 Object[value2]存在的话，就说明该值是重复的。
+
 ##### 259. 重排和重绘，讲讲看
 
 重绘（repaint或redraw）：当盒子的位置、大小以及其他属性，例如颜色、字体大小等都确定下来之后，浏览器便把这些原色都按照各自的特性绘制一遍，将内容呈现在页面上。重绘是指一个元素外观的改变所触发的浏览器行为，浏览器会根据元素的新属性重新绘制，使元素呈现新的外观。
@@ -1782,6 +3881,12 @@ return newObj;
 
 
 
+##### 264. null == undefined为什么
+
+要比较相等性之前，不能将null 和 undefined 转换成其他任何值，但 null == undefined 会返回 true 。ECMAScript规范中是这样定义的。
+
+
+
 ##### 265. this的指向 哪几种
 
 默认绑定：全局环境中，this默认绑定到window。
@@ -1797,6 +3902,60 @@ new绑定：如果函数或者方法调用之前带有关键字new，它就构�
 【2】如果构造函数使用return语句但没有指定返回值，或者返回一个原始值，那么这时将忽略返回值，同时使用这个新对象作为调用结果。
 
 【3】如果构造函数显式地使用return语句返回一个对象，那么调用表达式的值就是这个对象。
+
+
+
+##### 266. 暂停死区
+
+在代码块内，使用let、const命令声明变量之前，该变量都是不可用的。这在语法上，称为“暂时性死区”
+
+
+
+##### 267. AngularJS双向绑定原理
+
+Angular将双向绑定转换为一堆watch表达式，然后递归这些表达式检查是否发生过变化，如果变了则执行相应的watcher函数（指view上的指令，如ng-bind，ng-show等或是{{}}）。等到model中的值不再发生变化，也就不会再有watcher被触发，一个完整的digest循环就完成了。
+
+Angular中在view上声明的事件指令，如：ng-click、ng-change等，会将浏览器的事件转发给$scope上相应的model的响应函数。等待相应函数改变model，紧接着触发脏检查机制刷新view。
+
+watch表达式：可以是一个函数、可以是$scope上的一个属性名，也可以是一个字符串形式的表达式。$watch函数所监听的对象叫做watch表达式。watcher函数：指在view上的指令（ngBind，ngShow、ngHide等）以及{{}}表达式，他们所注册的函数。每一个watcher对象都包括：监听函数，上次变化的值，获取监听表达式的方法以及监听表达式，最后还包括是否需要使用深度对比（angular.equals()）
+
+
+
+##### 269. 简历中提到了requestAnimationFrame，请问是怎么使用的
+
+requestAnimationFrame() 方法告诉浏览器您希望执行动画并请求浏览器在下一次重绘之前调用指定的函数来更新动画。该方法使用一个回调函数作为参数，这个回调函数会在浏览器重绘之前调用。
+
+
+
+##### 270. 有一个游戏叫做Flappy Bird，就是一只小鸟在飞，前面是无尽的沙漠，上下不断有钢管生成，你要躲避钢管。然后小明在玩这个游戏时候老是卡顿甚至崩溃，说出原因（3-5个）以及解决办法（3-5个）
+
+原因可能是：
+
+1.内存溢出问题。
+
+2.资源过大问题。
+
+3.资源加载问题。
+
+4.canvas绘制频率问题
+
+解决办法：
+
+1.针对内存溢出问题，我们应该在钢管离开可视区域后，销毁钢管，让垃圾收集器回收钢管，因为不断生成的钢管不及时清理容易导致内存溢出游戏崩溃。
+
+2.针对资源过大问题，我们应该选择图片文件大小更小的图片格式，比如使用webp、png格式的图片，因为绘制图片需要较大计算量。
+
+3.针对资源加载问题，我们应该在可视区域之前就预加载好资源，如果在可视区域生成钢管的话，用户的体验就认为钢管是卡顿后才生成的，不流畅。
+
+4.针对canvas绘制频率问题，我们应该需要知道大部分显示器刷新频率为60次/s,因此游戏的每一帧绘制间隔时间需要小于1000/60=16.7ms，才能让用户觉得不卡顿。
+
+（注意因为这是单机游戏，所以回答与网络无关）
+
+
+
+##### 274. 什么是按需加载
+
+当用户触发了动作时才加载对应的功能。触发的动作，是要看具体的业务场景而言，包括但不限于以下几个情况：鼠标点击、输入文字、拉动滚动条，鼠标移动、窗口大小更改等。加载的文件，可以是JS、图片、CSS、HTML等。
 
 
 
@@ -1832,7 +3991,240 @@ new绑定：如果函数或者方法调用之前带有关键字new，它就构�
 
 
 
-##### 297. 有了解过事件模型吗，DOM0级和DOM2级有什么区别，DOM的分级是什么
+##### 279. 写一个函数，第一秒打印1，第二秒打印2
+
+```
+for(let i=0;i<5;i++){
+setTimeout(function(){
+console.log(i)
+},1000*i)
+}
+
+for(var i=0;i<5;i++){
+(function(i){
+setTimeout(function(){
+console.log(i)
+},1000*i)
+})(i)
+}
+```
+
+##### 280. vue的生命周期
+
+Vue实例有一个完整的生命周期，也就是从开始创建、初始化数据、编译模板、挂载Dom、渲染→更新→渲染、销毁等一系列过程，我们称这是Vue的生命周期。通俗说就是Vue实例从创建到销毁的过程，就是生命周期。
+
+每一个组件或者实例都会经历一个完整的生命周期，总共分为三个阶段：初始化、运行中、销毁。
+
+实例、组件通过new Vue() 创建出来之后会初始化事件和生命周期，然后就会执行beforeCreate钩子函数，这个时候，数据还没有挂载呢，只是一个空壳，无法访问到数据和真实的dom，一般不做操作
+
+挂载数据，绑定事件等等，然后执行created函数，这个时候已经可以使用到数据，也可以更改数据,在这里更改数据不会触发updated函数，在这里可以在渲染前倒数第二次更改数据的机会，不会触发其他的钩子函数，一般可以在这里做初始数据的获取
+
+接下来开始找实例或者组件对应的模板，编译模板为虚拟dom放入到render函数中准备渲染，然后执行beforeMount钩子函数，在这个函数中虚拟dom已经创建完成，马上就要渲染,在这里也可以更改数据，不会触发updated，在这里可以在渲染前最后一次更改数据的机会，不会触发其他的钩子函数，一般可以在这里做初始数据的获取
+
+接下来开始render，渲染出真实dom，然后执行mounted钩子函数，此时，组件已经出现在页面中，数据、真实dom都已经处理好了,事件都已经挂载好了，可以在这里操作真实dom等事情...
+
+当组件或实例的数据更改之后，会立即执行beforeUpdate，然后vue的虚拟dom机制会重新构建虚拟dom与上一次的虚拟dom树利用diff算法进行对比之后重新渲染，一般不做什么事儿
+
+当更新完成后，执行updated，数据已经更改完成，dom也重新render完成，可以操作更新后的虚拟dom
+
+当经过某种途径调用$destroy方法后，立即执行beforeDestroy，一般在这里做一些善后工作，例如清除计时器、清除非指令绑定的事件等等
+
+组件的数据绑定、监听...去掉后只剩下dom空壳，这个时候，执行destroyed，在这里做善后工作也可以
+
+
+
+##### 281. 简单介绍一下symbol
+
+Symbol是ES6 的新增属性，代表用给定名称作为唯一标识，这种类型的值可以这样创建，let id=symbol(“id”)
+
+Symbl确保唯一，即使采用相同的名称，也会产生不同的值，我们创建一个字段，仅为知道对应symbol的人能访问，使用symbol很有用，symbol并不是100%隐藏，有内置方法Object.getOwnPropertySymbols(obj)可以获得所有的symbol。
+也有一个方法Reflect.ownKeys(obj)返回对象所有的键，包括symbol。
+
+所以并不是真正隐藏。但大多数库内置方法和语法结构遵循通用约定他们是隐藏的，
+
+
+
+##### 282. 什么是事件监听
+
+addEventListener()方法，用于向指定元素添加事件句柄，它可以更简单的控制事件，语法为
+
+element.addEventListener(event, function, useCapture);
+
+第一个参数是事件的类型(如 "click" 或 "mousedown").
+
+第二个参数是事件触发后调用的函数。
+
+第三个参数是个布尔值用于描述事件是冒泡还是捕获。该参数是可选的。
+
+事件传递有两种方式，冒泡和捕获
+
+事件传递定义了元素事件触发的顺序，如果你将P元素插入到div元素中，用户点击P元素，
+
+在冒泡中，内部元素先被触发，然后再触发外部元素，
+
+捕获中，外部元素先被触发，在触发内部元素，
+
+
+
+##### 283. 介绍一下promise，及其底层如何实现
+
+Promise是一个对象，保存着未来将要结束的事件，她有两个特征:
+
+1、对象的状态不受外部影响，Promise对象代表一个异步操作，有三种状态，pending进行中，fulfilled已成功，rejected已失败，只有异步操作的结果，才可以决定当前是哪一种状态，任何其他操作都无法改变这个状态，这也就是promise名字的由来
+
+2、一旦状态改变，就不会再变，promise对象状态改变只有两种可能，从pending改到fulfilled或者从pending改到rejected，只要这两种情况发生，状态就凝固了，不会再改变，这个时候就称为定型resolved,
+
+Promise的基本用法，
+
+````
+let promise1 = new Promise(function(resolve,reject){
+setTimeout(function(){
+resolve('ok')
+},1000)
+})
+promise1.then(function success(val){
+console.log(val)
+})
+````
+
+
+
+##### 286. js原型链，原型链的顶端是什么？Object的原型是什么？Object的原型的原型是什么？在数组原型链上实现删除数组重复数据的方法
+
+能够把这个讲清楚弄明白是一件很困难的事，
+
+首先明白原型是什么，在ES6之前，JS没有类和继承的概念，JS是通过原型来实现继承的，在JS中一个构造函数默认带有一个prototype属性，这个的属性值是一个对象，同时这个prototype对象自带有一个constructor属性，这个属性指向这个构造函数，同时每一个实例都会有一个_proto_属性指向这个prototype对象，我们可以把这个叫做隐式原型，我们在使用一个实例的方法的时候，会先检查这个实例中是否有这个方法，没有的话就会检查这个prototype对象是否有这个方法，
+
+基于这个规则，如果让原型对象指向另一个类型的实例，即constructor1.protoytpe=instance2，这时候如果试图引用constructor1构造的实例instance1的某个属性p1,
+
+首先会在instance1内部属性中找一遍，
+
+接着会在instance1._proto_（constructor1.prototype）即是instance2中寻找p1
+
+搜寻轨迹：instance1->instance2->constructor2.prototype……->Object.prototype;这即是原型链，原型链顶端是Object.prototype
+
+补充学习：
+
+每个函数都有一个prototype属性，这个属性指向了一个对象，这个对象正是调用该函数而创建的实例的原型，那么什么是原型呢，可以这样理解，每一个JavaScript对象在创建的时候就会预制管理另一个对象，这个对象就是我们所说的原型，每一个对象都会从原型继承属性
+
+https://www.nowcoder.com/ta/review-frontend/review?page=286
+
+
+
+##### 287. 什么是js的闭包？有什么作用，用闭包写个单例模式
+
+MDN对闭包的定义是：闭包是指那些能够访问自由变量的函数，自由变量是指在函数中使用的，但既不是函数参数又不是函数的局部变量的变量，由此可以看出，闭包=函数+函数能够访问的自由变量，所以从技术的角度讲，所有JS函数都是闭包，但是这是理论上的闭包，还有一个实践角度上的闭包，从实践角度上来说，只有满足1、即使创建它的上下文已经销毁，它仍然存在，2、在代码中引入了自由变量，才称为闭包
+
+闭包的应用：
+
+模仿块级作用域。2、保存外部函数的变量。3、封装私有变量
+
+
+
+##### 288. promise+Generator+Async的使用
+
+https://www.nowcoder.com/ta/review-frontend/review?page=288
+
+Promise
+
+解决的问题:回调地狱
+
+Promise规范:
+
+promise有三种状态，等待（pending）、已完成（fulfilled/resolved）、已拒绝（rejected）.Promise的状态只能从“等待”转到“完成”或者“拒绝”，不能逆向转换，同时“完成”和“拒绝”也不能相互转换.
+
+promise 必须提供一个 then方法以访问其当前值、终值和据因。promise.then(resolve, reject),resolve 和 reject都是可选参数。如果 resolve 或reject 不是函数，其必须被忽略.
+
+then 方法必须返回一个 promise 对象.
+
+使用:
+
+实例化promise对象需要传入函数(包含两个参数),resolve和reject,内部确定状态.resolve和reject函数可以传入参数在回调函数中使用.
+resolve和reject都是函数,传入的参数在then的回调函数中接收.
+
+
+
+
+
+##### 289. 事件委托以及冒泡原理。
+
+事件委托是利用冒泡阶段的运行机制来实现的，就是把一个元素响应事件的函数委托到另一个元素，一般是把一组元素的事件委托到他的父元素上，委托的优点是
+
+减少内存消耗，节约效率
+
+动态绑定事件
+
+事件冒泡，就是元素自身的事件被触发后，如果父元素有相同的事件，如onclick事件，那么元素本身的触发状态就会传递，也就是冒到父元素，父元素的相同事件也会一级一级根据嵌套关系向外触发，直到document/window，冒泡过程结束。
+
+
+
+##### 290. 写个函数，可以转化下划线命名到驼峰命名
+
+
+
+##### 292. JS中string的startwith和indexof两种方法的区别
+
+JS中startwith函数，其参数有3个，stringObj,要搜索的字符串对象，str，搜索的字符串，position，可选，从哪个位置开始搜索，如果以position开始的字符串以搜索字符串开头，则返回true，否则返回false
+
+Indexof函数，indexof函数可返回某个指定字符串在字符串中首次出现的位置，
+
+
+
+##### 293. js字符串转数字的方法
+
+通过函数parseInt（），可解析一个字符串，并返回一个整数，语法为parseInt（string ,radix）
+
+string：被解析的字符串
+
+radix：表示要解析的数字的基数，默认是十进制，如果radix<2或>36,则返回NaN
+
+
+
+##### 294. let const var的区别 ，什么是块级作用域，如何用ES5的方法实现块级作用域（立即执行函数），ES6 呢
+
+提起这三个最明显的区别是var声明的变量是全局或者整个函数块的，而let,const声明的变量是块级的变量，var声明的变量存在变量提升，let,const不存在，let声明的变量允许重新赋值，const不允许，
+
+
+
+##### 295. ES6箭头函数的特性
+
+ES6 增加了箭头函数，基本语法为
+
+let func = value => value;
+
+相当于
+
+let func = function (value) {
+
+return value;
+
+};
+
+箭头函数与普通函数的区别在于：
+
+1、箭头函数没有this，所以需要通过查找作用域链来确定this的值，这就意味着如果箭头函数被非箭头函数包含，this绑定的就是最近一层非箭头函数的this，
+
+2、箭头函数没有自己的arguments对象，但是可以访问外围函数的arguments对象
+
+3、不能通过new关键字调用，同样也没有new.target值和原型
+
+
+
+##### 296. setTimeout和Promise的执行顺序
+
+settimeout这种异步操作的回调，只有主线程中没有执行任何同步代码的前提下，才会执行异步回调，而settimeout（fun,0）表示立刻执行，也就是用来改变任务的执行顺序，要求浏览器尽可能快的进行回调
+
+promise何时执行，由上图可知promise新建后立即执行，所以promise构造函数里代码同步执行的，
+
+then方法指向的回调将在当前脚本所有同步任务执行完成后执行，
+
+那么then为什么比settimeout执行的早呢，因为settimeout（fun,0）不是真的立即执行，
+
+经过测试得出结论：执行顺序为：同步执行的代码-》promise.then->settimeout
+
+
+
+##### 297 有了解过事件模型吗，DOM0级和DOM2级有什么区别，DOM的分级是什么
 
 JSDOM事件流存在如下三个阶段：
 
@@ -1862,6 +4254,99 @@ event.currentTarget = this，时间帮顶的当前元素，只有被点击时目
 
 
 
+##### 297. 有了解过事件模型吗，DOM0级和DOM2级有什么区别，DOM的分级是什么
+
+JSDOM事件流存在如下三个阶段：
+
+事件捕获阶段
+
+处于目标阶段
+
+事件冒泡阶段
+
+JSDOM标准事件流的触发的先后顺序为：先捕获再冒泡，点击DOM节点时，事件传播顺序：事件捕获阶段，从上往下传播，然后到达事件目标节点，最后是冒泡阶段，从下往上传播
+
+DOM节点添加事件监听方法addEventListener，中参数capture可以指定该监听是添加在事件捕获阶段还是事件冒泡阶段，为false是事件冒泡，为true是事件捕获，并非所有的事件都支持冒泡，比如focus，blur等等，我们可以通过event.bubbles来判断
+
+事件模型有三个常用方法：
+
+event.stopPropagation:阻止捕获和冒泡阶段中，当前事件的进一步传播，
+
+event.stopImmediatePropagetion，阻止调用相同事件的其他侦听器，
+
+event.preventDefault，取消该事件（假如事件是可取消的）而不停止事件的进一步传播，
+
+event.target：指向触发事件的元素，在事件冒泡过程中这个值不变
+
+event.currentTarget = this，时间帮顶的当前元素，只有被点击时目标元素的target才会等于currentTarget，
+
+最后，对于执行顺序的问题，如果DOM节点同时绑定了两个事件监听函数，一个用于捕获，一个用于冒泡，那么两个事件的执行顺序真的是先捕获在冒泡吗，答案是否定的，绑定在被点击元素的事件是按照代码添加顺序执行的，其他函数是先捕获再冒泡
+
+##### 299. JS的基本数据类型有哪些，基本数据类型和引用数据类型的区别，NaN是什么的缩写，JS的作用域类型，undefined==null返回的结果是什么，undefined与null的区别在哪，写一个函数判断变量类型
+
+JS的基本数据类型有字符串，数字，布尔，对象，Null，Undefined,基本数据类型是按值访问的，也就是说我们可以操作保存在变量中的实际的值，
+
+基本数据类型和引用数据类型的区别如下：
+
+基本数据类型的值是不可变的，任何方法都无法改变一个基本类型的值，当这个变量重新赋值后看起来变量的值是改变了，但是这里变量名只是指向变量的一个指针，所以改变的是指针的指向改变，该变量是不变的，但是引用类型可以改变
+
+基本数据类型不可以添加属性和方法，但是引用类型可以
+
+基本数据类型的赋值是简单赋值，如果从一个变量向另一个变量赋值基本类型的值，会在变量对象上创建一个新值，然后把该值复制到为新变量分配的位置上，引用数据类型的赋值是对象引用，
+
+基本数据类型的比较是值的比较，引用类型的比较是引用的比较，比较对象的内存地址是否相同
+
+基本数据类型是存放在栈区的，引用数据类型同事保存在栈区和堆区
+
+NaN是JS中的特殊值，表示非数字，NaN不是数字，但是他的数据类型是数字，它不等于任何值，包括自身，在布尔运算时被当做false，NaN与任何数运算得到的结果都是NaN，党员算失败或者运算无法返回正确的数值的就会返回NaN，一些数学函数的运算结果也会出现NaN ,
+
+JS的作用域类型：
+
+一般认为的作用域是词法作用域，此外JS还提供了一些动态改变作用域的方法，常见的作用域类型有：
+
+函数作用域，如果在函数内部我们给未定义的一个变量赋值，这个变量会转变成为一个全局变量，
+
+块作用域：块作用域吧标识符限制在{}中，
+
+改变函数作用域的方法：
+
+eval（），这个方法接受一个字符串作为参数，并将其中的内容视为好像在书写时就存在于程序中这个位置的代码，
+
+with关键字：通常被当做重复引用同一个对象的多个属性的快捷方式
+
+
+
+undefined与null：目前null和undefined基本是同义的，只有一些细微的差别，null表示没有对象，undefined表示缺少值，就是此处应该有一个值但是还没有定义
+
+undefined == null；//返回值是true
+
+undefined === null; //返回值是false
+
+
+
+此外了解== 和===的区别：
+
+在做==比较时。不同类型的数据会先转换成一致后在做比较，===中如果类型不一致就直接返回false，一致的才会比较
+
+类型判断函数，使用typeof即可，首先判断是否为null，之后用typeof哦按段，如果是object的话，再用array.isarray判断是否为数组，如果是数字的话用isNaN判断是否是NaN即可
+扩展学习：
+
+JS采用的是词法作用域，也就是静态作用域，所以函数的作用域在函数定义的时候就决定了，
+
+
+
+##### 300. setTimeout(fn,100);100毫秒是如何权衡的
+
+setTimeout()函数只是将事件插入了任务列表，必须等到当前代码执行完，主线程才会去执行它指定的回调函数，有可能要等很久，所以没有办法保证回调函数一定会在setTimeout指定的时间内执行，100毫秒是插入队列的时间+等待的时间
+
+
+
+##### 301. JS的垃圾回收机制
+
+
+
+
+
 ##### 303. 怎么获得对象上的属性：比如说通过Object.key（）
 
 从ES5开始，有三种方法可以列出对象的属性
@@ -1871,6 +4356,196 @@ for（let I in obj）该方法依次访问一个对象及其原型链中所有�
 object.keys:返回一个数组，包括所有可枚举的属性名称
 
 object.getOwnPropertyNames:返回一个数组包含不可枚举的属性
+
+
+
+##### 304. 简单讲一讲ES6的一些新特性
+
+ES6在变量的声明和定义方面增加了let、const声明变量，有局部变量的概念，赋值中有比较吸引人的结构赋值，同时ES6对字符串、 数组、正则、对象、函数等拓展了一些方法，如字符串方面的模板字符串、函数方面的默认参数、对象方面属性的简洁表达方式，ES6也 引入了新的数据类型symbol，新的数据结构set和map,symbol可以通过typeof检测出来，为解决异步回调问题，引入了promise和 generator，还有最为吸引人了实现Class和模块，通过Class可以更好的面向对象编程，使用模块加载方便模块化编程，当然考虑到 浏览器兼容性，我们在实际开发中需要使用babel进行编译
+
+重要的特性：
+
+块级作用域：ES5只有全局作用域和函数作用域，块级作用域的好处是不再需要立即执行的函数表达式，循环体中的闭包不再有问题
+
+rest参数：用于获取函数的多余参数，这样就不需要使用arguments对象了，
+
+promise:一种异步编程的解决方案，比传统的解决方案回调函数和事件更合理强大
+
+模块化：其模块功能主要有两个命令构成，export和import，export命令用于规定模块的对外接口，import命令用于输入其他模块提供的功能
+
+
+
+##### 305. call和apply是用来做什么？
+
+Call和apply的作用是一模一样的，只是传参的形式有区别而已
+
+1、改变this的指向
+
+2、借用别的对象的方法，
+
+3、调用函数，因为apply，call方法会使函数立即执行
+
+
+
+##### 306. 了解事件代理吗，这样做有什么好处
+
+事件代理/事件委托：利用了事件冒泡，只指定一个事件处理程序，就可以管理某一类型的事件，
+
+简而言之：事件代理就是说我们将事件添加到本来要添加的事件的父节点，将事件委托给父节点来触发处理函数，这通常会使用在大量的同级元素需要添加同一类事件的时候，比如一个动态的非常多的列表，需要为每个列表项都添加点击事件，这时就可以使用事件代理，通过判断e.target.nodeName来判断发生的具体元素，这样做的好处是减少事件绑定，同事动态的DOM结构任然可以监听，事件代理发生在冒泡阶段
+
+
+
+##### 307. 如何使不同页面之间进行通信
+
+
+
+##### 308. 如何写一个继承？
+
+原型链继承
+
+核心： 将父类的实例作为子类的原型
+
+特点：
+
+非常纯粹的继承关系，实例是子类的实例，也是父类的实例
+
+父类新增原型方法/原型属性，子类都能访问到
+
+简单，易于实现
+
+缺点：
+
+要想为子类新增属性和方法，不能放到构造器中
+
+无法实现多继承
+
+来自原型对象的所有属性被所有实例共享
+
+创建子类实例时，无法向父类构造函数传参
+
+
+
+构造继承
+
+核心：使用父类的构造函数来增强子类实例，等于是复制父类的实例属性给子类（没用到原型）
+
+特点：
+
+解决了子类实例共享父类引用属性的问题
+
+创建子类实例时，可以向父类传递参数
+
+可以实现多继承（call多个父类对象）
+
+缺点：
+
+实例并不是父类的实例，只是子类的实例
+
+只能继承父类的实例属性和方法，不能继承原型属性/方法
+
+无法实现函数复用，每个子类都有父类实例函数的副本，影响性能
+
+
+
+实例继承
+
+核心：为父类实例添加新特性，作为子类实例返回
+
+特点：
+
+不限制调用方式，不管是new 子类()还是子类(),返回的对象具有相同的效果
+
+缺点：
+
+实例是父类的实例，不是子类的实例
+
+不支持多继承
+
+
+
+拷贝继承
+
+特点：
+
+支持多继承
+
+缺点：
+
+效率较低，内存占用高（因为要拷贝父类的属性）
+
+
+
+组合继承
+
+核心：通过调用父类构造，继承父类的属性并保留传参的优点，然后通过将父类实例作为子类原型，实现函数复用
+
+特点：
+
+可以继承实例属性/方法，也可以继承原型属性/方法
+
+既是子类的实例，也是父类的实例
+
+不存在引用属性共享问题
+
+可传参
+
+函数可复用
+
+
+
+寄生组合继承
+
+核心：通过调用父类构造，继承父类的属性并保留传参的优点，然后通过将父类实例作为子类原型，实现函数复用
+
+
+
+##### 320. js加载过程阻塞，解决方法。
+
+指定script标签的async属性。
+
+如果async="async"，脚本相对于页面的其余部分异步地执行（当页面继续进行解析时，脚本将被执行）
+
+如果不使用async 且 defer="defer"：脚本将在页面完成解析时执行
+
+
+
+##### 322. JavaScript中的轮播实现原理？假如一个页面上有两个轮播，你会怎么实现？
+
+图片轮播的原理就是图片排成一行，然后准备一个只有一张图片大小的容器，对这个容器设置超出部分隐藏，在控制定时器来让这些图片整体左移或右移，这样呈现出来的效果就是图片在轮播了。
+
+如果有两个轮播，可封装一个轮播组件，供两处调用
+
+
+
+#### 328. class
+
+ES6提供了更接近传统语言的写法，引入了Class（类）这个概念，作为对象的模板。通过class关键字，可以定义类。
+
+
+
+##### 329. 口述数组去重
+
+法一：indexOf循环去重
+
+法二：ES6 Set去重；Array.from(new Set(array))
+
+法三：Object 键值对去重；把数组的值存成 Object 的 key 值，比如 Object[value1] = true，在判断另一个值的时候，如果 Object[value2]存在的话，就说明该值是重复的。
+
+
+
+##### 333 箭头函数和function有什么区别
+
+箭头函数根本就没有绑定自己的this，在箭头函数中调用 this 时，仅仅是简单的沿着作用域链向上寻找，找到最近的一个 this 拿来使用
+
+
+
+##### 334. new操作符原理
+
+\1. 创建一个类的实例：创建一个空对象obj，然后把这个空对象的__proto__设置为构造函数的prototype。
+
+\2. 初始化实例：构造函数被传入参数并调用，关键字this被设定指向该实例obj。
+
+\3. 返回实例obj。
 
 
 
@@ -1884,6 +4559,22 @@ bind除了返回是函数以外，它的参数和call一样。
 
 
 
+##### 342. 事件委托
+
+把一个元素响应事件（click、keydown......）的函数委托到另一个元素；
+
+优点：减少内存消耗、动态绑定事件。
+
+
+
+
+
+##### 349. 事件代理
+
+事件代理是利用事件的冒泡原理来实现的，何为事件冒泡呢？就是事件从最深的节点开始，然后逐步向上传播事件，举个例子：页面上有这么一个节点树，div>ul>li>a;比如给最里面的a加一个click点击事件，那么这个事件就会一层一层的往外执行，执行顺序a>li>ul>div，有这样一个机制，那么我们给最外面的div加点击事件，那么里面的ul，li，a做点击事件的时候，都会冒泡到最外层的div上，所以都会触发，这就是事件代理，代理它们父级代为执行事件。
+
+
+
 ##### 350. Eventloop
 
 任务队列中，在每一次事件循环中，macrotask只会提取一个执行，而microtask会一直提取，直到microsoft队列为空为止。
@@ -1892,6 +4583,22 @@ bind除了返回是函数以外，它的参数和call一样。
 
 macrotasks: setTimeout, setInterval, setImmediate, I/O, UI rendering
 microtasks: process.nextTick, Promise, MutationObserver
+
+
+
+##### 356. 如何实现跨域
+
+JSONP：通过动态创建script，再请求一个带参网址实现跨域通信。document.domain + iframe跨域：两个页面都通过js强制设置document.domain为基础主域，就实现了同域。
+
+location.hash + iframe跨域：a欲与b跨域相互通信，通过中间页c来实现。 三个页面，不同域之间利用iframe的location.hash传值，相同域之间直接js访问来通信。
+
+window.name + iframe跨域：通过iframe的src属性由外域转向本地域，跨域数据即由iframe的window.name从外域传递到本地域。
+
+postMessage跨域：可以跨域操作的window属性之一。
+
+CORS：服务端设置Access-Control-Allow-Origin即可，前端无须设置，若要带cookie请求，前后端都需要设置。
+
+代理跨域：起一个代理服务器，实现数据的转发
 
 
 
@@ -1908,6 +4615,8 @@ webpack是一个前端模块化方案，更侧重模块打包，我们可以把�
 在组件化的应用中，会有着大量的组件层级关系，深嵌套的组件与浅层父组件进行数据交互，变得十分繁琐困难。而redux，站在一个服务级别的角度，可以毫无阻碍地将应用的状态传递到每一个层级的组件中。redux就相当于整个应用的管家。
 
 
+
+redux里常用方法
 
 提供 [getState()](https://www.nowcoder.com/ta/review-frontend/review?page=377#getState) 方法获取 state；
 
@@ -1964,6 +4673,18 @@ React的生命周期函数：
 
 
 
+##### 390. reactJs的组件交流
+
+React组件之间的交流方式可以分为以下三种
+
+1. 父组件向子组件传值:主要是利用props来进行交流
+
+2. 子组件向父组件传值：子组件通过控制自己的state然后告诉父组件的点击状态。然后在父组件中展示出来
+
+3. 没有任何嵌套关系的组件之间传值：如果组件之间没有任何关系，组件嵌套层次比较深（个人认为 2 层以上已经算深了），或者你为了一些组件能够订阅、写入一些信号，不想让组件之间插入一个组件，让两个组件处于独立的关系。对于事件系统，这里有 2 个基本操作步骤：订阅（subscribe）/监听（listen）一个事件通知，并发送（send）/触发（trigger）/发布（publish）/发送（dispatch）一个事件通知那些想要的组件。
+
+
+
 ##### 391. 有了解过react的虚拟DOM吗，虚拟DOM是怎么对比的呢
 
 当然是使用的diff算法，diff算法有三种优化形式：
@@ -1973,6 +4694,24 @@ tree diff：将新旧两颗DOM树按照层级遍历，只对同级的DOM节点�
 component diff：不同组件之间的对比，如果组件类型相同，暂不更新，否则删除旧的组件，再创建一个新的组件，插入到删除组件的位置
 
 element diff:在类型相同的组件内，再继续对比组件内部的元素，
+
+
+
+##### 394. 怎么获取真正的dom
+
+ReactDOM.findDOMNode()或this.refs
+
+
+
+##### 397. setState之后的流程
+
+在代码中调用setState函数之后，React 会将传入的参数对象与组件当前的状态合并，然后触发所谓的调和过程（Reconciliation）。 经过调和过程，React 会以相对高效的方式根据新的状态构建 React 元素树并且着手重新渲染整个UI界面。 在 React 得到元素树之后，React 会自动计算出新的树与老树的节点差异，然后根据差异对界面进行最小化重渲染。 在差异计算算法中，React 能够相对精确地知道哪些位置发生了改变以及应该如何改变，这就保证了按需更新，而不是全部重新渲染。
+
+
+
+##### 398. react高阶组件知道吗？
+
+高阶组件接收React组件作为参数，并且返回一个新的React组件。高阶组件本质上也是一个函数，并不是一个组件。
 
 
 
@@ -2009,6 +4748,24 @@ osi七层模型可以说是面试必考基础了
 数据链路层：传输有地址的帧
 
 物理层：二进制的数据形式在物理媒体上传输数据
+
+
+
+##### 417. TCP/IP的网络模型
+
+TCP/IP模型是一系列网络协议的总称，这些协议的目的是使得计算机之间可以进行信息交换，
+
+TCP/IP模型四层架构从下到上分别是链路层，网络层，传输层，应用层
+
+链路层的作用是负责建立电路连接，是整个网络的物理基础，典型的协议包括以太网，ADSL等，
+
+网络层负责分配地址和传送二进制数据，主要协议是IP协议，
+
+传输层负责传送文本数据，主要协议是TCP
+
+应用层负责传送各种最终形态的数据，是直接与用户信息打交道的层，主要协议是http，ftp等
+
+
 
 
 
@@ -2056,9 +4813,39 @@ b. 寄存器  这个可能会误解，因为电脑的寄存器是物理的，每
 
 8、套接字：可用于不同机器之间的进程通信
 
+
+
+##### 428. Redis和 mysql
+
+（1）类型上
+
+从类型上来说，mysql是关系型数据库，redis是缓存数据库
+
+（2）作用上
+
+mysql用于持久化的存储数据到硬盘，功能强大，但是速度较慢
+
+redis用于存储使用较为频繁的数据到缓存中，读取速度快
+
+（3）需求上
+
+mysql和redis因为需求的不同，一般都是配合使用。
+
+
+
 ##### 431 尾递归
 
 如果一个函数中所有递归形式的调用都出现在函数的末尾，我们称这个递归函数是尾递归的。当递归调用是整个函数体中最后执行的语句且它的返回值不属于表达式的一部分时，这个递归调用就是尾递归
+
+##### 444. 设计模式：单例，工厂，发布订阅
+
+单例模式：在它的核心结构中值包含一个被称为单例的特殊类。一个类只有一个实例，即一个类只有一个对象实例。
+
+工厂模式：在创建对象时不会对客户端暴露创建逻辑，并且是通过使用一个共同的接口来指向新创建的对象。
+
+发布订阅模式：在[软件架构](https://baike.baidu.com/item/软件架构)中，发布订阅是一种[消息](https://baike.baidu.com/item/消息)[范式](https://baike.baidu.com/item/范式)，消息的发送者（称为发布者）不会将消息直接发送给特定的接收者（称为订阅者）。而是将发布的消息分为不同的类别，无需了解哪些订阅者（如果有的话）可能存在。同样的，订阅者可以表达对一个或多个类别的兴趣，只接收感兴趣的消息，无需了解哪些发布者（如果有的话）存在。
+
+JS中常用的设计模式中，我最常用的是装饰者模式，在不改变元对象的基础上，对这个对象进行包装和拓展（包括添加属性和方法），从而使这个对象可以有更复杂的功能。
 
 
 

@@ -18,3 +18,17 @@ Queue.prototype.dequeue = function() {
     delete this.elements[this.head++];
     return element;
 }
+
+// simulate list as queue
+let queue = [];
+// FIFO
+queue.push(1);
+queue.push(2);
+queue.push(3);
+
+let n = queue.length;
+
+for (let i = 0; i < n; i++) {
+    let removed = queue.shift();
+    console.log(`removed at idx ${i} and the element is ${removed}`)
+}

@@ -20,22 +20,23 @@
  * @param {string} s
  * @return {number}
  */
- var lengthOfLongestSubstring = function(s) {
-    let checked = new Set();
-    let rp = -1, res = 0;
+var lengthOfLongestSubstring = function(s) {
+    let checkedSet = new Set();
+    let rPtr = -1, res = 0;
 
     for (let i = 0; i < s.length; i++) {
         if (i != 0) {
-            checked.delete(s.charAt(i - 1));
-        }
-        while (rp + 1 < s.length && !checked.has(s.charAt(rp + 1))) {
-            checked.add(s.charAt(rp + 1));
-            rp++;
+            checkedSet.delete(s.charAt(i - 1));
         }
 
-        res = Math.max(res, rp - i + 1);
+        while (rPtr + 1 < s.length && !checkedSet.has(s.charAt(rPtr + 1))) {
+            checkedSet.add(s.charAt(rPtr + 1));
+            rPtr = rPtr + 1
+        }
+
+        res = Math.max(res, rPtr - i + 1);
     }
-    return res
+    return res;
 };
 
 
