@@ -4851,6 +4851,40 @@ JS中常用的设计模式中，我最常用的是装饰者模式，在不改变
 
 
 
+##### 从promise、process.nextTick、setTimeout出发，谈谈Event Loop中的Job queue
+
+event loop读取任务的先后顺序，取决于任务队列（Job queue）中对于不同任务读取规则的限定
+
+**Job queue中的执行顺序**
+
+在Job queue中的队列分为两种类型：macro-task和microTask。我们举例来看执行顺序的规定，我们设
+
+macro-task队列包含任务: ***a1, a2 , a3***
+micro-task队列包含任务: ***b1, b2 , b3***
+
+执行顺序为，首先执行marco-task队列开头的任务，也就是 ***a1*** 任务，执行完毕后，在执行micro-task队列里的所有任务，也就是依次执行***b1, b2 , b3***，执行完后清空micro-task中的任务，接着执行marco-task中的第二个任务，依次循环。
+
+了解完了macro-task和micro-task两种队列的执行顺序之后，我们接着来看，真实场景下这两种类型的队列里真正包含的任务（我们以node V8引擎为例），在node V8中，这两种类型的真实任务顺序如下所示：
+
+macro-task队列真实包含任务：
+
+***\*script(主程序代码),setTimeout, setInterval, setImmediate, I/O, UI rendering\****
+
+micro-task队列真实包含任务：
+***process.nextTick, Promises, Object.observe, MutationObserver***
+
+由此我们得到的执行顺序应该为：
+
+***script(主程序代码)—>process.nextTick—>Promises...——>setTimeout——>setInterval——>setImmediate——> I/O——>UI rendering***
+
+在ES6中macro-task队列又称为ScriptJobs，而micro-task又称PromiseJobs
+
+同是微任务的情况下，process优先级更高
+
+
+
+
+
 
 
 
