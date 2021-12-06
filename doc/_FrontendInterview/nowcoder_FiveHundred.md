@@ -4883,6 +4883,690 @@ micro-task队列真实包含任务：
 
 
 
+##### 响应式布局的常用解决方案对比(媒体查询、百分比、rem和vw/vh）
+
+前端开发中，静态网页通常需要适应不同分辨率的设备，常用的自适应解决方案包括媒体查询、百分比、rem和vw/vh等。本文从px单位出发，分析了px在移动端布局中的不足，接着介绍了几种不同的自适应解决方案。
+
+1. px和视口
+2. 媒体查询
+3. 百分比
+4. 自适应场景下的rem解决方案
+5. 通过vw/vh来实现自适应
+
+**px和视口**
+
+在静态网页中，我们经常用像素（px）作为单位，来描述一个元素的宽高以及定位信息。在pc端，通常认为css中,1px所表示的真实长度是固定的。
+
+***那么，px真的是一个设备无关，跟长度单位米和分米一样是固定大小的吗？***
+
+- 像素
+
+  像素是网页布局的基础，一个像素表示了计算机屏幕所能显示的最小区域，像素分为两种类型：css像素和物理像素。
+
+  我们在js或者css代码中使用的px单位就是指的是css像素，物理像素也称设备像素，只与设备或者说硬件有关，同样尺寸的屏幕，设备的密度越高，物理像素也就越多。下表表示css像素和物理像素的具体区别：
+
+  | css像素  | 为web开发者提供，在css中使用的一个抽象单位           |
+  | -------- | ---------------------------------------------------- |
+  | 物理像素 | 只与设备的硬件密度有关，任何设备的物理像素都是固定的 |
+
+  那么css像素与物理像素的转换关系是怎么样的呢？为了明确css像素和物理像素的转换关系，必须先了解视口是什么。
+
+
+
+- 视口
+
+  广义的视口，是指浏览器显示内容的屏幕区域，狭义的视口包括了布局视口、视觉视口和理想视口
+
+  - 布局视图
+
+    布局视口定义了pc网页在移动端的默认布局行为，因为通常pc的分辨率较大，布局视口默认为980px。也就是说在不设置网页的viewport的情况下，pc端的网页默认会以布局视口为基准，在移动端进行展示。因此我们可以明显看出来，默认为布局视口时，根植于pc端的网页在移动端展示很模糊。
+
+  - 视觉视图
+
+    视觉视口表示浏览器内看到的网站的显示区域，用户可以通过缩放来查看网页的显示内容，从而改变视觉视口。视觉视口的定义，就像拿着一个放大镜分别从不同距离观察同一个物体，视觉视口仅仅类似于放大镜中显示的内容，因此视觉视口不会影响布局视口的宽度和高度。
+
+  - 理想视图
+
+    理想视口或者应该全称为“理想的布局视口”，在移动设备中就是指设备的分辨率。换句话说，理想视口或者说分辨率就是给定设备物理像素的情况下，最佳的“布局视口”。
+
+    **上述视口中，最重要的是要明确理想视口的概念，在移动端中，理想视口或者说分辨率跟物理像素之间有什么关系呢？**
+
+    为了理清分辨率和物理像素之间的联系，我们介绍一个用DPR（Device pixel ratio）设备像素比来表示，则可以写成：
+
+    `1 DPR = 物理像素／分辨率`
+
+    在不缩放的情况下，一个css像素就对应一个dpr，也就是说，在不缩放
+
+    `1 CSS像素 = 物理像素／分辨率`
+
+    此外，在移动端的布局中，我们可以通过viewport元标签来控制布局，比如一般情况下，我们可以通过下述标签使得移动端在理想视口下布局：
+
+    `<meta id="viewport" name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1; user-scalable=no;">`
+
+
+
+上述meta标签的每一个属性的详细介绍如下：
+
+| 属性名        | 取值    | 描述                                     |
+| ------------- | ------- | ---------------------------------------- |
+| width         | 正整数  | 定义布局视口的宽度，单位为像素           |
+| height        | 正整数  | 定义布局视口的高度，单位为像素，很少使用 |
+| initial-scale | [0,10]  | 初始缩放比例，1表示不缩放                |
+| minimum-scale | [0,10]  | 最小缩放比例                             |
+| maximum-scale | [0,10]  | 最大缩放比例                             |
+| user-scalable | yes／no | 是否允许手动缩放页面，默认值为yes        |
+
+其中我们来看width属性，在移动端布局时，在meta标签中我们会将width设置称为device-width，device-width一般是表示分辨率的宽，通过width=device-width的设置我们就将布局视口设置成了理想的视口。
+
+**px 与自适应**
+
+上述我们了解到了当通过viewport元标签，设置布局视口为理想视口时，1个css像素可以表示成：
+
+`1 CSS像素 = 物理像素／分辨率`
+
+我们直到，在pc端的布局视口通常情况下为980px，移动端以iphone6为例，分辨率为375 * 667，也就是说布局视口在理想的情况下为375px。比如现在我们有一个750px * 1134px的视觉稿，
+
+那么在pc端，一个css像素可以如下计算：
+
+`PC端： 1 CSS像素 = 物理像素／分辨率 = 750 ／ 980 =0.76 px`
+
+而在iphone6下：
+
+`iphone6：1 CSS像素 = 物理像素 ／分辨率 = 750 ／ 375 = 2 px`
+
+也就是说在PC端，一个CSS像素可以用0.76个物理像素来表示，而iphone6中 一个CSS像素表示了2个物理像素。此外不同的移动设备分辨率不同，也就是1个CSS像素可以表示的物理像素是不同的，因此如果在css中仅仅通过px作为长度和宽度的单位，造成的结果就是无法通过一套样式，实现各端的自适应。
+
+***媒体查询***
+
+在前面我们说到，不同端的设备下，在css文件中，1px所表示的物理像素的大小是不同的，因此通过一套样式，是无法实现各端的自适应。由此我们联想：
+
+**如果一套样式不行，那么能否给每一种设备各一套不同的样式来实现自适应的效果？**
+
+使用[@media](https://github.com/media)媒体查询可以针对不同的媒体类型定义不同的样式，特别是响应式页面，可以针对不同屏幕的大小，编写多套样式，从而达到自适应的效果。举例来说：
+
+```css
+@media screen and (max-width: 960px){
+    body{
+      background-color:#FF6699
+    }
+}
+
+@media screen and (max-width: 768px){
+    body{
+      background-color:#00FF66;
+    }
+}
+
+@media screen and (max-width: 550px){
+    body{
+      background-color:#6633FF;
+    }
+}
+
+@media screen and (max-width: 320px){
+    body{
+      background-color:#FFFF00;
+    }
+}
+```
+
+上述的代码通过媒体查询定义了几套样式，通过max-width设置样式生效时的最大分辨率，上述的代码分别对分辨率在0～320px，320px～550px，550px～768px以及768px～960px的屏幕设置了不同的背景颜色。
+
+通过媒体查询，可以通过给不同分辨率的设备编写不同的样式来实现响应式的布局，比如我们为不同分辨率的屏幕，设置不同的背景图片。比如给小屏幕手机设置[@2x](https://github.com/2x)图，为大屏幕手机设置[@3x](https://github.com/3x)图，通过媒体查询就能很方便的实现。
+
+但是媒体查询的缺点也很明显，如果在浏览器大小改变时，需要改变的样式太多，那么多套样式代码会很繁琐。
+
+***百分比***
+
+除了用px结合媒体查询实现响应式布局外，我们也可以通过百分比单位 " % " 来实现响应式的效果。
+
+比如当浏览器的宽度或者高度发生变化时，通过百分比单位，通过百分比单位可以使得浏览器中的组件的宽和高随着浏览器的变化而变化，从而实现响应式的效果。
+
+**css中的子元素中的百分比（%）到底是谁的百分比？**
+
+直观的理解，我们可能会认为子元素的百分比完全相对于直接父元素，height百分比相对于height，width百分比相对于width。当然这种理解是正确的，
+
+但是根据css的盒式模型，除了height、width属性外，还具有padding、border、margin等等属性。那么这些属性设置成百分比，是根据父元素的那些属性呢？此外还有border-radius和translate等属性中的百分比，又是相对于什么呢？下面来具体分析。
+
+1. 子元素height和width的百分比
+
+   子元素的height或width中使用百分比，是相对于子元素的直接父元素，width相对于父元素的width，height相对于父元素的height。
+
+2. top和bottom 、left和right
+
+   子元素的top和bottom如果设置百分比，则相对于直接非static定位(默认定位)的父元素的高度，同样子元素的left和right如果设置百分比，则相对于直接非static定位(默认定位的)父元素的宽度。
+
+3. padding
+
+   子元素的padding如果设置百分比，不论是垂直方向或者是水平方向，都相对于直接父亲元素的width，而与父元素的height无关。
+
+4. margin
+
+   跟padding一样，margin也是如此，子元素的margin如果设置成百分比，不论是垂直方向还是水平方向，都相对于直接父元素的width。这里就不具体举例。
+
+5. border-radius
+
+   border-radius不一样，如果设置border-radius为百分比，则是相对于自身的宽度，除了border-radius外，还有比如translate、background-size等都是相对于自身的，这里就不一一举例。
+
+**百分比单位布局应用**
+
+比如我们要实现一个固定长宽比的长方形，比如要实现一个长宽比为4:3的长方形,我们可以根据padding属性来实现，因为padding不管是垂直方向还是水平方向，百分比单位都相对于父元素的宽度，因此我们可以设置padding-top为百分比来实现，长宽自适应的长方形.
+
+**百分比单位缺点**
+
+从上述对于百分比单位的介绍我们很容易看出如果全部使用百分比单位来实现响应式的布局，有明显的以下两个缺点：
+
+（1）计算困难，如果我们要定义一个元素的宽度和高度，按照设计稿，必须换算成百分比单位。
+（2）从小节1可以看出，各个属性中如果使用百分比，相对父元素的属性并不是唯一的。比如width和height相对于父元素的width和height，而margin、padding不管垂直还是水平方向都相对比父元素的宽度、border-radius则是相对于元素自身等等，造成我们使用百分比单位容易使布局问题变得复杂
+
+
+
+**自适应场景下的rem解决方案**
+
+**rem单位**
+
+首先来看，什么是rem单位。rem是一个灵活的、可扩展的单位，由浏览器转化像素并显示。与em单位不同，rem单位无论嵌套层级如何，都只相对于浏览器的根元素（HTML元素）的font-size。默认情况下，html元素的font-size为16px，所以：
+
+` 1 rem = 16px`
+
+为了计算方便，通常可以将html的font-size设置成：
+
+`html{ font-size: 62.5% }`
+
+which is
+
+`    1 rem = 10px`
+
+**通过rem来实现响应式布局**
+
+rem单位都是相对于根元素html的font-size来决定大小的,根元素的font-size相当于提供了一个基准，当页面的size发生变化时，只需要改变font-size的值，那么以rem为固定单位的元素的大小也会发生响应的变化。
+
+因此，如果通过rem来实现响应式的布局，只需要根据视图容器的大小，动态的改变font-size即可。
+
+```js
+function refreshRem() {
+    var docEl = doc.documentElement;
+    var width = docEl.getBoundingClientRect().width;
+    var rem = width / 10;
+    docEl.style.fontSize = rem + 'px';
+    flexible.rem = win.rem = rem;
+}
+win.addEventListener('resize', refreshRem);
+```
+
+上述代码中将视图容器分为10份，font-size用十分之一的宽度来表示，最后在header标签中执行这段代码，就可以动态定义font-size的大小，从而1rem在不同的视觉容器中表示不同的大小，用rem固定单位可以实现不同容器内布局的自适应。
+
+**rem2px和px2rem**
+
+如果在响应式布局中使用rem单位，那么存在一个单位换算的问题，rem2px表示从rem换算成px，这个就不说了，只要rem乘以相应的font-size中的大小，就能换算成px。更多的应用是px2rem，表示的是从px转化为rem。
+
+比如给定的视觉稿为750px（物理像素），如果我们要将所有的布局单位都用rem来表示，一种比较笨的办法就是对所有的height和width等元素，乘以相应的比例，现将视觉稿换算成rem单位，然后一个个的用rem来表示。另一种比较方便的解决方法就是，在css中我们还是用px来表示元素的大小，最后编写完css代码之后，将css文件中的所有px单位，转化成rem单位。
+
+px2rem的原理也很简单，重点在于预处理以px为单位的css文件，处理后将所有的px变成rem单位。可以通过两种方式来实现：
+
+1. webpack loader的形式：
+
+   `npm install px2rem-loader`
+
+   在webpack的配置文件中：
+
+   ```js
+   module.exports = {
+     // ...
+     module: {
+       rules: [{
+         test: /\.css$/,
+         use: [{
+           loader: 'style-loader'
+         }, {
+           loader: 'css-loader'
+         }, {
+           loader: 'px2rem-loader',
+           // options here
+           options: {
+             remUni: 75,
+             remPrecision: 8
+           }
+         }]
+       }]
+     }
+   }
+   ```
+
+   webpack中使用postcss plugin
+
+   `npm install postcss-loader`
+
+   ```js
+   var px2rem = require('postcss-px2rem');
+   
+   module.exports = {
+     module: {
+       loaders: [
+         {
+           test: /\.css$/,
+           loader: "style-loader!css-loader!postcss-loader"
+         }
+       ]
+     },
+     postcss: function() {
+       return [px2rem({remUnit: 75})];
+     }
+   }
+   ```
+
+   
+
+   通过rem单位，可以实现响应式的布局，特别是引入相应的postcss相关插件，免去了设计稿中的px到rem的计算。rem单位在国外的一些网站也有使用，这里所说的rem来实现布局的缺点，或者说是小缺陷是：
+
+   
+
+   **在响应式布局中，必须通过js来动态控制根元素font-size的大小。**
+
+   也就是说css样式和js代码有一定的耦合性。且必须将改变font-size的代码放在css样式之前。
+
+
+
+**通过vw/vh来实现自适应**
+
+1. 什么是vw/vh ?
+
+   css3中引入了一个新的单位vw/vh，与视图窗口有关，vw表示相对于视图窗口的宽度，vh表示相对于视图窗口高度，除了vw和vh外，还有vmin和vmax两个相关的单位。各个单位具体的含义如下：
+
+   | 单位 | 含义                              |
+   | ---- | --------------------------------- |
+   | vw   | 相对于视窗的宽度，视窗宽度是100vw |
+   | vh   | 相对于视窗的高度，视窗高度是100vh |
+   | vmin | vw和vh中的较小值                  |
+   | vmax | vw和vh中的较大值                  |
+
+   这里我们发现视窗宽高都是100vw／100vh，那么vw或者vh，下简称vw，很类似百分比单位。vw和%的区别为：
+
+   | 单位  | 含义                                                         |
+   | ----- | ------------------------------------------------------------ |
+   | %     | 大部分相对于祖先元素，也有相对于自身的情况比如（border-radius、translate等) |
+   | vw/vh | 相对于视窗的尺寸                                             |
+
+   从对比中我们可以发现，vw单位与百分比类似，确有区别，前面我们介绍了百分比单位的换算困难，这里的vw更像"理想的百分比单位"。任意层级元素，在使用vw单位的情况下，1vw都等于视图宽度的百分之一。
+
+   
+
+2. vw单位换算
+
+   同样的，如果要将px换算成vw单位，很简单，只要确定视图的窗口大小（布局视口），如果我们将布局视口设置成分辨率大小，比如对于iphone6/7 375*667的分辨率，那么px可以通过如下方式换算成vw：
+
+   `1px = （1/375）*100 vw`
+
+   也可以通过postcss的相应插件，预处理css做一个自动的转换，[postcss-px-to-viewport](https://github.com/evrone/postcss-px-to-viewport)可以自动将px转化成vw。postcss-px-to-viewport的默认参数为：
+
+   ```js
+   var defaults = {
+     viewportWidth: 320,
+     viewportHeight: 568, 
+     unitPrecision: 5,
+     viewportUnit: 'vw',
+     selectorBlackList: [],
+     minPixelValue: 1,
+     mediaQuery: false
+   };
+   ```
+
+   通过指定视窗的宽度和高度，以及换算精度，就能将px转化成vw。
+
+3. vw/vh单位的兼容性
+
+   可以在https://caniuse.com/ 查看各个版本的浏览器对vw单位的支持性。
+
+   从上图我们发现，绝大多数的浏览器支持vw单位，但是ie9-11不支持vmin和vmax，考虑到vmin和vmax单位不常用，vw单位在绝大部分高版本浏览器内的支持性很好，但是opera浏览器整体不支持vw单位，如果需要兼容opera浏览器的布局，不推荐使用vw。
+
+
+
+##### [高性能滚动 scroll 及页面渲染优化 ](https://www.cnblogs.com/coco1s/p/5499469.html)
+
+滚动优化的由来
+
+​	滚动优化其实也不仅仅指滚动（scroll 事件），还包括了例如 resize 这类会频繁触发的事件。简单的看看：
+
+```js
+var i = 0;
+window.addEventListener('scroll',function(){
+    console.log(i++);
+},false);
+```
+
+在绑定 scroll 、resize 这类事件时，当它发生时，它被触发的频次非常高，间隔很近。如果事件中涉及到大量的位置计算、DOM 操作、元素重绘等工作且这些工作无法在下一个 scroll 事件触发前完成，就会造成浏览器掉帧。加之用户鼠标滚动往往是连续的，就会持续触发 scroll 事件导致掉帧扩大、浏览器 CPU 使用率增加、用户体验受到影响。
+
+在滚动事件中绑定回调应用场景也非常多，在图片的懒加载、下滑自动加载数据、侧边浮动导航栏等中有着广泛的应用。
+
+当用户浏览网页时，拥有平滑滚动经常是被忽视但却是用户体验中至关重要的部分。当滚动表现正常时，用户就会感觉应用十分流畅，令人愉悦，反之，笨重不自然卡顿的滚动，则会给用户带来极大不舒爽的感觉。
+
+**滚动与页面渲染的关系**
+
+一个 Web 页面的展示，简单来说可以认为经历了以下下几个步骤：
+
+![pageshow](../Assets/pageshow.jpeg)
+
+- **JavaScript**：一般来说，我们会使用 JavaScript 来实现一些视觉变化的效果。比如做一个动画或者往页面里添加一些 DOM 元素等。
+- **Style：**计算样式，这个过程是根据 CSS 选择器，对每个 DOM 元素匹配对应的 CSS 样式。这一步结束之后，就确定了每个 DOM 元素上该应用什么 CSS 样式规则。
+- **Layout：**布局，上一步确定了每个 DOM 元素的样式规则，这一步就是具体计算每个 DOM 元素最终在屏幕上显示的大小和位置。web 页面中元素的布局是相对的，因此一个元素的布局发生变化，会联动地引发其他元素的布局发生变化。比如，`<body>` 元素的宽度的变化会影响其子元素的宽度，其子元素宽度的变化也会继续对其孙子元素产生影响。因此对于浏览器来说，布局过程是经常发生的。
+- **Paint：**绘制，本质上就是填充像素的过程。包括绘制文字、颜色、图像、边框和阴影等，也就是一个 DOM 元素所有的可视效果。一般来说，这个绘制过程是在多个层上完成的。
+- **Composite：**渲染层合并，由上一步可知，对页面中 DOM 元素的绘制是在多个层上进行的。在每个层上完成绘制过程之后，浏览器会将所有层按照合理的顺序合并成一个图层，然后显示在屏幕上。对于有位置重叠的元素的页面，这个过程尤其重要，因为一旦图层的合并顺序出错，将会导致元素显示异常。
+
+简单来说，网页生成的时候，至少会渲染（Layout+Paint）一次。用户访问的过程中，还会不断重新的重排（reflow）和重绘（repaint）。
+
+其中，用户 scroll 和 resize 行为（即是滑动页面和改变窗口大小）会导致页面不断的重新渲染。
+
+当你滚动页面时，浏览器可能会需要绘制这些层(有时也被称为合成层)里的一些像素。通过元素分组，当某个层的内容改变时，我们只需要更新该层的结构，并仅仅重绘和栅格化渲染层结构里变化的那一部分，而无需完全重绘。显然，如果当你滚动时，像视差网站([戳我看看](http://waaac.co/))这样有东西在移动时，有可能在多层导致大面积的内容调整，这会导致大量的绘制工作。
+
+**防抖（Debouncing）和节流（Throttling）**
+
+scroll 事件本身会触发页面的重新渲染，同时 scroll 事件的 handler 又会被高频度的触发, 因此事件的 handler 内部不应该有复杂操作，例如 DOM 操作就不应该放在事件处理中.
+
+针对此类高频度触发事件问题（例如页面 scroll ，屏幕 resize，监听用户输入等），下面介绍两种常用的解决方法，防抖和节流。
+
+**防抖（Debouncing）**
+
+防抖技术即是可以把多个顺序地调用合并成一次，也就是在一定时间内，规定事件被触发的次数.
+
+```js
+// 简单的防抖动函数
+function debounce(func, wait, immediate) {
+    // 定时器变量
+    var timeout;
+    return function() {
+        // 每次触发 scroll handler 时先清除定时器
+        clearTimeout(timeout);
+        // 指定 xx ms 后触发真正想进行的操作 handler
+        timeout = setTimeout(func, wait);
+    };
+};
+ 
+// 实际想绑定在 scroll 事件上的 handler
+function realFunc(){
+    console.log("Success");
+}
+ 
+// 采用了防抖动
+window.addEventListener('scroll',debounce(realFunc,500));
+// 没采用防抖动
+window.addEventListener('scroll',realFunc);
+```
+
+上面简单的防抖的例子可以拿到浏览器下试一下，大概功能就是如果 500ms 内没有连续触发两次 scroll 事件，那么才会触发我们真正想在 scroll 事件中触发的函数。
+
+上面的示例可以更好的封装一下：
+
+```js
+// 防抖动函数
+function debounce(func, wait, immediate) {
+    var timeout;
+    return function() {
+        var context = this, args = arguments;
+        var later = function() {
+            timeout = null;
+            if (!immediate) func.apply(context, args);
+        };
+        var callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+        if (callNow) func.apply(context, args);
+    };
+};
+ 
+var myEfficientFn = debounce(function() {
+    // 滚动中的真正的操作
+}, 250);
+ 
+// 绑定监听
+window.addEventListener('resize', myEfficientFn);
+```
+
+**节流（Throttling）**
+
+防抖函数确实不错，但是也存在问题，譬如图片的懒加载，我希望在下滑过程中图片不断的被加载出来，而不是只有当我停止下滑时候，图片才被加载出来。又或者下滑时候的数据的 ajax 请求加载也是同理。
+
+这个时候，我们希望即使页面在不断被滚动，但是滚动 handler 也可以以一定的频率被触发（譬如 250ms 触发一次），这类场景，就要用到另一种技巧，称为节流函数（throttling）。
+
+
+
+节流函数，只允许一个函数在 X 毫秒内执行一次。
+
+与防抖相比，节流函数最主要的不同在于它保证在 X 毫秒内至少执行一次我们希望触发的事件 handler。
+
+与防抖相比，节流函数多了一个 mustRun 属性，代表 mustRun 毫秒内，必然会触发一次 handler ，同样是利用定时器，看看简单的示例：
+
+
+
+```js
+// 简单的节流函数
+function throttle(func, wait, mustRun) {
+    var timeout,
+        startTime = new Date();
+ 
+    return function() {
+        var context = this,
+            args = arguments,
+            curTime = new Date();
+ 
+        clearTimeout(timeout);
+        // 如果达到了规定的触发时间间隔，触发 handler
+        if(curTime - startTime >= mustRun){
+            func.apply(context,args);
+            startTime = curTime;
+        // 没达到触发间隔，重新设定定时器
+        }else{
+            timeout = setTimeout(func, wait);
+        }
+    };
+};
+// 实际想绑定在 scroll 事件上的 handler
+function realFunc(){
+    console.log("Success");
+}
+// 采用了节流函数
+window.addEventListener('scroll',throttle(realFunc,500,1000));
+```
+
+上面简单的节流函数的例子可以拿到浏览器下试一下，大概功能就是如果在一段时间内 scroll 触发的间隔一直短于 500ms ，那么能保证事件我们希望调用的 handler 至少在 1000ms 内会触发一次。
+
+**使用 rAF（requestAnimationFrame）触发滚动事件**
+
+上面介绍的抖动与节流实现的方式都是借助了定时器 setTimeout ，但是如果页面只需要兼容高版本浏览器或应用在移动端，又或者页面需要追求高精度的效果，那么可以使用浏览器的原生方法 rAF（requestAnimationFrame）。
+
+**requestAnimationFrame**
+
+window.requestAnimationFrame() 这个方法是用来在页面重绘之前，通知浏览器调用一个指定的函数。这个方法接受一个函数为参，该函数会在重绘前调用。
+
+rAF 常用于 web 动画的制作，用于准确控制页面的帧刷新渲染，让动画效果更加流畅，当然它的作用不仅仅局限于动画制作，我们可以利用它的特性将它视为一个定时器。（当然它不是定时器）
+
+通常来说，rAF 被调用的频率是每秒 60 次，也就是 1000/60 ，触发频率大概是 16.7ms 。（当执行复杂操作时，当它发现无法维持 60fps 的频率时，它会把频率降低到 30fps 来保持帧数的稳定。）
+
+简单而言，使用 requestAnimationFrame 来触发滚动事件 === `throttle(func, xx, 1000/60) ``//xx 代表 xx ms内不会重复触发事件 handler`
+
+```js
+var ticking = false; // rAF 触发锁
+ 
+function onScroll(){
+  if(!ticking) {
+    requestAnimationFrame(realFunc);
+    ticking = true;
+  }
+}
+ 
+function realFunc(){
+    // do something...
+    console.log("Success");
+    ticking = false;
+}
+// 滚动事件监听
+window.addEventListener('scroll', onScroll, false);
+```
+
+
+
+使用 requestAnimationFrame 优缺点并存，首先我们不得不考虑它的兼容问题，其次因为它只能实现以 16.7ms 的频率来触发，代表它的可调节性十分差。但是相比 throttle(func, xx, 16.7) ，用于更复杂的场景时，rAF 可能效果更佳，性能更好。
+
+- 防抖动：防抖技术即是可以把多个顺序地调用合并成一次，也就是在一定时间内，规定事件被触发的次数。
+- 节流函数：只允许一个函数在 X 毫秒内执行一次，只有当上一次函数执行后过了你规定的时间间隔，才能进行下一次该函数的调用。
+- rAF：16.7ms 触发一次 handler，降低了可控性，但是提升了性能和精确度
+
+
+
+**简化 scroll 内的操作**
+
+上面介绍的方法都是如何去优化 scroll 事件的触发，避免 scroll 事件过度消耗资源的。
+
+但是从本质上而言，我们应该尽量去精简 scroll 事件的 handler ，将一些变量的初始化、不依赖于滚动位置变化的计算等都应当在 scroll 事件外提前就绪。
+
+建议如下：
+
+**避免在**scroll 事件**中修改样式属性 **将样式操作从 scroll 事件中剥离\**
+
+输入事件处理函数，比如 scroll / touch 事件的处理，都会在 requestAnimationFrame 之前被调用执行。
+
+因此，如果你在 scroll 事件的处理函数中做了修改样式属性的操作，那么这些操作会被浏览器暂存起来。然后在调用 requestAnimationFrame 的时候，如果你在一开始做了读取样式属性的操作，那么这将会导致触发浏览器的强制同步布局。
+
+输入事件处理函数，比如 scroll / touch 事件的处理，都会在 requestAnimationFrame 之前被调用执行。
+
+因此，如果你在 scroll 事件的处理函数中做了修改样式属性的操作，那么这些操作会被浏览器暂存起来。然后在调用 requestAnimationFrame 的时候，如果你在一开始做了读取样式属性的操作，那么这将会导致触发浏览器的强制同步布局。
+
+**滑动过程中尝试使用 pointer-events: none 禁止鼠标事件**
+
+
+
+大部分人可能都不认识这个属性，嗯，那么它是干什么用的呢？
+
+[pointer-events](https://developer.mozilla.org/zh-CN/docs/Web/CSS/pointer-events) 是一个 CSS 属性，可以有多个不同的值，属性的一部分值仅仅与 SVG 有关联，这里我们只关注 pointer-events: none 的情况，大概的意思就是禁止鼠标行为，应用了该属性后，譬如鼠标点击，hover 等功能都将失效，即是元素不会成为鼠标事件的 target。
+
+可以就近 F12 打开开发者工具面板，给 <body> 标签添加上 pointer-events: none 样式，然后在页面上感受下效果，发现所有鼠标事件都被禁止了。
+
+pointer-events: none 可用来提高滚动时的帧频。的确，当滚动时，鼠标悬停在某些元素上，则触发其上的 hover 效果，然而这些影响通常不被用户注意，并多半导致滚动出现问题。对 body 元素应用 pointer-events: none ，禁用了包括 hover 在内的鼠标事件，从而提高滚动性能。
+
+
+
+##### [javascript中this的指向问题](https://www.cnblogs.com/chengxs/p/8679313.html)
+
+**1：this永远指向一个对象；**
+
+**2：this的指向完全取决于函数调用的位置；**
+
+使用 JavaScript 开发的时候，很多开发者多多少少会被 `this` 的指向搞蒙圈，但是实际上，关于 `this` 的指向，记住最核心的一句话： 
+
+**哪个对象调用函数，函数里面的this指向哪个对象。** 分为两种情况：浏览器 和 Nodejs
+
+**一、普通函数调用**
+
+这个情况没特殊意外，就是指向全局对象-window。
+
+- 使用let
+
+  ```js
+  /*普通函数调用*/
+  let username = "uName";
+  function fn(){
+      console.log(this.username);   //undefined
+  }
+  fn();
+  
+  // nodejs : undefined
+  // browser : undefined
+  ```
+
+  
+
+- 使用var
+
+  ```js
+  var name = "uName";
+  function fn(){
+      console.log(this.name);
+  }
+  fn();
+  
+  // nodejs: undefined
+  // browser: uName
+  ```
+
+- 使用window
+
+- let和var区别：
+
+  **`（1）let` 允许把变量的作用域限制在块级域中；var** **申明变量要么是全局的，要么是函数级的，而无法是块级的**
+
+  
+
+
+
+**二、对象函数调用**
+
+ 这个相信不难理解，就是**哪个函数调用，this指向哪里**。
+
+```js
+/*对象函数调用*/
+//window.name='程新松';
+//var name='程新松';
+let name='程新松';
+let obj={
+    id:201102304,
+    fn:function(){
+        console.log(this.name);  //undefined
+        console.log(this.id);   //201102304
+    }
+}
+obj.fn();
+```
+
+很明显，第一次就是输出 `obj.name` ，但是没有这个name属性，输出的结果undefined。而第二次输出`obj.id，有这个id属性，`输出 201102304，**因为 `this` 指向 `obj` 。**
+
+```js
+/*需要注意的情况*/
+let obj1={
+    a:111
+}
+let obj2={
+    a:222,
+    fn:function(){
+        console.log(this.a);
+    }
+}
+obj1.fn=obj2.fn;
+obj1.fn();  //111
+```
+
+这个也不难理解，虽然 `obj1.fn` 是从 `obj2.fn` 赋值而来，但是调用函数的是 `obj1` ，所以 **`this` 指向 `obj1`** 。
+
+
+
+
+
+**三、构造函数调用**
+
+```js
+/*构造函数调用*/
+let structureClass=function(){
+    this.name='程新松';
+}
+let subClass1=new structureClass();
+console.log(subClass1.name); // 程新松
+
+let subClass=new structureClass();
+subClass.name='成才';
+console.log(subClass.name); //成
+```
+
+**在构造函数里面返回一个对象，会直接返回这个对象，而不是执行构造函数后创建的对象**
+
+```js
+let structureClass=function(){
+    this.name='程新松';
+    return {
+        username:'saucxs'
+    }
+}
+let subClass1=new structureClass();
+console.log(subClass1); // {username:'saucxs'}
+console.log(subClass1.name); // undefined
+```
 
 
 
@@ -4890,12 +5574,80 @@ micro-task队列真实包含任务：
 
 
 
+**四、apply和call调用**
 
+1. **apply和call简单来说就是会改变传入函数的this。**
 
+   ```js
+   /*apply和call调用*/
+   let obj1={
+       name:'程新松'
+   };
+   let obj2={
+       name:'saucxs',
+       fn:function(){
+           console.log(this.name);
+       }
+   }
+   obj2.fn.call(obj1); // 程新松
+   ```
 
+   **此时虽然是 `obj2` 调用方法，但是使用 了 `call` ，动态的把 `this` 指向到 `obj1` 。相当于这个 `obj2.fn` 这个执行环境是 `obj1` 。**
 
+   **`call` 和 `apply` 两个主要用途：**
 
+   1.改变 `this` 的指向（把 `this` 从 `obj2` 指向到 `obj1` ）
 
+   2.方法借用（ `obj1` 没有 `fn` ，只是借用 `obj2` 方法）
 
+2. **call与apply区别**
 
+    `call` 和 `apply` 的作用，完全一样，唯一的区别就是在参数上面。
+
+   **`call` 接收的参数不固定，第一个参数是函数体内 `this` 的指向，第二个参数以下是依次传入的参数。**
+
+   **apply接收两个参数，第一个参数也是函数体内 `this` 的指向。第二个参数是一个集合对象（数组或者类数组）**
+
+   ```js
+   /*apply和call区别*/
+   let fn=function(a,b,c){
+       console.log(a,b,c);
+   }
+   let arrArray=[1,2,3];
+   fn.call(window,arrArray); // [1, 2, 3], undefined, undefined
+   fn.apply(window,arrArray); // 1 2 3
+   ```
+
+   
+
+**五、箭头函数调用**
+
+ 首先不得不说，ES6 提供了箭头函数，增加了我们的开发效率，**但是在箭头函数里面，没有 `this`** ，**箭头函数里面的 `this` 是继承外面的环境**。
+
+```js
+/*箭头函数调用*/
+let obj={
+    name:'程新松',
+    fn:function(){
+        setTimeout(function(){console.log(this.name)})
+    }
+}
+obj.fn(); // undefined
+```
+
+不难发现，虽然 **fn()** 里面的 **this** 是指向 **obj** ，但是，传给 **setTimeout** 的是普通函数， **this** 指向是 **window** ， **window** 下面没有 **name** ，所以这里输出 **underfind** 。
+
+```js
+//换成箭头函数
+let obj={
+    name:"程新松",
+    fn:function(){
+        setTimeout(()=>{console.log(this.name)});
+    }
+}
+obj.fn(); // 程新松
+
+```
+
+这次输出 **程新松** 是因为，传给 **setTimeout** 的是箭头函数，然后箭头函数里面没有 **this** ，所以要向上层作用域查找，在这个例子上， **setTimeout** 的上层作用域是 **fn** 。而 **fn** 里面的 **this** 指向 **obj** ，所以 **setTimeout** 里面的箭头函数的 **this** ，指向 **obj** 。所以输出 **程新松**。
 
