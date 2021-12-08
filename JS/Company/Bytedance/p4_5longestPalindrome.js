@@ -20,20 +20,23 @@
  * @param {string} s
  * @return {string}
  */
- var longestPalindrome = function(s) {
+var longestPalindrome = function(s) {
     const n = s.length;
-    if (n < 2)
+
+    if (n < 2) {
         return s;
-    
-    let maxLength = 1;
+    }
+
+    let maxLen = 1;
     let start = 0;
+    let dp = new Array(n).fill(false).map(() => new Array(n).fill(false)); // create n length 2D array
 
-    let dp = new Array(n).fill(false).map(() => new Array(n).fill(false));
-
-    for (let i = 0; i < n; i++)
+    for (let i = 0; i < n; i++) {
         dp[i][i] = true;
-    
-    for (let i = 2; i < n + 1; ++i) {
+    }
+    console.log(dp)
+
+    for (let i = 2; i < n + 1; i++) {
         for (let j = 0; j < n; ++j) {
             rightBounary = i + j - 1;
 
@@ -56,9 +59,9 @@
             }
         }
     }
-    return s.slice(start, start+maxLength);
 };
 
+console.log(longestPalindrome('babad'));
 
 
 /**
