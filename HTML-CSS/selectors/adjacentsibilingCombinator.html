@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <title>Adjacentsibling Combinator</title>
+    <head>
+        <meta charset="utf-8">
+        <style>
+            ol > li, ul > li {
+                font-weight: bold;
+            }
+
+            div:first-child {
+                background-color: azure;
+            }
+
+            li:first-child {
+                color: aquamarine;
+            }
+
+            li::after {
+                content: ' Hello World';
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            <ol>
+                <li>List item 1</li>
+                <li>List item 2</li>
+                <li>List item 3</li>
+            </ol>
+            this is some text that is part of the 'div'
+            <ul>
+                <li>A list item</li>
+                <li>Another list item</li>
+                <li>Yet another list item</li>
+            </ul>
+        </div>
+    </body>
+</html>
+
