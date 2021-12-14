@@ -21,17 +21,19 @@
  * @return {number}
  */
  var maxArea = function(height) {
-    let leftPtr = 0
-    let rightPtr = height.length - 1;
+    let leftPtr = 0;
+    let rightPrt = height.length - 1;
     let res = 0;
 
-    while (leftPtr < rightPtr) {
-        let area = Math.min(height[leftPtr], height[rightPtr]) * (rightPtr - leftPtr);
-        res = Math.max(area, res);
-        if (height[leftPtr] <= height[rightPtr]) {
-            leftPtr += 1;
+    while (leftPtr < rightPrt) {
+        let minArea = Math.min(height[rightPrt] * (rightPrt-leftPtr), (rightPrt-leftPtr) * height[leftPtr]);
+
+        res = Math.max(minArea, res);
+
+        if (height[rightPrt] < height[leftPtr]) {
+            rightPrt -= 1
         } else {
-            rightPtr -= 1;
+            leftPtr += 1
         }
     }
     return res;
