@@ -16,7 +16,13 @@
  * Explanation:
  * *****************************************************************/
 
- var copyRandomList = function(head, cachedNode = new Map()) {
+function Node(val, next, random) {
+    this.val = val;
+    this.next = next;
+    this.random = random;
+}
+
+var copyRandomList = function(head, cachedNode = new Map()) {
     if (head === null) {
         return null;
     }
@@ -25,6 +31,10 @@
     }
     return cachedNode.get(head);
 }
+
+// 输入：head = [[7,null],[13,0],[11,4],[10,2],[1,0]]
+// 输出：[[7,null],[13,0],[11,4],[10,2],[1,0]]
+
 
 /**
  * @Idea:
