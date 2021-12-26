@@ -967,7 +967,62 @@ result(); // 1000
 
 
 
+##### Closure
 
+Closures are **frequently used in JavaScript** for object data privacy, in event handlers and callback functions, and in [partial applications, currying](https://medium.com/javascript-scene/curry-or-partial-application-8150044c78b8#.l4b6l1i3x), and other functional programming patterns.
+
+A **closure** is the combination of a function bundled together (enclosed) with references to its surrounding state (the **lexical environment**). In other words, a closure gives you access to an outer function’s scope from an inner function. In JavaScript, closures are created every time a function is created, at function creation time.
+
+​	To use a closure, define a function inside another function and expose it. To expose a function, return it or pass it to another function.
+
+​	The inner function will have access to the variables in the outer function scope, even after the outer function has returned.
+
+
+
+Among other things, closures are commonly used to give objects data privacy. Data privacy is an essential property that helps us program to an interface, not an implementation. 
+
+
+
+In JavaScript, closures are the primary mechanism used to enable data privacy. When you use closures for data privacy, the enclosed variables are only in scope within the containing (outer) function. You can’t get at the data from an outside scope except through the object’s **privileged methods**. In JavaScript, any exposed method defined within the closure scope is privileged. 
+
+Objects are not the only way to produce data privacy. Closures can also be used to create **stateful functions** whose return values may be influenced by their internal state
+
+https://medium.com/javascript-scene/master-the-javascript-interview-what-is-a-closure-b2f0d2152b36
+
+
+
+In functional programming, closures are frequently used for partial application & currying.
+
+```js
+// Generic Partial Application Function
+// https://jsbin.com/biyupu/edit?html,js,output
+// https://gist.github.com/ericelliott/f0a8fd662111ea2f569e
+
+// partialApply(targetFunction: Function, ...fixedArgs: Any[]) =>
+//   functionWithFewerParams(...remainingArgs: Any[])
+const partialApply = (fn, ...fixedArgs) => {
+  return function (...remainingArgs) {
+    return fn.apply(this, fixedArgs.concat(remainingArgs));
+  };
+};
+
+
+test('add10', assert => {
+  const msg = 'partialApply() should partially apply functions'
+
+  const add = (a, b) => a + b;
+
+  const add10 = partialApply(add, 10);
+
+
+  const actual = add10(5);
+  const expected = 15;
+
+  assert.equal(actual, expected, msg);
+});
+```
+
+##### TODO: Object Pool Design
 
 
 

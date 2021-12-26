@@ -2,6 +2,10 @@
 
 
 
+https://juejin.cn/post/6850418118854967304#heading-36
+
+
+
 [TOC]
 
 
@@ -4521,9 +4525,7 @@ Call和apply的作用是一模一样的，只是传参的形式有区别而已
 
 如果有两个轮播，可封装一个轮播组件，供两处调用
 
-
-
-#### 328. class
+##### 328. class
 
 ES6提供了更接近传统语言的写法，引入了Class（类）这个概念，作为对象的模板。通过class关键字，可以定义类。
 
@@ -5656,4 +5658,354 @@ obj.fn(); // 程新松
 ```
 
 这次输出 **程新松** 是因为，传给 **setTimeout** 的是箭头函数，然后箭头函数里面没有 **this** ，所以要向上层作用域查找，在这个例子上， **setTimeout** 的上层作用域是 **fn** 。而 **fn** 里面的 **this** 指向 **obj** ，所以 **setTimeout** 里面的箭头函数的 **this** ，指向 **obj** 。所以输出 **程新松**。
+
+
+
+##### 什么是BFC？什么条件下会触发？应用场景有哪些
+
+> 浮动元素和绝对定位元素，非块级盒子的块级容器（例如 inline-blocks, table-cells, 和 table-captions），以及overflow值不为"visiable"的块级盒子，都会为他们的内容创建新的BFC（Block Fromatting Context， 即块级格式上下文）。
+
+一个HTML元素要创建BFC，则满足下列的任意一个或多个条件即可： 下列方式会创建块格式化上下文：
+
+1. 根元素
+2. 浮动元素（元素的 float 不是 none）
+3. 绝对定位元素（元素的 position 为 absolute 或 fixed）
+4. 行内块元素（元素的 display 为 inline-block）
+5. 表格单元格（元素的 display为 table-cell，HTML表格单元格默认为该值）
+6. 表格标题（元素的 display 为 table-caption，HTML表格标题默认为该值）
+7. 匿名表格单元格元素（元素的 display为 table、table-row、 table-row-group、table-header-group、table-footer-group（分别是HTML table、row、tbody、thead、tfoot的默认属性）或 inline-table）
+8. overflow 值不为 visible 的块元素 -弹性元素（display为 flex 或 inline-flex元素的直接子元素） 网格元素（display为 grid 或 inline-grid 元素的直接子元素） 等等。
+
+**BFC渲染规则**
+
+- BFC是一个独立的容器，外面的元素不会影响里面的元素
+- 计算BFC高度的时候浮动元素也会参与计算
+- BFC的区域不会与浮动元素的box重叠
+- Box垂直方向的距离由margin决定。属于同一个BFC的两个相邻Box的margin会发生重叠**
+
+**应用场景**
+
+不适用BFC情况下，子元素使用浮动，父元素高度会塌陷
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .inner {
+            height: 50px;
+            width: 50px;
+            background: green;
+            float: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="inner"></div>
+    </div>
+</body>
+</html>
+```
+
+将父级元素设为BFC后
+
+```css
+.container {
+    overflow: hidden;
+}
+```
+
+以上情况应用规则 计算BFC高度的时候浮动元素也会参与计算
+
+2. #### 避免外边距折叠
+
+当2个box在同一个BFC容器内，同时使用margin会引起外边距重合
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .container{
+            overflow: hidden;
+        }
+        .inner {
+            margin: 10px 0;
+            background: green;
+            
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="inner">div1</div>
+        <div class="inner">div2</div>
+        <div class="inner">div3</div>
+    </div>
+</body>
+</html>
+```
+
+此时将box变为BFC，增加如下样式：
+
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .container{
+            overflow: hidden;
+        }
+        .inner {
+            margin: 10px 0;
+            background: green;
+            
+        }
+        .bfc {
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="inner">div1</div>
+        <div class="bfc">
+            <div class="inner">div2</div>
+        </div>
+        
+        <div class="inner">div3</div>
+    </div>
+</body>
+</html>
+```
+
+以上情况应用规则 Box垂直方向的距离由margin决定。属于同一个BFC的两个相邻Box的margin会发生重叠
+
+3. #### 自适应两栏布局
+
+根据规则BFC的区域不会与浮动元素的box重叠，可以实现自适应两栏布局
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+       .left{
+        width: 500px;
+        height: 150px;
+        float: left;
+        background: rgb(139, 214, 78);
+        text-align: center;
+        line-height: 150px;
+        font-size: 20px;
+       }
+       .right{
+        overflow: hidden;
+        height: 300px;
+        background: rgb(170, 54, 236);
+        text-align: center;
+        line-height: 300px;
+        font-size: 40px;
+       }
+    </style>
+</head>
+<body>
+   <div class="left"></div>
+   <div class="right"></div>
+</body>
+</html>
+```
+
+BFC就是页面上的一个隔离的独立容器，容器里面的子元素不会影响到外面的元素。反之也如此。
+
+##### JavaScript对象的底层数据结构是什么
+
+JavaScript基本类型数据都是直接按值存储在栈中的(Undefined、Null、不是new出来的布尔、数字和字符串)，每种类型的数据占用的内存空间的大小是确定的，并由系统自动分配和自动释放。这样带来的好处就是，内存可以及时得到回收，相对于堆来说 ，更加容易管理内存空间。
+
+JavaScript引用类型数据被存储于堆中 (如对象、数组、函数等，它们是通过拷贝和new出来的）。其实，说存储于堆中，也不太准确，因为，引用类型的数据的地址指针是存储于栈中的，当我们想要访问引用类型的值的时候，需要先从栈中获得对象的地址指针，然后，在通过地址指针找到堆中的所需要的数据。
+
+
+
+##### Symbol类型在实际开发中的应用、可手动实现一个简单的Symbol
+
+1. 使用Symbol来替代常量
+
+2. 使用Symbol来作为对象属性名(key)
+
+   ```js
+   const PROP_NAME = Symbol()
+   const PROP_AGE = Symbol()
+   let obj = {
+     [PROP_NAME]: "一斤代码"
+   }
+   obj[PROP_AGE] = 18
+   ```
+
+3. 使用Symbol定义类的私有属性/方法
+
+   ```js
+   // a.js
+   const PASSWORD = Symbol()
+   class Login {
+     constructor(username, password) {
+       this.username = username
+       this[PASSWORD] = password
+     }
+   
+     checkPassword(pwd) {
+         return this[PASSWORD] === pwd
+     }
+   }
+   export default Login
+   // b.js
+   import Login from './a'
+   const login = new Login('admin', '123456')
+   login.checkPassword('123456')  // true
+   login.PASSWORD  // oh!no!
+   login[PASSWORD] // oh!no!
+   login["PASSWORD"] // oh!no!
+   ```
+
+   注册和获取全局Symbol window中创建的Symbol实例总是唯一的，而我们需要的是在所有这些window环境下保持一个共享的Symbol。这种情况下，我们就需要使用另一个API来创建或获取Symbol，那就是Symbol.for()，它可以注册或获取一个window间全局的Symbol实例
+
+   
+
+4. 注册和获取全局Symbol window中创建的Symbol实例总是唯一的，而我们需要的是在所有这些window环境下保持一个共享的Symbol。这种情况下，我们就需要使用另一个API来创建或获取Symbol，那就是Symbol.for()，它可以注册或获取一个window间全局的Symbol实例
+
+   ```js
+   let gs1 = Symbol.for('global_symbol_1')  //注册一个全局Symbol
+   let gs2 = Symbol.for('global_symbol_1')  //获取全局Symbol
+   gs1 === gs2  // true
+   ```
+
+   
+
+##### JavaScript中的变量在内存中的具体存储形式
+
+引用类型是保存在堆内存中的对象，值大小不固定，栈内存中存放的该对象的访问地址指向堆内存中的对象，JavaScript不允许直接访问堆内存中的位置，因此操作对象时，实际操作对象的引用
+
+```js
+let a1 = 0; // 栈内存
+let a2 = "this is string" // 栈内存
+let a3 = null; // 栈内存
+let b = { x: 10 }; // 变量b存在于栈中，{ x: 10 }作为对象存在于堆中
+let c = [1, 2, 3]; // 变量c存在于栈中，[1, 2, 3]作为对象存在于堆中
+```
+
+
+
+##### 基本类型对应的内置对象，以及他们之间的装箱拆箱操作
+
+**内置对象：** Object是 JavaScript 中所有对象的父对象 数据封装类对象：Object、Array、Boolean、Number 和 String 其他对象：Function、Math、Date、RegExp、Error。 特殊的基本包装类型(String、Number、Boolean) arguments: 只存在于函数内部的一个类数组对象
+
+**装箱：** 把基本数据类型转化为对应的引用数据类型的操作，装箱分为隐式装箱和显示装箱 
+
+**隐式装箱**:
+
+```js
+let a = 'sun'
+let b = a.indexof('s') // 0 // 返回下标
+
+// 上面代码在后台实际的步骤为：
+let a = new String('sun')
+let b = a.indexof('s')
+a = null
+
+// 实现机制：
+/**
+ *	1.创建String类型的一个实例； 2.在实例上调用指定的方法； 3.销毁这个实例；
+ */
+```
+
+**显示装箱**: 通过内置对象可以对Boolean、Object、String等可以对基本类型显示装箱 let a = new String('sun')
+
+**拆箱：** 拆箱和装箱相反，就是把引用类型转化为基本类型的数据，通常通过引用类型的valueof()和toString（）方法实现
+
+```js
+let name = new String('sun')
+let age = new Number(24)
+console.log(typeof name) // object
+console.log(typeof age) //  object
+// 拆箱操作
+console.log(typeof age.valueOf()); // number // 24  基本的数字类型
+console.log(typeof name.valueOf()); // string  // 'sun' 基本的字符类型
+console.log(typeof age.toString()); // string  // '24' 基本的字符类型
+console.log(typeof name.toString()); // string  // 'sun' 基本的字符类型
+```
+
+##### 作用域和闭包
+
+**理解词法作用域和动态作用域**：
+
+**词法作用域**，函数的作用域在函数定义的时候就决定了（取决于函数定义的位置）
+**动态作用域**，函数的作用域在函数调用的时候就决定了（取决于函数的调用） js采用的是词法作用域
+
+**理解JavaScript的作用域和作用域链**：
+
+作用域就是一个独立的地盘，让变量不会外泄、暴露出去。也就是说作用域最大的用处就是隔离变量，不同作用域下同名变量不会有冲突。 ES6 之前 JavaScript 没有块级作用域,只有全局作用域和函数作用域。ES6的到来，为我们提供了‘块级作用域’,可通过新增命令let和const来体现。
+
+**作用域链** 在 JavaScript 中使用变量时，JavaScript 引擎将尝试在当前作用域中查找变量的值。如果找不到变量，它将查找外部作用域并继续这样做，直到找到变量或到达全局作用域为止。
+
+如果仍然找不到变量，它将在全局作用域内隐式声明变量（如果不是在严格模式下）或返回错误。 ####3.理解JavaScript的执行上下文栈，可以应用堆栈信息快速定位问题 执行上下文是当前 JavaScript 代码被解析和执行时所在环境的抽象概念。
+
+**执行上下文的类型** 执行上下文总共有三种类型
+ **全局执行上下文**：只有一个，浏览器中的全局对象就是 window 对象，this 指向这个全局对象。
+ **函数执行上下文**：存在无数个，只有在函数被调用的时候才会被创建，每次调用函数都会创建一个新的执行上下文。
+ **Eval 函数执行上下文**： 指的是运行在 eval 函数中的代码，很少用而且不建议使用。
+
+**执行栈** 执行栈，也叫调用栈，具有 LIFO（后进先出）结构，用于存储在代码执行期间创建的所有执行上下文。 首次运行JS代码时，会创建一个全局执行上下文并Push到当前的执行栈中。每当发生函数调用，引擎都会为该函数创建一个新的函数执行上下文并Push到当前执行栈的栈顶。 根据执行栈LIFO规则，当栈顶函数运行完成后，其对应的函数执行上下文将会从执行栈中Pop出，上下文控制权将移到当前执行栈的下一个执行上下文。
+
+**执行上下文的创建** 执行上下文分两个阶段创建：
+ 1）创建阶段；
+ 2）执行阶段
+ **创建阶段**
+ 1、确定 this 的值，也被称为 This Binding。
+ 2、LexicalEnvironment（词法环境） 组件被创建。
+ 3、VariableEnvironment（变量环境） 组件被创建。
+ **This Binding:**
+ 在全局执行上下文中，this 的值指向全局对象，在浏览器中，this 的值指向 window 对象。 在函数执行上下文中，this 的值取决于函数的调用方式。如果它被一个对象引用调用，那么 this 的值被设置为该对象，否则 this 的值被设置为全局对象或 undefined（严格模式下）
+
+**词法环境**
+ 在词法环境中，有两个组成部分：
+（1）环境记录（environment record）
+ （2）对外部环境的引用 环境记录是存储变量和函数声明的实际位置。 对外部环境的引用意味着它可以访问其外部词法环境。
+ **变量环境:**
+ 它也是一个词法环境，其 EnvironmentRecord 包含了由  VariableStatements 在此执行上下文创建的绑定。 如上所述，变量环境也是一个词法环境，因此它具有上面定义的词法环境的所有属性。 在 ES6 中，LexicalEnvironment 组件和 VariableEnvironment 组件的区别在于前者用于存储函数声明和变量（ let 和 const ）绑定，而后者仅用于存储变量（ var ）绑定。 在创建阶段，代码会被扫描并解析变量和函数声明，其中函数声明存储在环境中，而变量会被设置为 undefined（在 var 的情况下）或保持未初始化（在 let 和 const 的情况下） 这就是为什么你可以在声明之前访问 var 定义的变量（尽管是 undefined ），但如果在声明之前访问 let 和 const 定义的变量就会提示引用错误的原因。
+
+这就是我们所谓的变量提升。
+
+#####介绍下 Set、Map、WeakSet 和 WeakMap 的区别？
+
+**WeakSet 结构与 Set 类似，也是不重复的值的集合。但是，它与 Set 有两个区别。**
+
+- WeakSet 的成员只能是对象，而不能是其他类型的值
+- WeakSet 中的对象都是弱引用，即垃圾回收机制不考虑 WeakSet 对该对象的引用，也就是说，如果其他对象都不再引用该对象，那么垃圾回收机制会自动回收该对象所占用的内存，不考虑该对象还存在于 WeakSet 之中
+
+**WeakMap结构与Map结构类似，也是用于生成键值对的集合**
+
+- WeakMap只接受对象作为键名（null除外），不接受其他类型的值作为键名
+- WeakMap的键名所指向的对象，不计入垃圾回收机制
+
+
+
+
+
+
+
+
+
+
 

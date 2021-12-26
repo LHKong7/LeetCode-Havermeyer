@@ -110,7 +110,7 @@ UDP伪首部作用？
 假设 A 为客户端，B 为服务器端。    
 
 -  首先 B 处于 LISTEN（监听）状态，等待客户的连接请求。 
--  A 向 B 发送连接请求报文，SYN=1，ACK=0，选择一个初始的序号 x。      
+-  A 向 B 发送连接请求报文，SYN=1，选择一个初始的序号 x。      
   -  在SYN建立连接的阶段会携带MSS选项字段来决定MSS报文的大小 
   -  默认是536字节，如果双方协商不成功 
 -  B 收到连接请求报文，如果同意建立连接，则向 A 发送连接确认报文，SYN=1，ACK=1，确认号为 x+1，同时也选择一个初始的序号 y。 
@@ -643,7 +643,7 @@ URI包括URL和URN两个类别，URL是URI的子集，所以URL一定是URI，�
 
 ##### 30. OSI七层协议模型、TCP/IP四层模型和五层协议体系结构之间的关系？
 
-![OSI](../Assets/OSI.png)
+# ![OSI](../Assets/OSI.png)
 
 
 
@@ -1626,6 +1626,263 @@ XSS全称cross-site scripting（跨站点脚本），是一种代码注入攻击
 
 如果两个 URL 的 [protocol](https://developer.mozilla.org/zh-CN/docs/Glossary/Protocol)、[port (en-US)](https://developer.mozilla.org/en-US/docs/Glossary/Port) (如果有指定的话)和 [host](https://developer.mozilla.org/zh-CN/docs/Glossary/Host) 都相同的话，则这两个 URL 是*同源*。这个方案也被称为“协议/主机/端口元组”，或者直接是 “元组”。（“元组” 是指一组项目构成的整体，双重/三重/四重/五重/等的通用形式）。
 
+同源策略限制以下几种行为：
+
+1.  Cookie、LocalStorage 和 IndexDB 无法读取。
+2. DOM 无法获得。
+3.  AJAX 请求不能发送
+
+跨域解决方案:
+
+1、 通过jsonp跨域 
+
+2、CORS
+
+3、 document.domain + iframe跨域 
+
+4、 location.hash + iframe 
+
+5、 window.name + iframe跨域 
+
+6、 postMessage跨域 
+
+7、 nginx代理跨域 
+
+8、 nodejs中间件代理跨域 
+
+9、 WebSocket协议跨域
+
+
+
+**JSONP跨域**：
+
+> 通常为了减轻web服务器的负载，我们把js、css，img等静态资源分离到另一台独立域名的服务器上，在html页面中再通过相应的标签从不同域名下加载静态资源，而被浏览器允许，基于此原理，我们可以通过动态创建script，再请求一个带参网址实现跨域通信。jsonp正是利用这个特性来实现的。 
+
+1. **JSONP是服务器与客户端跨源通信的常用方法。最大特点就是简单适用，老式浏览器全部支持，服务器改造非常小。
+   **
+2. **只能实现get一种请求、**不安全 容易遭到xss攻击
+
+```js
+function jsonp({url,params,cb}) { 
+    return new Promise((resolve, reject) => { 
+      let script = document.createElement('script');               
+      window[cb] = function (params) {     
+               resolve(params); 
+      }      
+      params = {...params,cb};  
+      let arrs = [];  
+      for(let key in params){  
+          arrs.push(`${key}=${params[key]}`);       
+       }                
+      script.src = `${url}?${arrs.join('&')}`;   
+      document.body.appendChild(script);
+            });        }; 
+jsonp({  
+ url: 'https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su', 
+ params:{wd:'a'},    
+ cb:'show'       
+ }).then(data=>{            
+ console.log('jsonp跨域请求的数据为：',data);   
+});
+```
+
+**CORS**:
+
+> CORS是一个W3C标准，全称是"跨域资源共享"（Cross-origin resource sharing）它允许浏览器向跨源服务器，发出[`XMLHttpRequest`](https://link.juejin.cn/?target=http%3A%2F%2Fwww.ruanyifeng.com%2Fblog%2F2012%2F09%2Fxmlhttprequest_level_2.html)请求，从而克服了AJAX只能[同源](https://link.juejin.cn/?target=http%3A%2F%2Fwww.ruanyifeng.com%2Fblog%2F2016%2F04%2Fsame-origin-policy.html)使用的限制。
+
+ps：普通跨域请求：只服务端设置Access-Control-Allow-Origin即可，前端无须设置，若要带cookie请求：前后端都需要设置。由于同源策略的限制，所读取的cookie为跨域请求接口所在域的cookie，而非当前页。
+
+1. 目前，所有浏览器都支持该功能(IE8+：IE8/9需要使用XDomainRequest对象来支持CORS）)，CORS也已经成为主流的跨域解决方案。
+
+2. 整个CORS通信过程，都是浏览器自动完成，不需要用户参与。对于开发者来说，CORS通信与同源的AJAX通信没有差别，代码完全一样。浏览器一旦发现AJAX请求跨源，就会自动添加一些附加的头信息，有时还会多出一次附加的请求，但用户不会有感觉。
+
+3. CORS与JSONP的使用目的相同，但是比JSONP更强大。JSONP只支持`GET`请求，CORS支持所有类型的HTTP请求。JSONP的优势在于支持老式浏览器，以及可以向不支持CORS的网站请求数据。
+
+浏览器将CORS请求分成两类：简单请求（simple request）和非简单请求（not-so-simple request）。
+
+只要同时满足以下两大条件，就属于简单请求。凡是不同时满足下面两个条件，就属于非简单请求。
+
+1. 请求方法是以下三种方法之一：HEAD GET POST
+
+2. HTTP的头信息不超出以下几种字段：
+
+   1. Accept
+   2. Accept-Language
+   3. Content-Language
+   4. Last-Event-ID
+   5. Content-Type
+
+   只限于三个值application/x-www-form-urlencoded、multipart/form-data、text/plain 
+
+简单请求，浏览器直接发出CORS请求。具体来说，就是在头信息之中，增加一个`Origin`字段。
+
+非简单请求： 是那种对服务器有特殊要求的请求，比如请求方法是`PUT`或`DELETE`，或者`Content-Type`字段的类型是`application/json`。
+
+非简单请求的CORS请求，会在正式通信之前，增加一次HTTP查询请求，称为"预检"请求（preflight）。
+
+浏览器先询问服务器，当前网页所在的域名是否在服务器的许可名单之中，以及可以使用哪些HTTP动词和头信息字段。只有得到肯定答复，浏览器才会发出正式的`XMLHttpRequest`请求，否则就报错。
+
+
+
+1. **Access-Control-Allow-Origin**
+
+   该字段是必须的。它的值要么是请求时`Origin`字段的值，要么是一个`*`，表示接受任意域名的请求。**
+   **
+
+2. **Access-Control-Allow-Credentials**
+
+   该字段可选。它的值是一个布尔值，表示是否允许发送Cookie。默认情况下，Cookie不包括在CORS请求之中。设为`true`，即表示服务器明确许可，Cookie可以包含在请求中，一起发给服务器。这个值也只能设为`true`，如果服务器不要浏览器发送Cookie，删除该字段即可
+
+3. **Access-Control-Expose-Headers**
+
+   该字段可选。CORS请求时，`XMLHttpRequest`对象的`getResponseHeader()`方法只能拿到6个基本字段：`Cache-Control`、`Content-Language`、`Content-Type`、`Expires`、`Last-Modified`、`Pragma`。如果想拿到其他字段，就必须在`Access-Control-Expose-Headers`里面指定。上面的例子指定，`getResponseHeader('FooBar')`可以返回`FooBar`字段的值
+
+withCredentials 属性: CORS请求默认不发送Cookie和HTTP认证信息。如果要把Cookie发到服务器，一方面要服务器同意，指定`Access-Control-Allow-Credentials`字段。
+
+`Access-Control-Allow-Credentials: true`
+
+开发者必须在AJAX请求中打开`withCredentials`属性。
+
+```
+var xhr = new XMLHttpRequest();
+xhr.withCredentials = true;
+```
+
+否则，即使服务器同意发送Cookie，浏览器也不会发送。或者，服务器要求设置Cookie，浏览器也不会处理。
+
+但是，如果省略`withCredentials`设置，有的浏览器还是会一起发送Cookie。这时，可以显式关闭`withCredentials`。
+
+```
+xhr.withCredentials = false;
+```
+
+需要注意的是，如果要发送Cookie，`Access-Control-Allow-Origin`就不能设为星号，必须指定明确的、与请求网页一致的域名。同时，Cookie依然遵循同源政策，只有用服务器域名设置的Cookie才会上传，其他域名的Cookie并不会上传，且（跨源）原网页代码中的`document.cookie`也无法读取服务器域名下的Cookie。
+
+ 4. **Access-Control-Request-Method**
+
+    该字段是必须的，用来列出浏览器的CORS请求会用到哪些HTTP方法，上例是`PUT`。**
+    **
+
+ 5. **Access-Control-Request-Headers**
+
+    该字段是一个逗号分隔的字符串，指定浏览器CORS请求会额外发送的头信息字段
+
+    ```
+    Access-Control-Allow-Methods: GET, POST, PUT
+    Access-Control-Allow-Headers: X-Custom-Header
+    Access-Control-Allow-Credentials: true
+    Access-Control-Max-Age: 1728000
+    ```
+
+6. **Access-Control-Allow-Methods**
+
+   该字段必需，它的值是逗号分隔的一个字符串，表明服务器支持的所有跨域请求的方法。注意，返回的是所有支持的方法，而不单是浏览器请求的那个方法。这是为了避免多次"预检"请求。
+
+7. **Access-Control-Allow-Headers**
+
+   如果浏览器请求包括`Access-Control-Request-Headers`字段，则`Access-Control-Allow-Headers`字段是必需的。它也是一个逗号分隔的字符串，表明服务器支持的所有头信息字段，不限于浏览器在"预检"中请求的字段。
+
+8. **Access-Control-Allow-Credentials**
+
+   该字段与简单请求时的含义相同。
+
+   
+
+9. **Access-Control-Max-Age**
+
+   该字段可选，用来指定本次预检请求的有效期，单位为秒。上面结果中，有效期是20天（1728000秒），即允许缓存该条回应1728000秒（即20天），在此期间，不用发出另一条预检请求。
+
+**postMessage跨域**:
+
+> HTML5为了解决这个问题，引入了一个全新的API：跨文档通信 API（Cross-document messaging）。
+>
+> 这个API为`window`对象新增了一个`window.postMessage`方法，允许跨窗口通信，不论这两个窗口是否同源。
+>
+> > `postMessage`方法的第一个参数是具体的信息内容，第二个参数是接收消息的窗口的源（origin），即"协议 + 域名 + 端口"。也可以设为`*`，表示不限制域名，向所有窗口发送。
+
+它可用于解决以下方面的问题：
+
+a.） 页面和其打开的新窗口的数据传递 
+
+b.） 多窗口之间消息传递 
+
+c.） 页面与嵌套的iframe消息传递 
+
+d.） 上面三个场景的跨域数据传递
+
+
+
+**Nginx 代理跨域**
+
+1. ##### nginx配置解决iconfont跨域
+
+   浏览器跨域访问js、css、img等常规静态资源被同源策略许可，但iconfont字体文件(eot|otf|ttf|woff|svg)例外，此时可在nginx的静态资源服务器中加入以下配置。
+
+   ```
+   location / {
+     add_header Access-Control-Allow-Origin *;
+   }
+   ```
+
+2. ##### nginx反向代理接口跨域
+
+   跨域原理： 同源策略是浏览器的安全策略，不是HTTP协议的一部分。服务器端调用HTTP接口只是使用HTTP协议，不会执行JS脚本，不需要同源策略，也就不存在跨越问题。
+
+   实现思路：通过nginx配置一个代理服务器（域名与domain1相同，端口不同）做跳板机，反向代理访问domain2接口，并且可以顺便修改cookie中domain信息，方便当前域cookie写入，实现跨域登录。
+
+   ```nginx
+   #proxy服务器
+   server {
+       listen       81;
+       server_name  www.domain1.com;
+   
+       location / {
+           proxy_pass   http://www.domain2.com:8080;  #反向代理
+           proxy_cookie_domain www.domain2.com www.domain1.com; #修改cookie里域名
+           index  index.html index.htm;
+   
+           # 当用webpack-dev-server等中间件代理接口访问nignx时，此时无浏览器参与，故没有同源限制，下面的跨域配置可不启用
+           add_header Access-Control-Allow-Origin http://www.domain1.com;  #当前端只跨域不带cookie时，可为*
+           add_header Access-Control-Allow-Credentials true;
+       }
+   }
+   ```
+
+
+
+**WebSocket**:
+
+> WebSocket protocol是HTML5一种新的协议。它实现了浏览器与服务器全双工通信，同时允许跨域通讯，是server push技术的一种很好的实现。
+>
+> WebSocket是一种通信协议，使用`ws://`（非加密）和`wss://`（加密）作为协议前缀。该协议不实行同源政策，只要服务器支持，就可以通过它进行跨源通信。
+>
+> 原生WebSocket API使用起来不太方便，可以使用Socket.io，它很好地封装了webSocket接口，提供了更简单、灵活的接口，也对不支持webSocket的浏览器提供了向下兼容。本此因为是模拟就没有安装了用了WebSocket
+
+
+
+下面是一个例子，浏览器发出的WebSocket请求的头信息（摘自[维基百科](https://link.juejin.cn/?target=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FWebSocket)）。
+
+```
+GET /chat HTTP/1.1
+Host: server.example.com
+Upgrade: websocket
+Connection: Upgrade
+Sec-WebSocket-Key: x3JJHMbDL1EzLkh9GBhXDw==
+Sec-WebSocket-Protocol: chat, superchat
+Sec-WebSocket-Version: 13
+Origin: http://example.com
+```
+
+
+
+
+
+
+
+
+
+
+
 **Inherited origins (源的继承)**
 
 在页面中通过 `about:blank` 或 `javascript:` URL 执行的脚本会继承打开该 URL 的文档的源，因为这些类型的 URLs 没有包含源服务器的相关信息。
@@ -2356,11 +2613,35 @@ HTTP协议是基于请求/响应模式的，因此只要服务端给了响应，
 
 第二个区别就是实现的方式，连接的长短是通过协议来规定和实现的。而轮询的长短，是服务器通过编程的方式手动挂起请求来实现的。
 
+##### HTTP 请求头，请求行，请求体
+
+HTTP Request :HTTP请求
+Request Line:请求行
+Header:请求头
+Request Body:请求体
+
+HTTP请求报文由3部分组成（请求行+请求头+请求体）：
+
+![httprequest](../Assets/httprequest.webp)
 
 
 
+①是请求方法，HTTP/1.1 定义的请求方法有8种：GET、POST、PUT、DELETE、PATCH、HEAD、OPTIONS、TRACE,最常的两种GET和POST，如果是RESTful接口的话一般会用到GET、POST、DELETE、PUT。
 
+②为请求对应的URL地址，它和报文头的Host属性组成完整的请求URL
+③是协议名称及版本号。
+④是HTTP的报文头，报文头包含若干个属性，格式为“属性名:属性值”，服务端据此获取客户端的信息。
+⑤是报文体，它将一个页面表单中的组件值通过param1=value1&param2=value2的键值对形式编码成一个格式化串，它承载多个请求参数的数据。不但报文体可以传递请求参数，请求URL也可以通过类似于“/chapter15/user.html? param1=value1&param2=value2”的方式传递请求参数。
 
+**HTTP响应报文解剖**
+HTTP的响应报文也由三部分组成（响应行+响应头+响应体）
+
+![httpresponse](../Assets/httpresponse.webp)
+
+①报文协议及版本；
+②状态码及状态描述；
+③响应报文头，也是由多个属性组成；
+④响应报文体，即我们真正要的“干货”。
 
 
 

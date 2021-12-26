@@ -1,0 +1,81 @@
+<!-- <!DOCTYPE html>
+<html>
+    <head>
+        <title>BFC in Practice</title>
+        <meta charset="utf-8">
+        <style>
+            .parent {
+                overflow: hidden;
+            }
+            .child {
+                width: 50px;
+                height: 50px;
+                background-color: aquamarine;
+                float: left;
+            }
+        </style>
+    </head>
+    <body>
+        <div class='parent'>
+            Parent element
+            <div class='child'>child One</div>
+        </div>
+    </body>
+</html> -->
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .container{
+            overflow: hidden;
+        }
+        .inner {
+            margin: 10px 0;
+            background: green;
+            
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="inner">div1</div>
+        <div class="inner">div2</div>
+        <div class="inner">div3</div>
+    </div>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+       .left{
+        width: 500px;
+        height: 150px;
+        float: left;
+        background: rgb(139, 214, 78);
+        text-align: center;
+        line-height: 150px;
+        font-size: 20px;
+       }
+       .right{
+        overflow: hidden;
+        height: 300px;
+        background: rgb(170, 54, 236);
+        text-align: center;
+        line-height: 300px;
+        font-size: 40px;
+       }
+    </style>
+</head>
+<body>
+   <div class="left"></div>
+   <div class="right"></div>
+</body>
+</html>
