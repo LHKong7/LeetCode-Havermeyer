@@ -1398,8 +1398,6 @@ css3属性transform。子元素设置position: absolute; left: 50%; top: 50%;tra
 
 ##### 165. CSS3中对溢出的处理
 
-cnkOhu
-
 text-overflow属性，值为clip是修剪文本；ellipsis为显示省略符号来表被修剪的文本；string为使用给定的字符串来代表被修剪的文本。
 
 
