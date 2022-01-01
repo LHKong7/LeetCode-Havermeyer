@@ -14,7 +14,10 @@ https://juejin.cn/post/6850418118854967304#heading-36
 
 (1)什么是WebSocket?
 
-WebSocket是HTML5中的协议，支持持久连续，http协议不支持持久性连接。Http1.0和HTTP1.1都不支持持久性的链接，HTTP1.1中的keep-alive，将多个http请求合并为1个
+WebSocket是HTML5中的协议，
+
+WebSocket 支持持久连续，
+http协议不支持持久性连接。Http1.0和HTTP1.1都不支持持久性的链接，HTTP1.1中的keep-alive，将多个http请求合并为1个 
 
 (2)WebSocket是什么样的协议，具体有什么优点？
 
@@ -216,7 +219,7 @@ HTML5语义化标签是指正确的标签包含了正确的内容，结构良好
 
 定义：iframe元素会创建包含另一个文档的内联框架
 
-提示：可以将提示文字放在<iframe></iframe>之间，来提示某些不支持iframe的浏览器
+提示：可以将提示文字放在`<iframe></iframe>`之间，来提示某些不支持iframe的浏览器
 
 缺点：
 
