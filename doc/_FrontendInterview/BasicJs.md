@@ -977,19 +977,11 @@ A **closure** is the combination of a function bundled together (enclosed) with 
 
 ​	The inner function will have access to the variables in the outer function scope, even after the outer function has returned.
 
-
-
 Among other things, closures are commonly used to give objects data privacy. Data privacy is an essential property that helps us program to an interface, not an implementation. 
 
+1. In JavaScript, closures are the primary mechanism used to enable data privacy. When you use closures for data privacy, the enclosed variables are only in scope within the containing (outer) function. You can’t get at the data from an outside scope except through the object’s **privileged methods**. In JavaScript, any exposed method defined within the closure scope is privileged. 
 
-
-In JavaScript, closures are the primary mechanism used to enable data privacy. When you use closures for data privacy, the enclosed variables are only in scope within the containing (outer) function. You can’t get at the data from an outside scope except through the object’s **privileged methods**. In JavaScript, any exposed method defined within the closure scope is privileged. 
-
-Objects are not the only way to produce data privacy. Closures can also be used to create **stateful functions** whose return values may be influenced by their internal state
-
-https://medium.com/javascript-scene/master-the-javascript-interview-what-is-a-closure-b2f0d2152b36
-
-
+2. Objects are not the only way to produce data privacy. Closures can also be used to create **stateful functions** whose return values may be influenced by their internal state
 
 In functional programming, closures are frequently used for partial application & currying.
 
@@ -1034,6 +1026,182 @@ test('add10', assert => {
 2. 如果返回了`return 标量` 或 `throw Error` 则返回 `{PromiseStatus: resolved/rejected}` 的 `Promise`对象。
 3. 如果遇到了`await`装饰的`Promise`，则返回 `{PromiseStatus: pending}` 的 `Promise`。并等待此`Promise`的执行结果：如果`Promise`触发了`resolve`则获取结果并继续向下执行；如果`Promise`触发了`reject`则抛出一个异常。所以我们在使用时应将代码使用`try...catch`封装。
 4. `await` 关键字只能在 `async`内使用，`await`主要意图是装饰一个以 `{PromiseStatus: pending}`的状态返回的`Promise`对象（任何 JS 表达式都可以，但没什么意义），并等待其后续的`resolved/rejected`状态更新，从而决定是获得结果并继续向下执行，还是终止并抛出异常。
+
+```js
+var url = window.location.href
+
+async function getUrls(url1, url2, url3) {
+    try {
+        // req1 success or throw error (promise reject)
+        let res1 = await asyncHttpGet(url1);
+        
+        // req2 success or throw error (promise reject)
+        let res2 = await asyncHttpGet(url2);
+        
+        // req3 success or throw error (promise reject)
+        let res3 = await asyncHttpGet(url3);
+        
+        // 三个异步请求都成功 获取最终结果
+        return [res1, res2, res3].join("\n")
+    } catch(err) {
+        // 出现错误，做一些处理
+        console.log(err)
+        throw err
+    }
+}
+
+// 如此 3 个 Promise 请求在 async/await 的封装下变成了一个同步书写风格的异步请求
+getUrls(url, url, url).then(res => {
+    console.log(res)
+    // todo 业务
+}).catch(err => {
+    console.log(err)
+})
+
+console.log("request has been sended, and waiting for res")
+```
+
+
+
+async 返回的是 `Promise`对象，所以我们还可以继续使用 `async\await`封装异步到同步风格。
+
+```js
+async function getUrlsMore(url1, url2) {
+    try {
+        let getUrls1 = await getUrls(url1, url1, url1)
+        let getUrls2 = await getUrls(url2, url2, url2)
+        
+        // Promise resolve
+        return [getUrls1, getUrls2].join("\n")
+    } catch (err) {
+        // Promise reject
+        throw err
+    }
+}
+
+getUrlsMore(url, url).then(res => {
+    console.log(res)
+}).catch(err => {
+    console.log(err)
+})
+```
+
+
+
+**async/await 和 Promise 的关系**
+
+`async/await` 和 `Promise` 的关系非常的巧妙，`await`必须在`async`内使用，并装饰一个`Promise`对象，`async`返回的也是一个`Promise`对象。
+
+`async/await`中的`return/throw`会代理自己返回的`Promise`的`resolve/reject`，而一个`Promise`的`resolve/reject`会使得`await`得到返回值或抛出异常。
+
+如果方法内无`await`节点
+
+`return` 一个`字面量`则会得到一个`{PromiseStatus: resolved}`的`Promise`。
+`throw` 一个`Error`则会得到一个`{PromiseStatus: rejected}`的`Promise`。
+
+如果方法内有`await`节点
+`async`会返回一个`{PromiseStatus: pending}`的`Promise`（发生切换，异步等待`Promise`的执行结果）。
+`Promise`的`resolve`会使得`await`的代码节点获得相应的返回结果，并继续向下执行。
+`Promise`的`reject` 会使得`await`的代码节点自动抛出相应的异常，终止向下继续执行。
+
+
+
+总结：async封装Promise，await相当then，try…catch相当于catch
+
+**async 函数是什么**:
+
+***async 函数，就是 Generator 函数的语法糖。*** 它有以下几个特点：
+
+- 建立在promise之上。所以，不能把它和回调函数搭配使用。但它会声明一个异步函数，并隐式地返回一个Promise。因此可以直接return变量，无需使用Promise.resolve进行转换。
+- 和promise一样，是非阻塞的。但不用写 then 及其回调函数，这减少代码行数，也避免了代码嵌套。而且，所有异步调用，可以写在同一个代码块中，无需定义多余的中间变量。
+- 它的最大价值在于，可以使异步代码，在形式上，更接近于同步代码。
+- 它总是与await一起使用的。并且，await 只能在 async 函数体内。
+- await 是个运算符，用于组成表达式，它会阻塞后面的代码。如果等到的是 Promise 对象，则得到其 resolve值。否则，会得到一个表达式的运算结果。
+
+
+
+```js
+async function fn(args) {
+    // ...
+}
+
+// 等同于
+function fn(args) {
+    return spawn(function*() {
+        // ...
+    });
+}
+```
+
+**async 相较于 Promise的优势**
+
+**中间值**： 没有多余的中间值，更加优雅地实现了。
+
+
+
+**如果一个 Promise 被传递给一个 await 操作符，await 将等待 Promise 正常处理完成并返回其处理结果。**
+
+
+
+##### JS two pillars
+
+Prototypal Inheritance: Objects without classes, and prototype delegation, (Objects Linking to Other Objects)
+
+Fucntional Programming: enbaled lambdas with closure
+
+
+
+constructors downside:
+
+1. not in strict mode can be dangerous
+2. if you return an arbitrary object from a constructor function, it will break your prototype links, and the 'this' keyword will no longer be bound to the new object instance in the constructor. It is also less flexible than a real factory function because you cannot use this at all in the factory
+3. It actually not important to have constructor functions because any function can return a new object. With dynamic object extension, object literals and `Object.create()` 
+
+
+
+In JS, **factory functions** are simply constructor functions minus the 'new' requirement, global pollution danger and awkward limitations.
+
+you can copy/extend object properties using object spread syntax: `{...a, ...b}`
+
+The copy mechanism is another form of prototypal inheriatance. Sources of clone properties are a specific kind pof prototype called **exemplar prototypes**, and cloning an exemplar prototype is known as **concatenative inheritance**
+
+Concatenative inheritance is possible because of a feature in JavaScript known as **dynamic object extension:** the ability to add to an object after it has been instantiated.
+
+```
+“Program to an interface, not an implementation,”
+“favor object composition over class inheritance.”
+```
+
+
+
+##### Object Composition
+
+Class inheritance accomplishes reuse by abstracting a common interface away into a base class that subclasses can inherit from, add to, and override. There are two important parts of abstraction:
+
+- Generalization: The process of extracting only the shared properties and behaviors that serve the general use case
+- Specialization: The process oof providing the implementation details required to serve the special case
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -92,3 +92,44 @@ https://www.jianshu.com/p/1859224e4d79
 
 
 https://react.jokcy.me/book/api/react.html
+
+
+
+**tree diff**
+
+只会对同一层次的节点进行比较，如果节点不存在直接删除创建
+
+**Component diff**
+
+同一类型的组件继续tree diff比较，不同类型的组件直接删除重建。
+
+**element diff 或者叫list diff**
+三种方法：插入，移动，删除
+
+INSERT_MARKUP插入，新的 component 类型不在老集合里， 即是全新的节点，需要对新节点执行插入操作。
+
+MOVE_EXISTING移动，在老集合有新 component 类型，且 element 是可更新的类型，generateComponentChildren 已调用 receiveComponent，这种情况下 prevChild=nextChild，就需要做移动操作，可以复用以前的 DOM 节点。
+
+REMOVE_NODE删除，老 component 类型，在新集合里也有，但对应的 element 不同则不能直接复用和更新，需要执行删除操作，或者老 component 不在新集合里的，也需要执行删除操作。
+
+
+
+React 通过制定大胆的 diff 策略，将 O(n3) 复杂度的问题转换成 O(n) 复杂度的问题；
+
+React 通过分层求异的策略，对 tree diff 进行算法优化；
+
+React 通过相同类生成相似树形结构，不同类生成不同树形结构的策略，对 component diff 进行算法优化；
+
+React 通过设置唯一 key的策略，对 element diff 进行算法优化；
+
+建议，在开发组件时，保持稳定的 DOM 结构会有助于性能的提升；
+
+建议，在开发过程中，尽量减少类似将最后一个节点移动到列表首部的操作，当节点数量过大或更新操作过于频繁时，在一定程度上会影响 React 的渲染性能。
+
+
+
+
+
+
+
+
