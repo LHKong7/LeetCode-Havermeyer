@@ -1028,6 +1028,13 @@ test('add10', assert => {
 
 
 
+##### async/await
+
+1. `aysnc` 返回的也是一个 `Promise` 对象。
+2. 如果返回了`return 标量` 或 `throw Error` 则返回 `{PromiseStatus: resolved/rejected}` 的 `Promise`对象。
+3. 如果遇到了`await`装饰的`Promise`，则返回 `{PromiseStatus: pending}` 的 `Promise`。并等待此`Promise`的执行结果：如果`Promise`触发了`resolve`则获取结果并继续向下执行；如果`Promise`触发了`reject`则抛出一个异常。所以我们在使用时应将代码使用`try...catch`封装。
+4. `await` 关键字只能在 `async`内使用，`await`主要意图是装饰一个以 `{PromiseStatus: pending}`的状态返回的`Promise`对象（任何 JS 表达式都可以，但没什么意义），并等待其后续的`resolved/rejected`状态更新，从而决定是获得结果并继续向下执行，还是终止并抛出异常。
+
 
 
 
