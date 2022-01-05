@@ -50,3 +50,37 @@ console.log('script end');
     await会返回一个Promise 对象，或者一个表达式的值。
     其目的是为了让异步操作更优雅，能像同步一样地书写。
 */
+
+function frameOne() {
+    return new Promise(function(resolve) {
+        // Change the frame
+        // document.getElementById('frame-two').image.src = '';
+        setTimeout(function() {
+            resolve(frameTwo())
+        }, 1000);
+    })
+}
+
+function frameTwo() {
+    return new Promise(function(resolve) {
+        // Change the frame
+        // document.getElementById('frame-two').image.src = '';
+        setTimeout(function() {
+            resolve(frameOne())
+        }, 2000);
+    })
+}
+
+frameOne();
+
+function changeFrame() {
+    return new Promise((resolve, reject) => {
+        setTimeout(resolve, 3000)
+    })
+}
+
+async function run() {
+    while (true) {
+        await changeFrame()
+    }
+}
