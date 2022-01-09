@@ -20,25 +20,24 @@
  * @param {string} s
  * @return {number}
  */
-var lengthOfLongestSubstring = function(s) {
-    let checkedSet = new Set(); // 我们还需要使用一种数据结构来判断 是否有重复的字符
-    let rPtr = -1, res = 0; // 右指针，初始值为 -1，相当于我们在字符串的左边界的左侧，还没有开始移动
+ var lengthOfLongestSubstring = function(s) {
+    let n = s.length;
+    let mySet = new Set();
+    let rPtr = -1, res = 0;
 
-    for (let i = 0; i < s.length; i++) {
-        if (i != 0) {
-            // 左指针向右移动一格，移除一个字符
-            checkedSet.delete(s.charAt(i - 1));
+    for (let i = 0; i < n; ++i) {
+        if (i !== 0) {
+            mySet.delete(s.charAt(i-1));
         }
 
-        while (rPtr + 1 < s.length && !checkedSet.has(s.charAt(rPtr + 1))) {
-            // 不断地移动右指针
-            checkedSet.add(s.charAt(rPtr + 1));
-            rPtr = rPtr + 1
+        while (rPtr + 1 < n && !mySet.has(s.charAt(rPtr + 1))) {
+            mySet.add(s.charAt(rPtr + 1));
+            rPtr += 1;
         }
 
-        // 第 i 到 rk 个字符是一个极长的无重复字符子串
         res = Math.max(res, rPtr - i + 1);
     }
+
     return res;
 };
 
