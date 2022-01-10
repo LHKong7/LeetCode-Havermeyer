@@ -9,13 +9,21 @@
 // // console.log(arr)
 // arr = arr;
 
-function ok() {
-    let count = 3;
-    function _closure() {
-        console.log(count);
-    }
+// function ok() {
+//     let count = 3;
+//     function _closure() {
+//         console.log(count);
+//     }
 
-    _closure();
+//     _closure();
+// }
+
+// ok();
+
+for (let i = 0; i < 10; i++) {
+    if (i === 2) {
+        continue;
+    }
+    console.log(i)
 }
 
-ok();
