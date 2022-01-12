@@ -15,51 +15,56 @@
  *
  * TestCase: [5, 2, 4, 3, 1]
  * Output: [1, 2, 3, 4, 5]
- * Explanation: 
+ * Explanation:
  *         create a function that merges two arrays. Obviously, this function
  *            will accept two arrays, and it needs to sort the two arrays
  *            correctly starting from the smallest element.
- *  
+ *
  *  The time complexity is O(nlogn)
  *      space complexity is O(N)
  * *****************************************************************/
-function _merge(left, right) {
-    let sortedArr = [];
 
-    while (left.length && right.length) {
-        if (left[0] < right[0]) {
-            sortedArr.push(left.shift());
-        } else {
-            sortedArr.push(right.shift());
-        }
+const merge = (left, right) => {
+  let resArr = [], i = 0, j = 0;
+
+  while (i < left.length && j < right.length) {
+    if (left[i] <= right[j]) {
+      resArr.push(left[i]);
+      i += 1;
+    } else {
+      resArr.push(right[j]);
+      j += 1;
     }
+  }
 
-    while (left.length) {
-        sortedArr.push(left.shift())
-    }
+  while (i < left.length) {
+    resArr.push(left[i]);
+    i += 1;
+  }
 
-    while (right.length) {
-        sortedArr.push(right.shift())
-    }
+  while (j < right.length) {
+    resArr.push(right[j]);
+    j += 1;
+  }
 
-    // use spread operator and create a new array, combining the three arrays
-    return sortedArr;
+  return resArr;
 }
 
-function mergeSort(arr) {
-    const half = arr.length / 2;
+const mergeSort = (arr) => {
+  if (arr.length < 2) {
+    return arr;
+  }
 
-    if (arr.length <= 1) {
-        return arr;
-    }
+  const mid = Math.floor(arr.length / 2);
+  const left = arr.slice(0, mid);
+  const right = arr.slice(mid);
 
-    const left = arr.splice(0, half);
-    const right = arr;
-
-    return _merge(mergeSort(left), mergeSort(right));
+  return merge(mergeSort(left), mergeSort(right));
 }
 
-console.log(mergeSort([5, 2, 4, 3, 1]));
+const data = [34, 33, 12, 78, 21, 1, 98, 100];
+let res = mergeSort(data);
+console.log(res)
 
 
 /**
