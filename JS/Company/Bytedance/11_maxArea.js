@@ -39,6 +39,20 @@
     return res;
 };
 
+var maxArea_BF = function(height) {
+    let n = height.length;
+    let maxArea = 0;
+
+    for (let i = 0; i < n; i++) {
+        for (let j = i + 1; j < n; j++) {
+            let curArea = Math.min(height[i], height[j]) * (j-i);
+            maxArea = Math.max(maxArea, curArea);
+        }
+    }
+
+    return maxArea;
+}
+
 
 
 /**
