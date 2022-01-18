@@ -79,7 +79,7 @@ console.log(trap_dp(height));
 
 /**
  * @Idea: 
- * @Solution: 时间复杂度：O(n)，其中 nn 是数组 \textit{height}height 的长度。两个指针的移动总次数不超过 nn
+ * @Solution: 时间复杂度：O(n)，其中 nn 是数组 height 的长度。两个指针的移动总次数不超过 n
  * @DataStructure:
  */
 
