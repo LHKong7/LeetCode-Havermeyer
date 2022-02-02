@@ -36,6 +36,95 @@ res : 200
 
 
 
+##### 64 minPathSum
+
+**BackTracking**:
+
+从 [0, 0] 开始 向上 (1, 0)或向下(0, 1) 
+
+构建树形结构 当到达 `(*row* === *grid*.length - 1 && *col* === *grid*[0].length - 1)` 到达叶子节点时，计算最小路径和
+
+剪枝 `if (nextRow < 0 || nextCol < 0 || nextRow >= *grid*.length || nextCol >= *grid*[0].length) continue;` 
+
+优化：记录每次到达叶子节点 在节点处取最小子节点的值
+
+**memoization**
+
+将每一个节点到叶子节点的最小路径和
+
+Memo数组里存储的是当前节点到终点的最小路径和
+
+**DP**:
+
+`dp[i][j]` : 表示从 i，j 到右下角（终点）的最短路径
+
+`dp[m-1][n-1] = grid[m-1][n-1]`
+
+最后一行： `dp[m-1][j] = grid[m-1][j] + dp[m-1][j+1]`
+
+最后一列： `dp[i][n-1] = grid[i][n-1] + dp[i+1][n-1]`
+
+平常的状态转移: `dp[i][j] = grid[i][j] + min(dp[i-1][j], dp[i][j-1])`
+
+
+
+##### 53 maxSubArray
+
+```javascript
+var maxSubArray = function(nums) {
+    let pre = 0, maxAns = nums[0];
+    nums.forEach((x) => {
+        pre = Math.max(pre + x, x);
+        maxAns = Math.max(maxAns, pre);
+    });
+    return maxAns;
+};
+```
+
+
+
+##### 647 回文子串
+
+**Dynamic Programming**:
+
+定义状态： `dp[i][j]` 表示子数组区间 `[i, j]` 对应的子串是否是回文
+
+如果 `s.charAt[i] === s.charAt[j]` 的话， 那么 `dp[i][j] = dp[i+1][j-1]`
+
+如果 `s.charAt[i] !== s.charAt[j]` 的话， 那么 `dp[i][j] =false`
+
+如果 只有两个字符的话， 那么`dp[i][j] = (s.charAt[i] == s.charAt[j])`
+
+确定状态转移方向： 初始化都是false
+
+
+
+##### 5 最长回文串
+
+##### 131
+
+
+
+##### 300 最长递增子序列
+
+`dp[i]` 表示以索引为i的元素结尾的最长递增子序列的长度
+
+`nums[j] > nums[i] : dp[j] = max(1 + dp[i], dp[i])`
+
+`nums[j] <= nums[i] : dp[j] = 1 `
+
+
+
+**最长递增子数组**：
+
+
+
+
+
+
+
+
+
 
 
 

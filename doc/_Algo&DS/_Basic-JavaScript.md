@@ -88,11 +88,67 @@ Used as Stack (LIFO) :
 
 ##### Map
 
+The **`Map`** object holds key-value pairs and remembers the original insertion order of the keys. Any value (both objects and [primitive values](https://developer.mozilla.org/en-US/docs/Glossary/Primitive)) may be used as either a key or a value.
+
+A `Map` object iterates its elements in insertion order — a [`for...of`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...of) loop returns an array of `[key, value]` for each iteration.
+
+
+
+**Key Equality**:
+
+- Key equality is based on the [`sameValueZero`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Equality_comparisons_and_sameness#same-value-zero_equality) algorithm.
+- [`NaN`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NaN) is considered the same as `NaN` (even though `NaN !== NaN`) and all other values are considered equal according to the semantics of the `===` operator.
+- In the current ECMAScript specification, `-0` and `+0` are considered equal, although this was not so in earlier drafts. See *"Value equality for -0 and 0"* in the [Browser compatibility](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map#browser_compatibility) table for details
+
+[`Object`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object) is similar to `Map`—both let you set keys to values, retrieve those values, delete keys, and detect whether something is stored at a key. For this reason (and because there were no built-in alternatives), `Object` has been used as `Map` historically.
+
+
+
+```javascript
+const contacts = new Map()
+contacts.set('Jessie', {phone: "213-555-1234", address: "123 N 1st Ave"})
+contacts.has('Jessie') // true
+contacts.get('Hilary') // undefined
+contacts.set('Hilary', {phone: "617-555-4321", address: "321 S 2nd St"})
+contacts.get('Jessie') // {phone: "213-555-1234", address: "123 N 1st Ave"}
+contacts.delete('Raymond') // false
+contacts.delete('Jessie') // true
+console.log(contacts.size) // 1
+```
+
+
+
+[`Map.prototype.clear()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/clear) Removes all key-value pairs from the `Map` object.
+
+[`Map.prototype.delete(key)`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/delete) Returns `true` if an element in the `Map` object existed and has been removed, or `false` if the element does not exist. `Map.prototype.has(key)` will return `false` afterwards.
+
+[`Map.prototype.get(key)`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/get) Returns the value associated to the `key`, or `undefined` if there is none.
+
+[`Map.prototype.has(key)`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/has) Returns a boolean asserting whether a value has been associated to the `key` in the `Map` object or not.
+
+[`Map.prototype.set(key, value)`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/set) Sets the `value` for the `key` in the `Map` object. Returns the `Map` obje
+
+
+
 
 
 ##### Set
 
+The **`Set`** object lets you store unique values of any type, whether [primitive values](https://developer.mozilla.org/en-US/docs/Glossary/Primitive) or object references.
 
+`Set` objects are collections of values. You can iterate through the elements of a set in insertion order. A value in the `Set` **may only occur once**; it is unique in the `Set`'s collection.
+
+
+
+**Instance Methods**:
+
+[`Set.prototype.add(value)`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set/add) Appends `value` to the `Set` object. Returns the `Set` object with added value.
+
+[`Set.prototype.clear()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set/clear) Removes all elements from the `Set` object.
+
+[`Set.prototype.delete(value)`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set/delete) Removes the element associated to the `value` and returns a boolean asserting whether an element was successfully removed or not. `Set.prototype.has(value)` will return `false` afterwards.
+
+[`Set.prototype.has(value)`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set/has) Returns a boolean asserting whether an element is present with the given value in the `Set` object or not.
 
 
 

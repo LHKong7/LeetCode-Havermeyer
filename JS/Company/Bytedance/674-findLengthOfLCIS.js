@@ -16,3 +16,22 @@
 
     return res;
 };
+
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+ var findLengthOfLCIS_DP = function(nums) {
+    if (nums === null || nums.length === 0) return 0;
+    let dp = new Array(nums.length).fill(1);
+
+    let maxLen = 1;
+    for (let i = 1; i < nums.length; i++) {
+        if (nums[i] > nums[i-1]) {
+            dp[i] = 1 + dp[i-1];
+            maxLen = Math.max(maxLen, dp[i]);
+        }
+    }
+
+    return maxLen;
+};
