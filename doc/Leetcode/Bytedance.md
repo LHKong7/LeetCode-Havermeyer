@@ -119,6 +119,50 @@ var maxSubArray = function(nums) {
 
 
 
+##### 72 minDistance
+
+求最优值问题：
+
+状态定义： 对于字符串的定义用二维数组来表示
+
+​	`dp[i][j]` 表示word1前i个字符转换成word2前j个字符 。 花的最少操作数 （即编辑距离）
+
+​	`dp = new Array(word1.length + 1).fill(0).map(() => new Array(word2.length + 1).fill(0))`
+
+
+
+状态推导：
+
+当 `word.charAt(i-1) == word2.charAt(j-1)` 时 `dp[i][j] = dp[i-1][j-1]`
+
+`dp[0][0`] 表示word1前0个字符转换成word2 前0个字符的编辑距离
+
+前0个字符的意思就是空字符串的意思。
+
+
+
+当 `word1.charAt(i) !== word2.charAt(j)`
+
+插入： `1 + dp[i][j-1]`
+
+删除： `1 + dp[i-1][j] `
+
+替换：`1 + dp[i-1][j-1]`
+
+最终： `1+min(dp[i][j-1], dp[i-1][j], dp[i-1][j-1])`
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
