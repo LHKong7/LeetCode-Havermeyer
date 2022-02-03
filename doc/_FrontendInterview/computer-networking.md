@@ -2788,6 +2788,32 @@ TCP socket也有三个选项和内核对应，通过setsockopt系统调用针对
 
 
 
+##### Load Balancing
+
+Loading Balancing is a core networking solution used to distribute traffic across multiplt servers in a server farm
+
+Load balancers improve application availability and responsiveness and prevent server overload
+
+Each load balancer sits between client devices and backend servers, receiving and then distributing incoming requests to any available server capable of fulfilling them.
+
+A load balancer may be:
+
+- A physical device, a virtualized instance running on specialized hardware, or a software process
+- Incorporated into [application delivery controllers (ADCs)](https://www.citrix.com/solutions/app-delivery-and-security/what-is-application-delivery-controller.html) designed to more broadly improve the performance and security of three-tier web and microservices-based applications, regardless of where they’re hosted
+- Able to leverage many possible load balancing algorithms including round robin, server response time, and the least connection method to distribute traffic in line with current requirements
+
+https://www.citrix.com/solutions/app-delivery-and-security/load-balancing/what-is-load-balancing.html
+
+
+
+##### 黏性Session和非黏性Session
+
+黏性Session：此模式下同一会话中的请求都被派送到同一个tomcat实例上，这样我们就无须在多台服务器之间实现session共享了，这是其好处，不好的地方就是不能实现failureover了，一但用户访问的机器挂掉，那么其session就会丢失。
+
+非黏性Session：又名复制Session，此模式下同一会话中的请求可以被分配到不同的tomcat实例上进行处理，此时就需要在不同服务器之间同步、复制session，这样一来即使一台服务器挂掉了，请求在其它服务器上照样可以访问到session信息，其缺点在于Session复制需要系统资源和网络开销
+
+
+
 
 
 
