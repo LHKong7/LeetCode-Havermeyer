@@ -307,15 +307,15 @@ webStorage虽然也有存储大小的限制，但是比cookie大得多，可以�
 
 ##### 97. cookie session区别
 
-\1.  cookie数据存放在客户的浏览器上，session数据放在服务器上。
+1. cookie数据存放在客户的浏览器上，session数据放在服务器上。
 
-\2.  cookie不是很安全，别人可以分析存放在本地的COOKIE并进行COOKIE欺骗
-考虑到安全应当使用session。
+2. cookie不是很安全，别人可以分析存放在本地的COOKIE并进行COOKIE欺骗
+   考虑到安全应当使用session。
 
-\3.  session会在一定时间内保存在服务器上。当访问增多，会比较占用你服务器的性能
-考虑到减轻服务器性能方面，应当使用COOKIE。
+3. session会在一定时间内保存在服务器上。当访问增多，会比较占用你服务器的性能
+   考虑到减轻服务器性能方面，应当使用COOKIE。
 
-\4.  单个cookie保存的数据不能超过4K，很多浏览器都限制一个站点最多保存20个cookie。
+4. 单个cookie保存的数据不能超过4K，很多浏览器都限制一个站点最多保存20个cookie。
 
 
 
@@ -480,6 +480,15 @@ webStorage虽然也有存储大小的限制，但是比cookie大得多，可以�
 
 
 ##### 105. 前端优化
+
+网络优化： 降低请求量，合并资源，减少HTTP请求数，DNS预解析，减少域名数，CDN分发
+
+客户端优化（browser & mobile device）：
+
+- 缓存
+- 渲染
+
+
 
 降低请求量：合并资源，减少HTTP 请求数，minify / gzip 压缩，webP，lazyLoad。
 

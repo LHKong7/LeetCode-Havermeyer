@@ -152,3 +152,15 @@ The **`Set`** object lets you store unique values of any type, whether [primitiv
 
 
 
+[`Set.prototype.keys()` (en-US)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set/values)
+
+与**`values()`**方法相同，返回一个新的迭代器对象，该对象包含`Set`对象中的按插入顺序排列的所有元素的值。
+
+[`Set.prototype.values()`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Set/values)
+
+返回一个新的迭代器对象，该对象包含`Set`对象中的按插入顺序排列的所有元素的值。
+
+
+
+
+
