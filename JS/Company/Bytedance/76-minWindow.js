@@ -49,5 +49,5 @@
         right++
     }
 
-    return ans[0] == -1 ? "" : s.substr(ans[1], ans[0])
+    return ans[0] == -1 ? "" : s.substring(ans[1], ans[0])
 };

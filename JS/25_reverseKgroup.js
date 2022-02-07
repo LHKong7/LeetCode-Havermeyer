@@ -32,9 +32,9 @@ const myReverse = (head, tail) => {
     return [tail, head];
 }
 var reverseKGroup = function(head, k) {
-    const hair = new ListNode(0);
-    hair.next = head;
-    let pre = hair;
+    const dummyNode = new ListNode(0);
+    dummyNode.next = head;
+    let pre = dummyNode;
 
     while (head) {
         let tail = pre;
@@ -42,7 +42,7 @@ var reverseKGroup = function(head, k) {
         for (let i = 0; i < k; ++i) {
             tail = tail.next;
             if (!tail) {
-                return hair.next;
+                return dummyNode.next;
             }
         }
         const nex = tail.next;
@@ -53,7 +53,7 @@ var reverseKGroup = function(head, k) {
         pre = tail;
         head = tail.next;
     }
-    return hair.next;
+    return dummyNode.next;
 };
 
 

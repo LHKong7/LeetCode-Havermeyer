@@ -2,14 +2,6 @@
 
 [TOC]
 
-
-
-### TODO:
-
-​	https://baijiahao.baidu.com/s?id=1707212969156040996&wfr=spider&for=pc
-
-
-
 ## General:
 
 ##### OSI七层协议模型、TCP/IP四层模型和五层协议体系结构之间的关系？
@@ -23,39 +15,23 @@
 
 
 
-### Application Layer
+### Application Layer 应用层
 
 #### HTTP
 
 
 
-### Presentation Layer
+### Presentation Layer  表示层
 
 
 
-### Session Layer
+### Session Layer 会话层
 
 
 
-### Transport Layer
+### Transport Layer 传输层
 
-
-
-### Network Layer
-
-
-
-### Data Link
-
-
-
-### Physical
-
-
-
-
-
-
+#### TCP
 
 ##### TCP报文格式及首部含义？
 
@@ -137,9 +113,19 @@
 -  16位的窗口大小最多能放65536字节 
 -  如果想要使用更大的窗口，可以在选项中添加窗口的缩放比例因子来进行扩大，比例为0-14
 
+#### UDP
 
 
-##### 2. IP报文格式及首部含义
+
+
+
+
+
+### Network Layer 网络层
+
+#### IP
+
+##### IP报文格式及首部含义
 
 ![IPmsg](../Assets/IPmsg.png)
 
@@ -157,6 +143,28 @@
  分段偏移    
 
 -  当原始报文过大，以以太网帧为例，当大于1500字节的时候，会对原始报文进行分割，此时该字段就用来表示该分段在原始报文的位置
+
+
+
+
+
+
+
+### Data Link 数据链路层
+
+
+
+### Physical 物理层
+
+
+
+
+
+
+
+
+
+
 
 ##### 3. UDP报文格式及首部含义
 
