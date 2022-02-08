@@ -12,3 +12,29 @@
 
 
 
+##### Singleton Pattern
+
+Database Driver
+
+For a given class, there is only one object (Data Store) => State of app
+
+
+
+
+
+##### Facade Pattern
+
+Compiler
+
+
+
+##### Bridge/Adapter Pattern
+
+
+
+##### Strategy pattern
+
+
+
+##### Observer Pattern
+
