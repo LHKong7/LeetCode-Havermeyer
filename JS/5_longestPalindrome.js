@@ -20,45 +20,35 @@
  * @param {string} s
  * @return {string}
  */
-var longestPalindrome = function(s) {
-    const n = s.length;
-
-    if (n < 2) {
-        return s;
-    }
-
-    let maxLen = 1;
-    let start = 0;
-    let dp = new Array(n).fill(false).map(() => new Array(n).fill(false)); // create n length 2D array
+ var longestPalindrome = function(s) {
+    if (s.length === 1) return s[0];
+    let n = s.length;
+    let res = s[0] + '';
+    let dp = new Array(n).fill(false).map(() => new Array(n).fill(false));
 
     for (let i = 0; i < n; i++) {
         dp[i][i] = true;
     }
-    console.log(dp)
 
-    for (let i = 2; i < n + 1; i++) {
-        for (let j = 0; j < n; ++j) {
-            rightBounary = i + j - 1;
+    for (let j = 1; j < n; j++) {
+        for (let i = 0; i < j; i++) {
+            let isCharEqual = s[i] === s[j];
 
-            if (rightBounary >= n)
-                break;
-            
-            if (s[j] != s[rightBounary]) {
-                dp[j][rightBounary] = false;
+            if (j - i === 1) {
+                dp[i][j] = isCharEqual;
+            } else if (!isCharEqual) {
+                dp[i][j] = false;
             } else {
-                if ((rightBounary - j) < 3) {
-                    dp[j][rightBounary] = true;
-                } else {
-                    dp[j][rightBounary] = dp[j+1][rightBounary-1]
-                }
+                dp[i][j] = dp[i+1][j-1];
             }
 
-            if (dp[j][rightBounary] == true && ((rightBounary-j+1) > maxLength)) {
-                maxLength = rightBounary - j + 1;
-                start = j;
+            if (dp[i][j] && j-i+1 > res.length) {
+                res = s.substring(i, j + 1);
             }
         }
     }
+
+    return res;
 };
 
 console.log(longestPalindrome('babad'));

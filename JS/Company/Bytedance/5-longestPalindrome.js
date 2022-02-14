@@ -3,25 +3,28 @@
  * @return {string}
  */
  var longestPalindrome = function(s) {
-    if (s === null || s.length === 0) return '';
-    if (s.length === 1) return s;
-    let dp = new Array(s.length).fill(false).map(() => new Array(s.length).fill(false));
-    let res = s.charAt(0) + '';
+    if (s.length === 1) return s[0];
+    let n = s.length;
+    let res = s[0] + '';
+    let dp = new Array(n).fill(false).map(() => new Array(n).fill(false));
 
-    for (let i = 0; i < s.length; i++) {
+    for (let i = 0; i < n; i++) {
         dp[i][i] = true;
     }
 
-    // state mutation
-    for (let j = 1; j < s.length; j++) {
+    for (let j = 1; j < n; j++) {
         for (let i = 0; i < j; i++) {
-            let charEquality = s.charAt(i) === s.charAt(j);
-            if (j - i === 1) { // only two char
-                dp[i][j] = charEquality;
-            } else { // larger than two char
-                dp[i][j] = charEquality && dp[i+1][j-1];
+            let isCharEqual = s[i] === s[j];
+
+            if (j - i === 1) {
+                dp[i][j] = isCharEqual;
+            } else if (!isCharEqual) {
+                dp[i][j] = false;
+            } else {
+                dp[i][j] = dp[i+1][j-1];
             }
-            if (dp[i][j] && j - i + 1 > res.length) {
+
+            if (dp[i][j] && j-i+1 > res.length) {
                 res = s.substring(i, j + 1);
             }
         }

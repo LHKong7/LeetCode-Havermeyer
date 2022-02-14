@@ -23,17 +23,20 @@
  * @param {number} target
  * @return {number[]}
  */
- var twoSum = function(nums, target) {
-    let myMap = new Map();
+var twoSum_1 = function(nums, target) {
+    const n = nums.length;
+    const hashStore = new Map();
 
-    for (let i = 0; i < nums.length; i++) {
-        if (myMap.has(target - nums[i])) {
-            return [myMap.get(target-nums[i]), i];
+    for (let i = 0; i < n; i++) {
+        if (hashStore.has(target - nums[i])) {
+            return [hashStore.get(target - nums[i]), i];
         }
-        myMap.set(nums[i], i);
+
+        hashStore.set(nums[i], i);
     }
-    return [-1,-1];
-}
+
+    return [-1, -1]
+};
 
 
 
