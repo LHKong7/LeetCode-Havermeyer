@@ -6,7 +6,7 @@
 
 https://juejin.cn/post/6850418118854967304#heading-2
 
-# Basic JavaScript Knowledge Prepartion
+# JavaScript Knowledge Prepartion
 
 ### JS knowledge
 

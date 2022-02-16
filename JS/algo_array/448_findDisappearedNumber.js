@@ -16,30 +16,32 @@
  * Output: [5,6]
  * Explanation:
  * *****************************************************************/
+
 /**
  * @param {number[]} nums
  * @return {number[]}
  */
-var findDisappearedNumbers = function(nums) {
+ var findDisappearedNumbers = function(nums) {
     const n = nums.length;
-    for (const num of nums) {
-        const x = (num - 1) % n;
-        nums[x] += n;
+    for (let i = 0; i < n; i++) {
+        let idx = (nums[i] - 1) % n;
+        nums[idx] += n;
     }
-    const ret = [];
-    for (const [i, num] of nums.entries()) {
-        if (num <= n) {
-            ret.push(i + 1);
+
+    let res = [];
+    for (let i = 0; i < n; i++) {
+        if (nums[i] <= n) {
+            res.push(i+1);
         }
     }
-    return ret;
+
+    return res;
 };
 
 
 
-
 /**
- * @Idea:
+ * @Idea: when less & equal to n, the value is not appe
  * @Solution:
  * @DataStructure:
  */
