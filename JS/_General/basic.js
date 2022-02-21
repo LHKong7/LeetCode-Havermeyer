@@ -26,5 +26,9 @@
 //     }
 //     console.log(i)
 // }
-let char = 'a';
-console.log(char * 2);
+// let char = 'a';
+// console.log(char * 2);
+
+// let myString = 'abcdefg';
+// myString.slice(0, -1)
+// console.log(myString);

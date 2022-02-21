@@ -156,6 +156,21 @@ Methods are functions, a method is just a function with a receiver argument.
 
 **Pointers and functions**: While methods with pointer receivers take either a value or a pointer as a receiver when they are called. Functions that take a value argument must take a value of that specifc type. While methods with value receivers take either a value or a pointer as the receiver when they are called.
 
+**Value or Pointer receiver**: 
+
+​	Two reasons to use a pointer receiver:
+
+- The method can modify the value that its receiver points to
+- avoid copying the value on each method call.
+
+
+
+##### Interfaces
+
+An interface type is defined as a set of method signatures. A value of interface type can hold any value that implements those methods.
+
+
+
 
 
 
