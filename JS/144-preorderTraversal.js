@@ -1,4 +1,22 @@
 /**
+ * @charset: UTF-8
+ * @Date:
+ * @Author: Linghan Kong
+ * @Algoset:
+ * @Memo: Giving up is not an option
+ */
+
+/******************************************************************
+ *
+ * Problem Description:
+ *
+ *
+ * TestCase:
+ * Output:
+ * Explanation:
+ * *****************************************************************/
+
+/**
  * Definition for a binary tree node.
  * function TreeNode(val, left, right) {
  *     this.val = (val===undefined ? 0 : val)
@@ -10,7 +28,7 @@
  * @param {TreeNode} root
  * @return {number[]}
  */
- var preorderTraversal = function(root) { // root-left-right
+var preorderTraversal = function(root) { // root-left-right
     let res = [];
     if (root === null) return res;
     let stack = [];
@@ -37,3 +55,13 @@ var preorderTraversal_recursive = function(root) {
     preOrder(root, res);
     return res;
 };
+
+
+
+
+/**
+ * @Idea:
+ * @Solution:
+ * @DataStructure:
+ */
+
