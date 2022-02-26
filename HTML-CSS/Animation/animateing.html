@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Animate With CSS</title>
+        <style>
+            /* .box {
+                width: 30px;
+                height: 30px;
+                background-color: aquamarine;
+                transform: translate(0, 0);
+                transition: transform 500ms;
+            }
+
+            .box.move {
+                transform: translate(100px, 100px);
+            } */
+            /* The CSS Animation */
+            .box {
+                width: 30px;
+                height: 30px;
+                background-color: aquamarine;
+                /* Choose the animation */
+                animation-name: movingBox;
+
+                /* The animation’s duration */
+                animation-duration: 1300ms;
+
+                /* The number of times we want
+                    the animation to run */
+                animation-iteration-count: infinite;
+
+                /* Causes the animation to reverse
+                    on every odd iteration */
+                animation-direction: alternate;
+            }
+
+            @keyframes movingBox {
+                0% {
+                    transform: translate(0, 0);
+                    opacity: 0.3;
+                }
+
+                25% {
+                    opacity: 0.9;
+                }
+
+                50% {
+                    transform: translate(100px, 100px);
+                    opacity: 0.2;
+                }
+
+                100% {
+                    transform: translate(30px, 30px);
+                    opacity: 0.8;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="root">
+            <div class="box"></div>
+        </div>
+    </body>
+    <script>
+        var box = document.querySelector('.box');
+            box.addEventListener('click', function() {
+                box.classList.toggle('move');
+            });
+    </script>
+</html>
