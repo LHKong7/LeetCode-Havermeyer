@@ -27,5 +27,104 @@ There are two primary ways to create animations on the web: With CSS and With Ja
 
 
 
+**Animate W. CSS**
+
+Specify what you'd like to happen
+
+CSS transitions: 
+
+​	JavaScript can use the `transitioned` event to listen.
+
+
+
+CSS animations: which allow you to have much more control over individual animation keyframes, durations and iterations. For example, animate without any user interactions like clicking and with infinite repetitions.
+
+
+
+**Animate W. JavaScript and the Web Animations API**
+
+You can use the *Web Animation API* to either animate specific CSS properties or build composable effect objects.
+
+JavaScript animations are *impreative*, You can also encapsualate them inside other objects.
+
+By default, Web Animations only modify the presentation of an element. If you would like to have your object remain at the location it has moved to, then you should modify its underlying styles when the animation has finished.
+
+With JavaScript, you have the total control of element's styles at every step.
+
+
+
+##### The Basics of Easing : `https://developers.google.com/web/fundamentals/design-and-ux/animations/the-basics-of-easing`
+
+`slow in` & `ease in`: motion that starts slowly and accelerates
+
+`slow out` & `ease out`: starts quickly and decelerates
+
+**Easing Keywords**:
+
+Keywords that can be used in CSS:
+
+- linear : animations without any kind of easing
+
+  - ```css
+    
+    transition: transform 500ms linear
+    
+    ```
+
+- ease-in : start slowly and end fast 
+
+  - ```css
+    transition: transform 500ms ease-in;
+    ```
+
+    
+
+- ease-out : start more quickly than linear and it also has deceleration at the end
+
+  ```css
+  transition: transform 500ms ease-out;
+  ```
+
+  
+
+- ease-in-out:
+
+  - ```css
+    transition: transform 500ms ease-in-out;
+    
+    ```
+
+    
+
+##### Custom of easing
+
+**With CSS**: you can define cubic `Bezier curves` to define the timing. 
+
+X axis is Time and Y axis is Value
+
+​	`Bezier Curves`: takes four values or two pairs of numbers: With each pair describing the X and Y coordinates of a cubic Bezier curve's control points. The starting point of the Bezier curve has coordinates (0, 0) and the ending point has coordinates (1,1); you get to set the X and Y values of two control points. The X values for the two control points must be between 0 and 1, and each control point's Y value can exceed the [0, 1] limit
+
+`transition: transform 500ms cubic-bezier(0.465, 0.183, 0.153, 0.946);`
+
+
+
+**With JavaScript**:
+
+Sometimes you need even more control than a cubic Bézier curve can provide. If you wanted an elastic bounce feel, you might consider using a JavaScript framework, because this is a difficult effect to achieve with either CSS or Web Animations.
+
+
+
+##### Animating Between Views
+
+- Use translations to move between views; avoid using `left`, `top`, or any other property that triggers layout.
+- Ensure that any animations you use are snappy and the durations are kept short.
+- Consider how your animations and layouts change as the screen sizes go up; what works for a smaller screen may look odd when used in a desktop context.
+
+
+
+```
+Sometimes you need even more control than a cubic Bézier curve can provide. If you wanted an elastic bounce feel, you might consider using a JavaScript framework, because this is a difficult effect to achieve with either CSS or Web Animations.
+```
+
 
 
