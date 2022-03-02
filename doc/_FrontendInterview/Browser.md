@@ -112,6 +112,12 @@ X axis is Time and Y axis is Value
 
 Sometimes you need even more control than a cubic Bézier curve can provide. If you wanted an elastic bounce feel, you might consider using a JavaScript framework, because this is a difficult effect to achieve with either CSS or Web Animations.
 
+```
+Sometimes you need even more control than a cubic Bézier curve can provide. If you wanted an elastic bounce feel, you might consider using a JavaScript framework, because this is a difficult effect to achieve with either CSS or Web Animations.
+```
+
+
+
 
 
 ##### Animating Between Views
@@ -120,11 +126,21 @@ Sometimes you need even more control than a cubic Bézier curve can provide. If 
 - Ensure that any animations you use are snappy and the durations are kept short.
 - Consider how your animations and layouts change as the screen sizes go up; what works for a smaller screen may look odd when used in a desktop context.
 
+Transition look and behave like depends on the type of views you are dealing with. 
 
+​	For example: Animating a modal overlay on top of a view should be a different experience from tranistioning between a list and details view.
 
 ```
-Sometimes you need even more control than a cubic Bézier curve can provide. If you wanted an elastic bounce feel, you might consider using a JavaScript framework, because this is a difficult effect to achieve with either CSS or Web Animations.
+Try to maintain 60fps for all of your animations. That way, your users won't see stuttering animations that interfere with their experience. Ensure that any animating element has will-change set for anything you plan to change well ahead of the animation starting. For view transitions, it’s highly likely you will want to use will-change: transform.
 ```
+
+
+
+**Use transitions to move between views**:
+
+​	Descriptions: Assume that there are two views: a list view and a detail view. As the user taps a list item inside the list view, the details view slides in, and the list view slides out.
+
+​	To achieve this effect: you need a container for both views that has `overflow: hidden` set on it. The two views can both be inside the container side-by-side without showing any horizontal scrollbars, and 
 
 
 
