@@ -141,3 +141,18 @@ Try to maintain 60fps for all of your animations. That way, your users won't see
 ​	Descriptions: Assume that there are two views: a list view and a detail view. As the user taps a list item inside the list view, the details view slides in, and the list view slides out.
 
 ​	To achieve this effect: you need a container for both views that has `overflow: hidden` set on it. The two views can both be inside the container side-by-side without showing any horizontal scrollbar;
+
+
+
+### Responsive Web Design
+
+
+
+**Meet the media query**:
+
+A **media query** allows us to target not only certain device classes, but to actually insepect the physical characteristics of the device rendering our work. 
+
+can used with import `@import url("shetland.css") screen and (max-device-width: 480px);`
+
+
+
