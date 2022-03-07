@@ -435,4 +435,332 @@ d、一定程度上改变了网站原有的布局结构，会出现用户混淆�
 
 当我们要指定一系列标签中的某个元素时，并不需要用JavaScript获取。可以用 `:nth-child(n)` 与 `:nth-of-type(n)` 来找到，并指定样式。但它们有一些小区别，需要注意。
 
+
+
+##### 像素基本概念
+
+手机（屏幕）尺寸： 指对角线的长度 用英寸表示
+
+css像素：逻辑像素，也就是我们写代码时候的px，注意缩放会改变css像素大小。
+
+设备像素pt ： 物理像素，不同的设备的物理像素大小也是不同的
+
+ppi：像素密度，即每英寸（in）像素个数，常用于ui设计。
+
+​			ppi = 屏幕分辨率的各方向的平方的和/屏幕尺寸
+
+```
+for example：
+
+iphone6: 屏幕是 1334 * 750 326ppi 屏幕4.7 英寸
+Math.sqrt(Math.pow(1334, 2) + Math.pow(750, 2)) / 4.7 = 325
+```
+
+dpi：每英寸（in）像素点数，常用于平面印刷
+
+dpr像素比：
+
+​				像素比 = 物理像素/css像素
+
+​	在PC端：
+
+​			dpr通常为1，即只需指定css为1，物理像素就为1px 因为屏幕足够大，一个css像素用一个物理像素来显示，完全可以
+
+​	在移动端：
+
+​			若dpr=2，意味着一个需要2个物理像素填充一个css像素，面积上需要4个，因此一个css像素=dpr个物理像素
+
+​			移动设备大小是有限的，而且分辨率不低，甚至比pc端更高，也就是可以显示的物理像素更多，如果和pc端一样，一个css的px和物理像素一一对应,可以想象,显示的内容有多小
+
+
+
+​	在高清屏中：
+
+​		屏幕拥有的物理像素点数比非高清屏多4倍甚至更多,如果继续按照dpr=1,那么同一张图片在高清屏上面显示的区域面积会是非高清屏的1/4 	故推出dpr=4等等,使用4个乃至更多物理像素来渲染1个逻辑像素,这样一来,,同样的CSS代码设置的尺寸相同
+
+​	
+
+​	1px边框问题：
+
+​		故在之上的条件下,1px可能屏幕硬是塞给你一条宽度为2—3个物理像素的线
+
+
+
+单位：
+
+​		em：一个字符的长度
+
+​		in：英尺
+
+分辨率：狭义的理解为屏幕的像素,例如1200*780,可以理解为水平方向有1200的像素点,垂直方向有780个像素点。分辨率高的显示屏可以显示更多细节，反之则粗糙。
+
+设备独立像素(保证图像在不同设备上占比相同)
+
+​	 ios:pt 
+
+​	android:dp 
+
+​		独立像素和像素关系: 	window.devicePixelRatio 
+
+视口(viewport) 
+
+​	pc端:视口大小就是整个浏览器大小(包括浏览器的上栏目等) 	
+
+​			document.doucumentElement.clientHeight
+
+
+
+##### Responsive Web Design Pattern
+
+**Mostly Fluid**:
+
+consists of a fluid grid. On large or medium screens, it usually remains the same size, simply adjusting the margins on wider screens. On smaller screens, the fluid grid causes the main content to reflow, while columns are stacked vertically. One major advantage of this pattern is that it usually only reuqires one breakpoint between small screens and large screens
+
+
+
+**Column drop**:
+
+For full-width multi-column layouts, column drop simply stacks teh columns vertically as the window becomes too narrows for the content.
+
+Eventually this results in all of the columns being stacked vertically. Choosing breakpoints for this layout pattern is dependent on the content and chanegs for each design.
+
+Content is stacked vertically in the smallest view, but as the screen expands beyond 600px, the parimary and secondary content `div`'s take the full width of the screen. The order of the `div`'s is set using the order CSS property. At 800px all three content `div`'s are shown, using the full width.
+
+```css
+.container {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-flow: row wrap;
+  flex-flow: row wrap;
+}
+
+.c1, .c2, .c3 {
+  width: 100%;
+}
+
+@media (min-width: 600px) {
+  .c1 {
+    width: 60%;
+    -webkit-order: 2;
+    order: 2;
+  }
+
+  .c2 {
+    width: 40%;
+    -webkit-order: 1;
+    order: 1;
+  }
+
+  .c3 {
+    width: 100%;
+    -webkit-order: 3;
+    order: 3;
+  }
+}
+
+
+@media (min-width: 800px) {
+  .c2 {
+    width: 20%;
+  }
+
+  .c3 {
+    width: 20%;
+  }
+}
+```
+
+**Layout shifter**:
+
+The layout shifter pattern is the most responsive pattern, with multiple breakpoints across several screen widths.
+
+Key to this layout is the way content moves about, instead of reflowing and dropping below other columns. Due to the significant differences between each major breakpoint, it is more complex to maintain and likely involves changes within elements, not just overall content layout.
+
+```css
+.container {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-flow: row wrap;
+  flex-flow: row wrap;
+}
+
+.c1, .c2, .c3, .c4 {
+  width: 100%;
+}
+
+@media (min-width: 600px) {
+  .c1 {
+    width: 25%;
+  }
+
+  .c4 {
+    width: 75%;
+  }
+
+}
+
+@media (min-width: 800px) {
+  .container {
+    width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+```
+
+**Tiny tweaks**:
+
+Tiny tweaks simply makes small changes to the layout, such as adjusting font size, resizing images, or moving content around in very minor ways.
+
+It works well on single column layouts such as one page linear websites and text-heavy articles.
+
+```css
+.c1 {
+  padding: 10px;
+  width: 100%;
+}
+
+@media (min-width: 500px) {
+  .c1 {
+    padding: 20px;
+    font-size: 1.5em;
+  }
+}
+
+@media (min-width: 800px) {
+  .c1 {
+    padding: 40px;
+    font-size: 2em;
+  }
+}
+```
+
+
+
+**Off canvas**:
+
+Rather than stacking content vertically, the off canvas pattern places less frequently used content—perhaps navigation or app menus—off screen, only showing it when the screen size is large enough, and on smaller screens, content is only a click away.
+
+Rather than stacking content vertically, this sample uses a `transform: translate(-250px, 0)` declaration to hide two of the content `div`s off screen. JavaScript is used to show the divs by adding an open class to the element to make visible. As the screen gets wider, the off-screen positioning is removed from the elements and they're shown within the visible viewport.
+
+Note in this sample, Safari for iOS 6 and Android Browser do not support the `flex-flow: row nowrap` feature of `flexbox`, so we’ve had to fall back to absolute positioning.
+
+```css
+body {
+  overflow-x: hidden;
+}
+
+.container {
+  display: block;
+}
+
+.c1, .c3 {
+  position: absolute;
+  width: 250px;
+  height: 100%;
+
+  /*
+    This is a trick to improve performance on newer versions of Chrome
+    #perfmatters
+  */
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden; 
+
+  -webkit-transition: -webkit-transform 0.4s ease-out;
+  transition: transform 0.4s ease-out;
+
+  z-index: 1;
+}
+
+.c1 {
+  /*
+  Using translate3d as a trick to improve performance on older versions of Chrome
+  See: http://aerotwist.com/blog/on-translate3d-and-layer-creation-hacks/
+  #perfmatters
+  */
+  -webkit-transform: translate(-250px,0);
+  transform: translate(-250px,0);
+}
+
+.c2 {
+  width: 100%;
+  position: absolute;
+}
+
+.c3 {
+  left: 100%;
+}
+
+.c1.open {
+  -webkit-transform: translate(0,0);
+  transform: translate(0,0);
+}
+
+.c3.open {
+  -webkit-transform: translate(-250px,0);
+  transform: translate(-250px,0);
+}
+
+@media (min-width: 500px) {
+  /* If the screen is wider then 500px, use Flexbox */
+  .container {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-flow: row nowrap;
+    flex-flow: row nowrap;
+  }
+  .c1 {
+    position: relative;
+    -webkit-transition: none 0s ease-out;
+    transition: none 0s ease-out;
+    -webkit-transform: translate(0,0);
+    transform: translate(0,0);
+  }
+  .c2 {
+    position: static;
+  }
+}
+
+@media (min-width: 800px) {
+  body {
+    overflow-x: auto;
+  }
+  .c3 {
+    position: relative;
+    left: auto;
+    -webkit-transition: none 0s ease-out;
+    transition: none 0s ease-out;
+    -webkit-transform: translate(0,0);
+    transform: translate(0,0);
+  }
+}
+```
+
+
+
+#### Images
+
+| Browser width | Device pixel ratio | Image used | Effective resolution |
+| :------------ | :----------------- | :--------- | :------------------- |
+| 400px         | 1                  | `200.jpg`  | 1x                   |
+| 400px         | 2                  | `400.jpg`  | 2x                   |
+| 320px         | 2                  | `400.jpg`  | 2.5x                 |
+| 600px         | 2                  | `800.jpg`  | 2.67x                |
+| 640px         | 3                  | `1000.jpg` | 3.125x               |
+| 1100px        | 1                  | `800.png`  | 1.45x                |
+
+**SVG**: SVG makes it possible to include responsive vector graphics in a web page. 
+
+​	The main advanatge of vector file formats over raster file formats is that the browser can render a vector image at any size. 
+
+ Vector formats describe the geometry of the image—how it's constructed from lines, curves, and colors and so on. Raster formats, on the other hand, only have information about individual dots of color, so the browser has to guess how to fill in the blanks when scaling.
+
+
+
+
+
+
+
+
+
  

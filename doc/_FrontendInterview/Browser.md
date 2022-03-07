@@ -156,3 +156,37 @@ can used with import `@import url("shetland.css") screen and (max-device-width: 
 
 
 
+
+
+## Performance
+
+
+
+**Core Web Vitals**:
+
+
+
+*Loading (LCP: largest contentful paint)* : measures *loading* performance. To provide a good user experience, LCP should occur within **2.5 seconds** of when the page first starts loading.
+
+*Interactivity (FID: First Input Delay)*: measures *interactivity*. To provide a good user experience, pages should have a FID of **100 milliseconds** or less.
+
+*Visual Stability (CLS: Cumulative Layout Shift)*: measures *visual stability*. To provide a good user experience, pages should maintain a CLS of **0.1.** or less.
+
+
+
+
+
+
+
+##### Loading Performance:
+
+
+
+
+
+##### Rendering Performace
+
+
+
+
+
