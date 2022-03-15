@@ -918,5 +918,15 @@ Sec-WebSocket-Version: 13
 
 
 
+##### Debounce and Throttle
+
+**Debounce（防抖）**:
+
+
+
+
+
+**Throttle （节流）**
+
 
 
