@@ -1202,11 +1202,198 @@ Class inheritance accomplishes reuse by abstracting a common interface away into
 
 
 
+##### 说一下Commonjs、AMD, CMD, ES6 modules
+
+一个模块是能实现特定功能的文件，有了模块就可以方便的使用别人的代码，想要什么功能就能加载什么模块。
+
+Commonjs：
+
+暴露模块使用`module.exports` 和 `exports` 
+
+全局性方法 `require()` 用于加载模块
+
+Example：
+
+```javascript
+var math = require('math');
+math.add(2, 3);
+```
+
+由于一个重大的局限，使得CommonJS规范不适用于浏览器环境。还是上一节的代码，如果在浏览器中运行，会有一个很大的问题: 第二行math.add(2, 3)，在第一行require(‘math’)之后运行，因此必须等math.js加载完成。也就是说，如果加载时间很长，整个应用就会停在那里等。
+
+这对服务器端不是一个问题，因为所有的模块都存放在本地硬盘，可以同步加载完成，等待时间就是硬盘的读取时间。但是，对于浏览器，这却是一个大问题，因为模块都放在服务器端，等待时间取决于网速的快慢，可能要等很长时间，浏览器处于”假死”状态。 因此，浏览器端的模块，不能采用”同步加载”（synchronous），只能采用”异步加载”（asynchronous）。这就是AMD规范诞生的背景。
 
 
 
+AMD (Asynchronous Module Definition) ：中文名异步模块定义的意思。采用异步方式加载模块，模块的加载不影响它后面语句的运行。所有依赖这个模块的语句，都定义在一个回调函数中，等到加载完成之后，这个回调函数才会运行。
+
+模块必须采用特定的define()函数来定义:
+
+`define(id?, dependencies?, factory)`
+
+- id:字符串，模块名称(可选)
+- dependencies: 是我们要载入的依赖模块(可选)，使用相对路径。,注意是数组格式
+- factory: 工厂方法，返回一个模块函数
+
+requireJS实现了AMD规范，主要用于解决下述两个问题。
+
+1.多个文件有依赖关系，被依赖的文件需要早于依赖它的文件加载到浏览器
+
+2.加载的时候浏览器会停止页面渲染，加载文件越多，页面失去响应的时间越长。
+
+语法：requireJS定义了一个函数define，它是全局变量，用来定义模块。
+
+```js
+define(['dependency'], function(){
+  var name = 'Byron';
+  function printName(){
+    console.log(name);
+  }
+  return {
+    printName: printName
+  };
+});
+```
+
+加载模块
+
+```
+require(['myModule'], function (my){
+	my.printName();
+}
+```
+
+AMD也采用require()语句加载模块，但是不同于CommonJS，它要求两个参数：
+
+`require([module],  callback)；`
+
+总结AMD规范：require（）函数在加载依赖函数的时候是异步加载的，这样浏览器不会失去响应，它指定的回调函数，只有前面的模块加载成功，才会去执行。
+因为网页在加载js的时候会停止渲染，因此我们可以通过异步的方式去加载js,而如果需要依赖某些，也是异步去依赖，依赖后再执行某些方法。
+
+主要有两个Javascript库实现了AMD规范：[require.js](http://requirejs.org/)和[curl.js](http://cujojs.com/)。
 
 
+
+**CMD规范**
+
+CMD (Common Module Definition), 是seajs推崇的规范，CMD则是依赖就近，用的时候再require。它写起来是这样的：
+
+```javascript
+define(function(require, exports, module) {
+  var clock = require('clock');
+  clock.start();
+});
+```
+
+CMD与AMD一样，也是采用特定的define()函数来定义,用require方式来引用模块:
+
+`define(id?, dependencies?, factory)`
+
+- id:字符串，模块名称(可选)
+- dependencies: 是我们要载入的依赖模块(可选)，使用相对路径。,注意是数组格式
+- factory: 工厂方法，返回一个模块函数
+
+AMD和CMD最大的区别是对依赖模块的执行时机处理不同，而不是加载的时机或者方式不同，二者皆为异步加载模块。
+
+AMD依赖前置，js可以方便知道依赖模块是谁，立即加载；
+
+而CMD就近依赖，需要使用把模块变为字符串解析一遍才知道依赖了那些模块，这也是很多人诟病CMD的一点，牺牲性能来带来开发的便利性，实际上解析模块用的时间短到可以忽略。
+
+
+
+**ES6 Modules**
+
+ES6标准发布后，module成为标准，标准使用是以export指令导出接口，以import引入模块，但是在我们一贯的node模块中，我们依然采用的是CommonJS规范，使用require引入模块，使用module.exports导出接口。
+
+**export 导出模块**
+
+export语法声明用于导出函数、对象、指定文件（或模块）的原始值。
+
+> 注意：在node中使用的是exports,不要混淆了
+
+export有两种模块导出方式：**命名式导出（名称导出）**和**默认导出（定义式导出）**，命名式导出每个模块可以多个，而默认导出每个模块仅一个。
+
+**命名式导出**:
+
+模块可以通过export前缀关键词声明导出对象，导出对象可以是多个。这些导出对象用名称进行区分，称之为命名式导出。
+
+```js
+export { myFunction }; // 导出一个已定义的函数
+export const foo = Math.sqrt(2); // 导出一个常量
+
+// 我们可以使用*和from关键字来实现的模块的继承：
+export * from 'article';
+
+// 模块导出时，可以指定模块的导出成员。导出成员可以认为是类中的公有对象，而非导出成员可以认为是类中的私有对象：
+var name = 'IT笔录';
+var domain = 'http://itbilu.com';
+ 
+export {name, domain}; // 相当于导出 {name:name,domain:domain}
+
+// 模块导出时，我们可以使用as关键字对导出成员进行重命名：
+var name = 'IT笔录';
+var domain = 'http://itbilu.com';
+ 
+export {name as siteName, domain};
+
+```
+
+**默认导出**:
+
+默认导出也被称做定义式导出。命名式导出可以导出多个值，但在在import引用时，也要使用相同的名称来引用相应的值。而默认导出每个导出只有一个单一值，这个输出可以是一个函数、类或其它类型的值，这样在模块import导入时也会很容易引用。
+
+```js
+export default function() {}; // 可以导出一个函数
+export default class(){}; // 也可以出一个类
+```
+
+**import 引入模块**:
+
+import语法声明用于从已导出的模块、脚本中导入函数、对象、指定文件（或模块）的原始值。
+
+import模块导入与export模块导出功能相对应，也存在两种模块导入方式：命名式导入（名称导入）和默认导入（定义式导入）
+
+
+
+**命名式导入**: 我们可以通过指定名称，就是将这些成员插入到当作用域中。导出时，可以导入单个成员或多个成员：
+
+```js
+// 注意，花括号里面的变量与export后面的变量一一对应
+import {myMember} from "my-module";
+import {foo, bar} from "my-module";
+
+// 通过*符号，我们可以导入模块中的全部属性和方法。当导入模块全部导出内容时，就是将导出模块（’my-module.js’）所有的导出绑定内容，插入到当前模块（’myModule’）的作用域中：
+import * as myModule from "my-module";
+
+// 导入模块对象时，也可以使用as对导入成员重命名，以方便在当前模块内使用：
+import {reallyReallyLongModuleMemberName as shortName} from "my-module";
+
+// 导入多个成员时，同样可以使用别名：
+import {reallyReallyLongModuleMemberName as shortName, anotherLongModuleName as short} from "my-module";
+
+// 导入一个模块，但不进行任何绑定：
+import "my-module";
+
+```
+
+**默认导入**: 在模块导出时，可能会存在默认导出。同样的，在导入时可以使用import指令导出这些默认值。
+
+```js
+// 直接导入默认值：
+import myDefault from "my-module";
+
+// 也可以在命名空间导入和名称导入中，同时使用默认导入
+import myDefault, * as myModule from "my-module"; // myModule 做为命名空间使用
+import myDefault, {foo, bar} from "my-module"; // 指定成员导入
+```
+
+自 ES6 起，引入了一套新的 ES6 Module 规范，在语言标准的层面上实现了模块功能，而且实现得相当简单，有望成为浏览器和服务器通用的模块解决方案。但目前浏览器对 ES6 Module 兼容还不太好，我们平时在 Webpack 中使用的 export 和 import，会经过 Babel 转换为 CommonJS 规范。在使用上的差别主要有：
+
+1. CommonJS 模块输出的是一个值的拷贝，ES6 模块输出的是值的引用。
+2. CommonJS 模块是运行时加载，ES6 模块是编译时输出接口。
+3. CommonJs 是单个值导出，ES6 Module可以导出多个
+4. CommonJs 是动态语法可以写在判断里，ES6 Module 静态语法只能写在顶层
+5. CommonJs 的 this 是当前模块，ES6 Module的 this 是 undefined
 
 
 

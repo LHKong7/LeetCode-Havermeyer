@@ -1,0 +1,11 @@
+{
+  "name": "algo_linkedlist",
+  "version": "1.0.0",
+  "description": "Algorithms of LinkedList",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "author": "K",
+  "license": "ISC"
+}

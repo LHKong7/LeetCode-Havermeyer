@@ -2053,53 +2053,6 @@ element.someObject=myObj;
 
 
 
-##### 224. 说一下Commonjs、AMD和CMD
-
-一个模块是能实现特定功能的文件，有了模块就可以方便的使用别人的代码，想要什么功能就能加载什么模块。
-
-Commonjs：开始于服务器端的模块化，同步定义的模块化，每个模块都是一个单独的作用域，模块输出，modules.exports，模块加载require()引入模块。
-
-AMD：中文名异步模块定义的意思。
-
-requireJS实现了AMD规范，主要用于解决下述两个问题。
-
-1.多个文件有依赖关系，被依赖的文件需要早于依赖它的文件加载到浏览器
-
-2.加载的时候浏览器会停止页面渲染，加载文件越多，页面失去响应的时间越长。
-
-语法：requireJS定义了一个函数define，它是全局变量，用来定义模块。
-
-```js
-define(['dependency'], function(){
-  var name = 'Byron';
-  function printName(){
-    console.log(name);
-  }
-  return {
-    printName: printName
-  };
-});
-```
-
-加载模块
-
-```
-require(['myModule'], function (my){
-	my.printName();
-}
-```
-
-requirejs定义了一个函数define,它是全局变量，用来定义模块：
-
-`define(id?dependencies?,factory)`
-
-在页面上使用模块加载函数：
-
-`require([dependencies],factory)；`
-
-总结AMD规范：require（）函数在加载依赖函数的时候是异步加载的，这样浏览器不会失去响应，它指定的回调函数，只有前面的模块加载成功，才会去执行。
-因为网页在加载js的时候会停止渲染，因此我们可以通过异步的方式去加载js,而如果需要依赖某些，也是异步去依赖，依赖后再执行某些方法。
-
 ##### 225. 对象深度克隆的简单实现
 
 ```js
