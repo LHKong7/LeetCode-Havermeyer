@@ -759,7 +759,15 @@ body {
 
 
 
+##### 60-30-10 Color Rule
 
+Width is 100%
+
+60% of neutral color
+
+30%: lighter color
+
+10% ›› actionable color
 
 
 
