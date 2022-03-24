@@ -1397,7 +1397,7 @@ import myDefault, {foo, bar} from "my-module"; // 指定成员导入
 
 
 
-##### ES6
+##### ES6 （https://www.taniarascia.com/es6-syntax-and-feature-overview/）
 
 **Arrow Function**:
 
@@ -1410,6 +1410,110 @@ An **arrow function expression** is a compact alternative to a traditional [func
 - Not suitable for [`call`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/call), [`apply`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/apply) and [`bind`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind) methods, which generally rely on establishing a [scope](https://developer.mozilla.org/en-US/docs/Glossary/Scope).
 - Can not be used as [constructors](https://developer.mozilla.org/en-US/docs/Glossary/Constructor).
 - Can not use [`yield`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/yield), within its body.
+
+**Method definition shorthand**:
+
+The `function` keyword can be omitted when assigning methods on an object.
+
+```js
+// ES5
+var obj = {
+  a: function (c, d) {},
+  b: function (e, f) {},
+}
+
+// ES6
+let obj = {
+  a(c, d) {},
+  b(e, f) {},
+}
+
+```
+
+**Destructuring**:
+
+Use curly brackets to assign properties of an object to their own variable.
+
+```js
+// ES5:
+var a = obj.a
+var b = obj.b
+var c = obj.c
+
+//ES6:
+let {a, b, c} = obj
+```
+
+
+
+**Classes/constructor functions**:
+
+ES6 introducess the `class` syntax on top of the prototype-based constructor function.
+
+```js
+// ES5:
+function Func(a, b) {
+  this.a = a
+  this.b = b
+}
+
+Func.prototype.getSum = function () {
+  return this.a + this.b
+}
+
+var x = new Func(3, 4)
+
+// ES6:
+class Func {
+  constructor(a, b) {
+    this.a = a
+    this.b = b
+  }
+
+  getSum() {
+    return this.a + this.b
+  }
+}
+
+let x = new Func(3, 4)
+```
+
+**Inheritance**:
+
+The `extends` keyword creates a subclass.
+
+```js
+// ES5:
+function Inheritance(a, b, c) {
+  Func.call(this, a, b)
+
+  this.c = c
+}
+
+Inheritance.prototype = Object.create(Func.prototype)
+Inheritance.prototype.getProduct = function () {
+  return this.a * this.b * this.c
+}
+
+var y = new Inheritance(3, 4, 5)
+
+// ES6:
+class Inheritance extends Func {
+  constructor(a, b, c) {
+    super(a, b)
+
+    this.c = c
+  }
+
+  getProduct() {
+    return this.a * this.b * this.c
+  }
+}
+
+let y = new Inheritance(3, 4, 5)
+```
+
+
 
 
 
