@@ -72,6 +72,12 @@ Blocked: In the blocked state, a process has performed some kind of operation th
 
 
 
+# Interclude: Process API
+
+
+
+
+
 
 
 
