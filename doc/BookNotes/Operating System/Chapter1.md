@@ -76,7 +76,9 @@ Blocked: In the blocked state, a process has performed some kind of operation th
 
 
 
+the PID is used to name the process if one wants to do something with the process.
 
+The children process is not an exact copy. Specifically, although it now has its own copy of the address space (i.e., its own private memory), its own registers, its own PC and so forth, the value it returns to the caller of **fork()** is different. 
 
 
 
