@@ -42,7 +42,7 @@
             else if (sum < 0) L++;
             else if (sum > 0) R--;
         }
-    }        
+    }
     return ans;
 };
 
