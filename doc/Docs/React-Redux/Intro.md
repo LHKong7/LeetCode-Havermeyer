@@ -1,3 +1,7 @@
+[TOC]
+
+
+
 # Redux Introduction
 
 The whole global state of the app is stored in an object tree inside a single store. 
