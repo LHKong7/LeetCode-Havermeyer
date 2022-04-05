@@ -1,0 +1,43 @@
+/**
+ * @param {number} n
+ * @return {number}
+ */
+var countPrimes = function(n) {
+    let res = 0;
+
+    for (let i = 2; i < n; i++) {
+        res += isPrime(i);
+    }
+
+    return res;
+};
+
+var isPrime = (x) => {
+    for (let i = 2; i * i <= x; i++) {
+        if (x % i == 0) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+/**
+ * @param {number} n
+ * @return {number}
+ */
+var countPrimes = function(n) {
+    const isPrime = new Array(n).fill(1);
+
+    let res = 0;
+    for (let i = 2; i < n; ++i) {
+        if (isPrime[i]) {
+            res += 1;
+            for (let j = i * i; j < n; j += i) {
+                isPrime[j] = 0;
+            }
+        }
+    }
+    return res;
+}
+
