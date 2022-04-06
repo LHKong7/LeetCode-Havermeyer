@@ -47,13 +47,14 @@ When processes running on the same end system, they can communicate with each ot
 
 Processes on two different end systems communicates with each other by exchanging messages across the computer network.
 
-​	A sending process creates and sends messages into the network; a receiving process receives these messages and possibly responds by sending message back
+A sending process creates and sends messages into the network; a receiving process receives these messages and possibly responds by sending message back
 
 
 
 **Client and Server Processes**:
 
-In the context of a communication session between a pair of processes, the process that initiates the communication (that is, initially contracts the other process at the beginning of the session) is labeled as the client. The process that waits to be contacts to begin the session is the server
+> In the context of a communication session between a pair of processes, the process that initiates the communication (that is, initially contracts the other process at the beginning of the session) is labeled as the client. The process that waits to be contacts to begin the session is the server
+>
 
 **The Interface Between the Process nad the Computer Network**:
 
@@ -69,4 +70,56 @@ The only control that the application developer has on the transport layer side 
 
 
 **Addressing Processes**:
+
+- Address of the host
+- an identifier that specifies the receiving process in the destination host
+
+In the internet, the host is identified by its **IP address**. 
+
+An address is 32 bits quantity, **Port Number** identify the receiving process (more specifically, the receiving socket) running in the host.
+
+- 80 : Web server
+- 25 : Mail server
+
+**Transport Services Available to Applications**:
+
+socket is. the interface between the application process and the transport-layer protocol. 
+
+​		The application at the sending side pushes messages through the socket.
+
+​		At the other side of the socket, the transport-layer protocol has the responsibility of getting the messages to the socket of the receiving process.
+
+Four Dimensions:
+
+- reliable data transfer
+- throughput
+- timing
+- security
+
+***reliable data transfer***: 
+
+packets can get lost within a computer network,  For example
+
+1. a packet. can overflow. a buffer in a router
+2. packet can be discarded by a host or router after. having some of its bits corrupted.
+
+loss-tolerarnt applications:  when a transport-layer protocol does not provide reliable data transfer, some of the data sent by the sending process may never arrive at the receiving process. Most multimedia applications such as, conversational audio/video that. can tolerate some amount of data loss.
+
+
+
+***Throughput***:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
