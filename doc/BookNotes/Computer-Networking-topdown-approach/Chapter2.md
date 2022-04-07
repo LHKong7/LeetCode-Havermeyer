@@ -109,6 +109,10 @@ loss-tolerarnt applications:  when a transport-layer protocol does not provide r
 
 ***Throughput***:
 
+Since other sessions will be sharing the bandwidth along the network path
+
+Since these other sessions will be coming and going, the available throughput can fluctuate with time.
+
 
 
 
