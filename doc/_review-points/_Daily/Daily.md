@@ -484,6 +484,221 @@ The pre-parser may also notice certain explicit requests in the HTML such as [pr
 
 ​		**Tokenization**: Tokenization involves turning the markup into individual tokens such as `begin tag, end tag, text run, comment and so forth`.  The tokenizer is a state machine that transitions between the different states of the HTML language, such as "in tag open state". 
 
+For those who perfer a more black-and-white approach to markup language correctness, browsers have an alternate parsing mechanism built in that treats any failure as a catastrophic failure (meaning any failure will cause the content to not render). 
+
+​		This parsing mode uses the [rules of XML to process HTML](https://en.wikipedia.org/wiki/XHTML), and can be enabled by sending the document to the browser with the “application/xhtml+xml” [MIME type](https://en.wikipedia.org/wiki/MIME) 
+
+Browsers may combine the pre-parser and tokenization steps together as an optimization.
+
+**Parsing/tree construction**:
+
+​		The browser needs an internal (in-memory) representation of a web page, in the DOM standard, web standards define exactly what shape that representation should be.
+
+​		The parser's responsibility is to take the tokens create and insert the objects into the Document Object Model (DOM) in the appropriate way.
+
+​		Using JavaScript, a web page can rearrage the DOM tree in almost any way it likes, even if it does not make sense. JavaScript can add more content to be parsed while the parser is in the middle of doing its job. `<script>` tags contain text that the parser must collect and then send to a scripting engine for evaluation. While the script engine parses and evaluates the script text, the parser waits. If the script evaluation includes invoking the `document.write` API, a second intstance of the HTML parser must start running.  `<script>` and `document.write` require stopping all in-progress work to go back to the store to get some additional materials that we hadn’t realized we needed. While we’re away at the store, all progress on the construction is stalled.
+
+
+
+**Events**:
+
+When the parser finishes, it announces its completion via an event called `DOMContentLoaded`. 
+
+Events are the broadcast system built into the browser that JavaScript can listen and respond to; Events are the reports that various workers bring to the foreman when they encounter a problem or finish a task
+
+The browser creates an event object in the DOM, packs it full of useful state information (such as the location of the touch on the screen), and "fires" that event.
+
+The tree structure of the DOM makes it convenient to “filter” how frequently code responds to an event by allowing events to be listened for at any level in the tree (i.e.., at the root of the tree, in the leaves of the tree, or anywhere in between).
+
+he browser first determines where to fire the event in the tree (meaning which DOM object, such as a specific `<input>` control), and then calculates a route for the event starting from the root of the tree, then down each branch until it reaches the target (the `<input>` for example), and then back along the same path to the root. Each object along the route then has its event listeners triggered, so that listeners at the root of the tree will “see” more events than specific listeners at the leaves of the tree.
+
+Some events can also be canceled, which provides, for example, the ability to stop a form submission if the form isn’t filled out properly. (A `submit` event is fired from a `<form>` element, and a JavaScript listener can check the form and optionally cancel the event if fields are empty or invalid.)
+
+
+
+**DOM**:
+
+
+
+**Element Interfaces**:
+
+As the parser is constructing objects to put into the tree, it looks up the element’s name (and namespace) and finds a matching HTML interface to wrap around the object.
+
+Interfaces add features to basic HTML elements that are specific to their *kind* or *type* of element. Some generic features include:
+
+- access to HTML collections representing all or a subset of the element’s children;
+- the ability to search the element’s attributes, children, and parent elements;
+- and importantly, ways to create new elements (without using the parser), and attach them to (or detach them from) the tree.
+
+
+
+The scope of the browser’s DOM is comparable to the set of features that apps can use in any operating system. Things like (but not limited to):
+
+- access to storage systems (databases, key/value storage, network cache storage);
+- devices (geolocation, proximity and orientation sensors of various types, USB, MIDI, Bluetooth, Gamepads);
+- the network (HTTP exchanges, bidirectional server sockets, real-time media streaming);
+- graphics (2D and 3D graphics primitives, shaders, virtual and augmented reality);
+- and multithreading (shared and dedicated execution environments with rich message passing capabilities).
+
+
+
+##### Braces to Pixels
+
+**Parsing**:
+
+Once CSS is downloaded by the browser, the CSS parser is spun up to handle any CSS that it encounters. This can be CSS within individual documents, inside of `<style>` tags, or inline within the `style` attribute of a DOM element. At the end of this process, we have a data structure with all the selectors, properties, and properties’ respective values.
+
+One thing that is worth noting is that the browser exploded the shorthands of `background` and `border` into their longhand variants, as shorthands are primarily for developer ergonomics; the browser only deals with the longhands from here on.
+
+*Computation*:
+
+| Web Developer                   | Computed Value             |
+| :------------------------------ | :------------------------- |
+| `font-size: 1em`                | `font-size: 16px`          |
+| `width: 50%`                    | `width: 50%`               |
+| `height: auto`                  | `height: auto`             |
+| `width: 506.4567894321568px`    | `width: 506.46px`          |
+| `line-height: calc(10px + 2em)` | `line-height: 42px`        |
+| `border-color: currentColor`    | `border-color: rgb(0,0,0)` |
+| `height: 50vh`                  | `height: 540px`            |
+| `display: grid`                 | `display: grid`            |
+
+
+
+**Cascade**:
+
+Since the CSS can come from a variety of sources, the browser needs a way to determine which styles should apply to a given element. To do this, the browser uses a formula called specificity
+
+​		Specificity: counts the number of tags, classes, ids and attributes selectors utilized in the selector, as well as the number of `!important` declarations present. 
+
+Styles on an element via the inline `style` attribute are given a rank that wins over any style from within a `<style>` block or external style sheet.
+
+| Selector                  | Specificity Score |
+| :------------------------ | :---------------- |
+| `li`                      | `0 0 0 0 1`       |
+| `li.foo`                  | `0 0 0 1 1`       |
+| `#comment li.foo.bar`     | `0 0 1 2 1`       |
+| `<li style="color: red">` | `0 1 0 0 0`       |
+| `color: red !important`   | `1 0 0 0 0`       |
+
+So what does the engine do when the specificity is tied? Given two or more selectors of equal specificity, the winner will be whichever one appears last in the document
+
+
+
+```css
+.fancy-button {
+	background: green;
+	border: 3px solid red;
+	font-size: 1em;
+}
+
+div .fancy-button {
+	background: yellow;
+}
+```
+
+| Selector            | Property           | Value            | Specificity Score | Document Order |
+| :------------------ | :----------------- | :--------------- | :---------------- | :------------- |
+| `.fancy-button`     | `background-color` | `rgb(0,255,0)`   | `0 0 0 1 0`       | `0`            |
+| `.fancy-button`     | `border-width`     | `3px`            | `0 0 0 1 0`       | `1`            |
+| `.fancy-button`     | `border-style`     | `solid`          | `0 0 0 1 0`       | `2`            |
+| `.fancy-button`     | `border-color`     | `rgb(255,0,0)`   | `0 0 0 1 0`       | `3`            |
+| `.fancy-button`     | `font-size`        | `16px`           | `0 0 0 1 0`       | `4`            |
+| `div .fancy-button` | `background-color` | `rgb(255,255,0)` | `0 0 0 1 1`       | `5`            |
+
+
+
+**Understanding Origins**:
+
+In CSS, there are also origins, but they serve different purposes:
+
+- user: any styles set globally within the user agent by the user;
+- author: the web developer’s styles;
+- and user agent: anything that can utilize and render CSS (to most web developers and users, this is a browser).
+
+The cascade power of each of these origins ensures that the greatest power lies with the user, then the author, and finally the user agent.
+
+
+
+When the browser has a complete data structure of all declarations from all origins, it will sort them in accordance with specification. First it will sort by origin, then by specificity, and finally, by document order.
+
+| Origin ![⬆](https://s.w.org/images/core/emoji/13.1.0/svg/2b06.svg) | Selector            | Property           | Value            | Specificity Score ![⬆](https://s.w.org/images/core/emoji/13.1.0/svg/2b06.svg) | DocumentOrder ![⬇](https://s.w.org/images/core/emoji/13.1.0/svg/2b07.svg) |
+| :----------------------------------------------------------- | :------------------ | :----------------- | :--------------- | :----------------------------------------------------------- | :----------------------------------------------------------- |
+| `User`                                                       | `*`                 | `font-size`        | `32px`           | `0 0 0 0 1`                                                  | `0`                                                          |
+| `Author`                                                     | `div .fancy-button` | `background-color` | `rgb(255,255,0)` | `0 0 0 1 1`                                                  | `5`                                                          |
+| `Author`                                                     | `.fancy-button`     | `background-color` | `rgb(0,255,0)`   | `0 0 0 1 0`                                                  | `0`                                                          |
+| `Author`                                                     | `.fancy-button`     | `border-width`     | `3px`            | `0 0 0 1 0`                                                  | `1`                                                          |
+| `Author`                                                     | `.fancy-button`     | `border-style`     | `solid`          | `0 0 0 1 0`                                                  | `2`                                                          |
+| `Author`                                                     | `.fancy-button`     | `border-color`     | `rgb(255,0,0)`   | `0 0 0 1 0`                                                  | `3`                                                          |
+| `Author`                                                     | `.fancy-button`     | `font-size`        | `16px`           | `0 0 0 1 0`                                                  | `4`                                                          |
+
+
+
+**Layout**:
+
+This tree is present in all modern engines and is referred to as the box tree. In order to construct this tree, we traverse down the DOM tree and create zero or more CSS boxes, each having a margin, border, padding and content box.
+
+
+
+In this section, we’ll be discussing the following CSS layout concepts:
+
+- Formatting context (FC) : there are many types of formatting contexts, most of which web developers invoke by changing the `display` value for an element. Some of the most common formatting contexts are block (block formatting context, or BFC), flex, grid, table-cells and inline. Some other CSS can force a new formatting context, too, such as `position: absolute` using `float` or utilizing multi-column.
+- Containing block: this is the ancestor block that you resolve styles against.
+- Inline direction: this is the direction in which text is laid out, as dictated by the element’s writing mode.
+- Block direction: this behaves exactly the same as the inline direction but is perpendicular to that axis.
+
+
+
+`auto` , `percentage` or `pixel` . The purpose of layout is to size and position all the boxes in the box tree to get them ready for painting. 
+
+
+
+**Dealing with Floats**: 
+
+Float box are one type of box that matches this layout type, but there are many other boxes, such as absolute positioned boxes (including `position: fixed` elements) and table cells with `auto` -based sizing
+
+
+
+**Understanding Fragmentation**:
+
+One final aspect to touch on for how layout works is fragmentation. If you’ve ever printed a web page or used CSS Multi-column, then you’ve taken advantage of fragmentation. 
+
+Fragmentation is the logic of breaking content apart to fit it into a different geometry. 
+
+
+
+
+
+**Painting**:
+
+Painting is roughly standardized by CSS, and to put it concisely (you can read the full breakdown in [CSS 2.2 Appendix E](https://www.w3.org/TR/CSS22/zindex.html#painting-order)), you paint in the following order:
+
+- background;
+- border;
+- and content.
+
+
+
+Once this is completed, it is converted to a bitmap. That’s right—ultimately every layout element (even text) becomes an image under the hood.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
