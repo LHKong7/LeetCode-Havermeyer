@@ -10,4 +10,4 @@
 
 ##### Throughput
 
->  the. rate at which the sending process can deliver bits to the receiving process.
+>  the rate at which the sending process can deliver bits to the receiving process.

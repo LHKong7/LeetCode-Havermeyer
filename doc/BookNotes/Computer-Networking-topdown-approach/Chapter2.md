@@ -109,9 +109,41 @@ loss-tolerarnt applications:  when a transport-layer protocol does not provide r
 
 ***Throughput***:
 
-Since other sessions will be sharing the bandwidth along the network path
+**Definition**: rate at which the sending process can deliver bits to the receiving process.
 
-Since these other sessions will be coming and going, the available throughput can fluctuate with time.
+
+
+​	Since other sessions will be sharing the bandwidth along the network path
+
+​	Since these other sessions will be coming and going, the available throughput can fluctuate with time.
+
+
+
+The application could request a guaranteed throughput of `r bits/sec` and the transport protocol would then ensure that the available throughput is always at least `r bits/sec`. 
+
+​	
+
+​	For example, if an Internet telephony application encodes voice at 32kbps, it needs. to send data into the network and have data delivered to the receiving application at this rate. If the transport protocol cannot provide this throughput, the application would need to encode at a lower rate (and receive enough throughput to sustain this lower coding rate) or may have to give up.
+
+Applications that have throughput requirements are said to be **bandwidth-senstive applications**. Many current multiMedia applications are bandwidth sensitive, although some multimeida applications may use adaptive coding techniques to encode digitized voice or video at a rate that matches the currently available throughput.
+
+
+
+**elastic applications** can make use of as much, or as little, throughput as happens to be available. Electronic mail, file transfer, and Web transfers are all elastic applications.
+
+
+
+***Timing***:
+
+A transport-layer protocol can also provide timing guarantees. As with throughput guarantees, timing guarantees can come in many shapes and forms.
+
+​		An example guarantee might be that every bit 
+
+
+
+
+
+
 
 
 
