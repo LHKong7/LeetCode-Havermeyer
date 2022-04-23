@@ -1,7 +1,5 @@
 # Machanism: Limited Direct Execution
 
-
-
 ### Overview
 
 In order to virtualize the CPU, the OS needs to share the physical CPU among many jobs running seemingly at the same time.
@@ -25,5 +23,6 @@ By time sharing the CPU, virtualization is achieved
 
 ##### Limited Direct Execution
 
+The "direct execution" part of the idea is simple: *just run the program directly on the  CPU*. 
 
 
