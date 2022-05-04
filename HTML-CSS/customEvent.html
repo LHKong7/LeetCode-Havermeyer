@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Custom Event</title>
+        <style>
+            button {
+                height: 100px;
+                width: 100px;
+            }
+        </style>
+    </head>
+    <body>
+        <button id="customEvent">Click Me</button>
+    </body>
+    <script type="text/javascript">
+        const myEvent = new Event("myCustomEvent", { bubbles: true, cancelable: true, composed: true }); // create a event
+        const myCustomEvent = new CustomEvent("myCustomEventData", { detail: {hello: 'world'}});
+        const myElement = document.querySelector('button');
+
+        // myElement.addEventListener('myCustomEvent', e => {
+        //     console.log(e);
+        // });
+
+        // document.addEventListener('myCustomEvent', e => {
+        //     console.log("event trigger in document", e);
+        // });
+        myElement.addEventListener("custom:doubleClick", e => {
+            console.log("double click", e.detail);
+        });
+
+        const MAX_DOUBLE_CLICK_TIME = 500;
+        let lastClick = 0;
+        myElement.addEventListener("click", e => {
+            const timeBetweenClick = e.timeStamp - lastClick;
+
+            if (timeBetweenClick > MAX_DOUBLE_CLICK_TIME) {
+                lastClick = e.timeStamp;
+                return;
+            };
+
+            const doubleClickEvent = new CustomEvent("custom:doubleClick", {
+                bubbles: true,
+                cancelable: true,
+                composed: true,
+                detail: {
+                    timeBetweenClick
+                }
+            });
+
+            e.target.dispatchEvent(doubleClickEvent);
+            lastClick = 0;
+        })
+
+        document.dispatchEvent(myEvent); // trigger an event
+    </script>
+</html>
