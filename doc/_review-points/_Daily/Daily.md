@@ -682,42 +682,8 @@ Painting is roughly standardized by CSS, and to put it concisely (you can read t
 Once this is completed, it is converted to a bitmap. That’s right—ultimately every layout element (even text) becomes an image under the hood.
 
 
+# 5/8
+Object.freeze() : this method freezes an object. A frozen object can no longer be changed; freezing an object prevents new properties from being added to it, existing properties from being removed, prevents changing the enumerability, configurability or writability of existing properties, and prevents the values of existing properties from being changed. freeze() returns the same object that was passed in.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
+##### Content-security-Policy
 
