@@ -1,15 +1,20 @@
-var canPlaceFlowers = function(flowerbed, n) {
-    const len = flowerbed.length
-    let i = 0
+/**
+ * @param {number[]} flowerbed
+ * @param {number} n
+ * @return {boolean}
+ */
+ var canPlaceFlowers = function(flowerbed, n) {
+    const len = flowerbed.length;
+    let i = 0;
     while (i < len && n > 0) {
         if (flowerbed[i] == 1) {
-            i += 2
+            i += 2;
         } else if (i == len - 1 || flowerbed[i + 1] == 0) {
-            n--
-            i += 2
+            n--;
+            i += 2;
         } else {
-            i += 3
+            i += 3;
         }
     }
-    return n <= 0
+    return n <= 0;
 };
