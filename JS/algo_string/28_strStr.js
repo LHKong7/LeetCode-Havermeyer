@@ -77,7 +77,38 @@ var strStr_BF2 = function(haystack, needle) {
 // KMP
 // 时间复杂度：O(m + n)
 // 空间复杂度：O(n)
+// 根据好前缀字符串的特点，来计算出模式串往后移的位数 找到好前缀的【最长匹配前缀子串】
 var strStr = function(haystack, needle) {
+    const getNexts = (pattern) => {
+        const n = pattern.length;
+        // bug 修复： 如果只有一个字符的话，就不计算 next 数组
+        if (n == 1) return [];
+    
+        const next = new Array(n - 1).fill(0);
+        next[0] = -1;
+    
+        for (let j = 1; j < n - 1; j++) {
+            if (pattern[next[j - 1] + 1] == pattern[j]) {
+                next[j] = next[j - 1] + 1;
+            } else {
+                let pre = next[j - 1];
+                while (pre >= 0 && pattern[pre + 1] != pattern[j]) {
+                    // 看前一个【最长匹配前缀字符串】
+                    pre = next[pre];
+                }
+    
+                if (pattern[pre + 1] == pattern[j]) {
+                    next[j] = pre + 1;
+                } else {
+                    next[j] = pre;
+                }
+            }
+        }
+    
+        // 最值问题
+        return next;
+    };
+
     const m = haystack.length, n = needle.length
     if (n == 0) return 0
     if (m < n) return -1
