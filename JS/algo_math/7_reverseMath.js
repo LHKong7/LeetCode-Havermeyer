@@ -17,27 +17,33 @@
  * *****************************************************************/
 
 // take the digital: x % 10, take of digital: x = x / 10
-const reverseNumber = (num) => {
-    const maxInt = Math.pow(2, 31) - 1;
-    const minInt = Math.pow(-2, 31);
+//  ~~ 是相当于取整，并不是完全和 floor 一样 负数用Math.floor（）得到的结果不是我们想要的
+/**
+ * @param {number} x
+ * @return {number}
+ */
+ var reverse = function(x) {
+    const MAX_INT = Math.pow(2, 31) - 1;
+    const MIN_INT = Math.pow(-2, 31);
     let res = 0;
 
-    while (num != 0) {
-        let digital = num % 10;
-        num = Math.floor(num / 10);
+    while (x != 0) {
+        let digital = x % 10;
+        x = ~~(x / 10);
 
-        if (res > (maxInt/10) || ((res == maxInt) || digital > 7)) {
-            return 0
+        if (res > ~~(MAX_INT/10) || ((res == MAX_INT && digital > 7))) {
+            return 0;
         }
 
-        if (res < (minInt/10) || ((res == minInt) || digital < -8)) {
-            return 0
+        if (res < ~~(MIN_INT/10) || ((res == MIN_INT && digital < -8))) {
+            return 0;
         }
+
         res = res * 10 + digital;
     }
 
-    return x > 0 ? res : -res
-}
+    return x >= 0 ? res: -res;
+};
 
 var reverse_EASY = function(x) {
     const boundry = x > 0 ? 2147483647 : 2147483648

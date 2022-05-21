@@ -34,7 +34,7 @@ var convert = function(s, numRows) {
         if (currRow == 0 || currRow == numRows - 1) goingDown = !goingDown;
         
         if (goingDown) currRow += 1;
-        else currRow -= 1;ßßß
+        else currRow -= 1;
     }
 
     for (let ele of res) {
