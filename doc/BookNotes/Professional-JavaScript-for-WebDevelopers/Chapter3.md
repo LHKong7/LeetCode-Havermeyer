@@ -138,3 +138,59 @@ Integers can also be represented as either base 8 or base 16 literals.
 
 Because storing floating-point values uses twice as much memory as storing integer values, ECMAScript always looks for ways to convert values into integers. When there is no digit after the decimal point, the number becomes an integer
 
+The smallest number that can be represented in ECMAScript is stored in Number.MIN_VALUE and is 5e–324 on most browsers; the largest number is stored in Number.MAX_VALUE and is 1.7976931348623157e+308 on most browsers. 
+
+Floating-point can be represented using `e-notation`
+
+Floating-point values are accurate up to 17 decimal places but are far less accurate in arithmetic computations than whole numbers
+
+**NaN**: Not a Number is used to indicate when an operation intended to return a number has failed.
+
+
+
+**String Type**:
+
+Strings are immutable in ECMAScript, meaning that once they are created, their values cannot change. To change the string held by a variable, the original string must be destroyed and the variable filled with another string containing a new value.
+
+**Template String**:
+
+- template literals are especially useful when defining templates, such as HTML
+
+- Template literals also support the ability to define tag functions, which are able to define custom interpolation behavior. The tag function is passed the individual pieces after the template has been split by the interpolation token and after the expressions have been evaluated.
+
+
+
+**Symbol Type**:
+
+Symbols are primitive values, and symbol instances are unique and immutable. The purpose of a symbol is to be a guaranteed unique identifier for object properties that does not risk property collision.
+
+symbols are intended to be used as unique tokens that can be used to key special properties with something other than a string.
+
+**Global Symbol Registry**: In scenarios where different parts of the runtime would like to share and reuse a symbol instance, it is possible to create and reuse symbols in a string-keyed global symbol registry. This behavior can be achieved using Symbol.for()
+
+Symbols defined in the global registry are totally distinct from symbols created using Symbol(), even if they share a description:
+
+It is possible to check against the global registry using Symbol.keyFor(), which accepts a symbol and will return the global string key for that global symbol, or undefined if the symbol is not a global symbol.
+
+
+
+**Using Symbols as Properties**: Anywhere you can normally use a string or number property, you can also use a symbol. This includes object literal properties and Object.defineProperty()/Object.defineProperties(). An object literal can only use a symbol as a property inside the computed property syntax.
+
+**Well-known Symbols**: would be used throughout the language to expose internal language behaviors for direct access, overriding, or emulating. These well-known symbols exist as string properties on the Symbol factory function.
+
+Each well-defined symbol property is non-writeable, non-enumerable, and non-configurable.
+
+
+
+
+
+##### The Object Type
+
+
+
+
+
+
+
+
+
