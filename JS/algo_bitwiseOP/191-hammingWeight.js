@@ -38,9 +38,19 @@ var hammingWeight = function(n) {
     let res = 0;
 
     while (n !== 0) {
-        n = n & (n-1);
+        n = n & (n-1); //每次移除掉最后一个1 直到 n 为 0
         res++;
     }
 
     return res;
+};
+
+var hammingWeight = function(n) {
+    let ret = 0;
+    for (let i = 0; i < 32; i++) {
+        if ((n & (1 << i)) !== 0) {
+            ret++;
+        }
+    }
+    return ret;
 };
