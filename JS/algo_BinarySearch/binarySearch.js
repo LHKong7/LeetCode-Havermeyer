@@ -64,7 +64,7 @@ const binarySearch_firstGreaterEqual = (nums, target) => {
     let middleIdx = leftPtr + Math.floor((rightPtr - leftPtr) / 2);
 
     if (nums[middleIdx] >= target) {
-      if (middleIdx === 0 || (nums[middleIdx - 1] < target) return middleIdx;
+      if (middleIdx === 0 || (nums[middleIdx - 1] < target)) return middleIdx;
       else rightPtr = middleIdx - 1;
     } else {
       leftPtr = middleIdx + 1;
