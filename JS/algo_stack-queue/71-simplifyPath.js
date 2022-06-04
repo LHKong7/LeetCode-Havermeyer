@@ -21,18 +21,18 @@
  * @return {string}
  */
 var simplifyPath = function(path) {
-    let pathArr = path.split('/');
-    let resStk = [];
+    const pathLst = path.split('/');
+    const pathStk = [];
 
-    for (let char of pathArr) {
+    for (const char of pathLst) {
         if (char === '' || char === '.') continue;
-        else if (char === '..' && !resStk.length) continue;
-        else if (char === '..' && resStk.length) resStk.pop();
-        else resStk.push(char)
+        else if (char === '..' && pathStk.length === 0) continue;
+        else if (char === '..' && pathStk.length !== 0) pathStk.pop();
+        else pathStk.push(char);
     }
 
-    if (resStk.length === 0) return '/';
-    return '/' + resStk.join('/');
+    if (pathStk.length === 0) return '/';
+    else return '/' + pathStk.join('/');
 };
 
 
