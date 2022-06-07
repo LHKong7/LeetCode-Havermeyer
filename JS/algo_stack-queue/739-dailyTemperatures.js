@@ -41,7 +41,28 @@ var dailyTemperatures = function(temperatures) {
     return res;
 };
 
+/**
+ * @param {number[]} temperatures
+ * @return {number[]}
+ */
+var dailyTemperatures = function(temperatures) {
+    if (temperatures.length === 1) return [];
+    const monoStk = [];
+    const res = new Array(temperatures.length).fill(0);
 
+    for (let i = 0; i < temperatures.length; i++) {
+        let curr = temperatures[i];
+
+        while (monoStk.length && temperatures[monoStk[monoStk.length - 1]] < curr) {
+            let prevIdx = monoStk.pop();
+
+            res[prevIdx] = i - prevIdx;
+        }
+        monoStk.push(i);
+    }
+
+    return res;
+};
 
 /**
  * @Idea:
