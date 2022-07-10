@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        @import url('custom-selectors.css');
+
+        .top div {
+            padding-left: 0em;
+            transition: padding-left 500ms ease-in-out;
+        }
+
+        .top div:hover {
+            padding-left: 2em;
+            transition: padding-left 500ms ease-in-out;
+        }
+
+        .top p {
+            background: #fff;
+            padding: 0.5em;
+        }
+
+        /* presentational styles */
+        .top div {
+            background: var(--color-primary-x-light);
+            border-top: 1px solid var(--color-primary);
+            border-left: 1px solid var(--color-primary);
+        }
+        .top > div {
+            border-bottom: 1px solid var(--color-primary);
+            border-right: 1px solid var(--color-primary);
+        }
+
+        .top p {
+            text-align: left;
+            border-left: 1px solid var(--color-primary);
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <div class="wrapper">
+            <article class="flow">
+                <h1>Descendant combinator, recursive effect</h1>
+                <figure class="callout">
+                    <p> Because the descendant combinator is <strong>recursive</strong>, the padding added to each child element applies, resulting in a staggered effect.</p>
+                </figure>
+                <div class="top box">
+                    <div>
+                        <p>1 level deep</p>
+                        <div>
+                            <p>2 levels deep</p>
+                            <div>
+                                <p>3 levels deep</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+          </article>
+        </div>
+    </main>
+</body>
+</html>
