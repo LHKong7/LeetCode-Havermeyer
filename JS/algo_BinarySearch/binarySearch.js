@@ -74,8 +74,8 @@ const binarySearch_firstGreaterEqual = (nums, target) => {
   return -1;
 }
 
-let arr = [-1,0,3,5,9,12];
-let target = 12;
-console.log(binarySearch_recursive(arr, target));
+let arr = [-1,0,0,0,0,0,0,0,3,5,9,12];
+let target = 0;
+console.log(binarySearch_firstGreaterEqual(arr, target));
 
 
