@@ -77,6 +77,55 @@ const sortBU = function (data) {
     }
 }
 
+// NEWEST UPDATE 8/24
+const mergeSort = (arr) => {
+    if (arr === null || arr.length < 2) return;
+
+    sort2(arr, 0, arr.length-1);
+}
+
+const sort2 = (arr, left, right) => {
+    if (left === right) return;
+    let mid = Math.floor((left + right) / 2);
+    sort2(arr, left, mid);
+    sort2(arr, mid + 1, right);
+
+    merge3(arr, left, mid, right);
+}
+
+const merge3 = (arr, left, mid, right) => {
+    let tempArr = new Array(right - left + 1).fill(0);
+    
+    let tempPos = 0, i = left, j = mid + 1;
+
+    while (i <= mid && j <= right) {
+        if (arr[i] <= arr[j]) {
+            tempArr[tempPos] = arr[i];
+            i++, tempPos++;
+        } else {
+            tempArr[tempPos] = arr[j];
+            j++, tempPos++;
+        }
+    }
+
+    while (i <= mid) {
+        tempArr[tempPos] = arr[i];
+        i++, tempPos++;
+    }
+
+    while (j <= right) {
+        tempArr[tempPos] = arr[j];
+        j++, tempPos++;
+    }
+
+    for (tempPos = 0; tempPos < tempArr.length; tempPos++) {
+        arr[left] = tempArr[tempPos];
+        left++;
+    }
+}
+
+
 data = [34, 33, 12, 78, 21, 1, 98, 100]
-sortBU(data)
-console.log(data)
+// sortBU(data)
+mergeSort(data);
+console.log(data.toString())

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>React in HTML</title>
+        <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    </head>
+    <body>
+        <div id="root"></div>
+        <script>
+            function App() {
+                var len = 100;
+                return React.createElement(
+                    "ul",
+                    null,
+                    Array(len).fill(0).map(function (_, i) {
+                        return React.createElement(
+                            "li",
+                            null,
+                            i
+                        );
+                    })
+                );
+            }
+    
+            const rootEl = document.querySelector("#root");
+            ReactDOM.render(React.createElement(App, null), rootEl);
+        </script>
+    </body>
+</html>
