@@ -80,31 +80,30 @@ const sortBU = function (data) {
 // NEWEST UPDATE 8/24
 const mergeSort = (arr) => {
     if (arr === null || arr.length < 2) return;
+    let tempArr = new Array(arr.length);
 
-    sort2(arr, 0, arr.length-1);
+    sort2(arr, 0, arr.length-1, tempArr);
 }
 
-const sort2 = (arr, left, right) => {
+const sort2 = (arr, left, right, temp) => {
     if (left === right) return;
     let mid = Math.floor((left + right) / 2);
-    sort2(arr, left, mid);
-    sort2(arr, mid + 1, right);
+    sort2(arr, left, mid, temp);
+    sort2(arr, mid + 1, right, temp);
 
-    merge3(arr, left, mid, right);
+    merge3(arr, left, mid, right, temp);
 }
 
-const merge3 = (arr, left, mid, right) => {
-    let tempArr = new Array(right - left + 1).fill(0);
-    
-    let tempPos = 0, i = left, j = mid + 1;
+const merge3 = (arr, left, mid, right, tempArr) => {
+    let tempPos = left, i = left, j = mid + 1;
 
     while (i <= mid && j <= right) {
         if (arr[i] <= arr[j]) {
             tempArr[tempPos] = arr[i];
-            i++, tempPos++;
+            tempPos++, i++;
         } else {
             tempArr[tempPos] = arr[j];
-            j++, tempPos++;
+            tempPos++, j++;
         }
     }
 
@@ -118,11 +117,19 @@ const merge3 = (arr, left, mid, right) => {
         j++, tempPos++;
     }
 
-    for (tempPos = 0; tempPos < tempArr.length; tempPos++) {
-        arr[left] = tempArr[tempPos];
-        left++;
+    for (tmpPos = left; tmpPos <= right; tmpPos++) {
+        arr[left++] = tempArr[tmpPos]
     }
 }
+
+/**
+ * @param {number[]} nums
+ * @return {number[]}
+ */
+var sortArray = function(nums) {
+    mergeSort(nums);
+    return nums;
+};
 
 
 data = [34, 33, 12, 78, 21, 1, 98, 100]
