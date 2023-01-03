@@ -29,3 +29,23 @@ var areNumbersAscending = function(s) {
 var isDigit = (char) => {
     return parseInt(char) || parseInt(char) === 0;
 }
+
+// Built-in
+/**
+ * @param {string} s
+ * @return {boolean}
+ */
+var areNumbersAscending = function(s) {
+    let strArr = s.split(' ');
+    let prev = -1;
+    for (let str of strArr) {
+        if (parseInt(str) || parseInt(str) === 0) {
+            let curr = parseInt(str);
+            if (curr <= prev) return false;
+            prev = curr;
+        }
+    }
+
+    return true;
+};
+
