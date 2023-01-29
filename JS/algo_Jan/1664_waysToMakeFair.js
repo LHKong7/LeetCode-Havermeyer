@@ -37,3 +37,6 @@ var waysToMakeFair = function(nums) {
 
 const nums = [2,1,6,4]
 const res = waysToMakeFair(nums)
+
+// 时间复杂度：O(n)
+// 空间复杂度：O(1)
