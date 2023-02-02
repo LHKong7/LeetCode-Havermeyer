@@ -3,26 +3,21 @@
  * @param {string} message
  * @return {string}
  */
- var decodeMessage = function(key, message) {
+var decodeMessage = function(key, message) {
     let cur = 'a';
-    const rules = new Map();
+    let rules = new Map();
 
-    for (let i = 0; i < key.length; ++i) {
-        const c = key[i];
-        if (c !== ' ' && !rules.has(c)) {
-            rules.set(c, cur);
+    for (let i = 0; i < key.length; i++) {
+        if (key[i] !== ' ' && !rules.has(key[i])) {
+            rules.set(key[i], cur);
             cur = String.fromCharCode(cur.charCodeAt() + 1);
         }
     }
 
-    let ret = '';
-    for (let i = 0; i < message.length; ++i) {
-        let c = message[i];
-        if (c !== ' ') {
-            c = rules.get(c);
-        }
-        ret += c;
+    let res = '';
+    for (let i = 0; i < message.length; i++) {
+        res += message[i] === ' ' ? ' ' : rules.get(message[i]);
     }
 
-    return ret;
+    return res;
 };
